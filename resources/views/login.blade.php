@@ -86,6 +86,15 @@
               </div>
               <p class="formulario__input-error">La contraseña debe ser de 8 a 32 dígitos.</p>
             </div>
+            <!-- Campo de confirmación de contraseña -->
+            <div class="formulario__grupo" id="grupo__password_confirmation">
+              <div class="input-field">
+                <i class="fas fa-lock"></i>
+                <input type="password" placeholder="Confirmar contraseña" name="password_confirmation" id="password_confirmation" required/>
+                <i class="formulario__validacion-estado fas fa-times-circle"></i>
+              </div>
+              <p class="formulario__input-error">Las contraseñas deben coincidir.</p>
+            </div>
             <div class="formulario__grupo" id="grupo__terminos">
               <label>
                 <input class="formulario__checkbox" type="checkbox" name="terminos" id="terminos" required>
@@ -93,9 +102,20 @@
               </label>
             </div>
             <br>
-            <div class="formulario__mensaje" id="formulario__mensaje" style="display:none;">
-              <p><i class="fas fa-exclamation-circle"><b>Error: El formulario no se ha llenado correctamente</b></i></p>
-            </div>
+            <!-- Muestra errores de back-end si existen -->
+            @if($errors->any())
+              <div class="formulario__mensaje formulario__mensaje-activo">
+                <ul>
+                  @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                  @endforeach
+                </ul>
+              </div>
+            @else
+              <div class="formulario__mensaje" id="formulario__mensaje" style="display:none;">
+                <p><i class="fas fa-exclamation-circle"><b>Error: El formulario no se ha llenado correctamente</b></i></p>
+              </div>
+            @endif
             <button type="submit" class="btn">SIGN UP</button>
           </form>
 
