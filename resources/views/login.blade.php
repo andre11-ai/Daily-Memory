@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Login | Daily Memory</title>
     <link rel="stylesheet" href="{{ asset('CSS/styleLoginSigup.css') }}">
-    <!-- FontAwesome para los íconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -12,7 +11,6 @@
       <div class="forms-container">
         <div class="signin-signup">
 
-          <!-- Formulario de inicio de sesión -->
           <form action="/signin" method="POST" class="sign-in-form">
             @csrf
             <h2 class="title">Inicio de sesión</h2>
@@ -102,7 +100,6 @@
               </label>
             </div>
             <br>
-            <!-- Muestra errores de back-end si existen -->
             @if($errors->any())
               <div class="formulario__mensaje formulario__mensaje-activo">
                 <ul>
@@ -121,7 +118,6 @@
 
         </div>
       </div>
-      <!--Moverse entre las páginas-->
       <div class="panels-container">
         <div class="panel left-panel">
           <div class="content">

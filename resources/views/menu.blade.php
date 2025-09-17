@@ -13,7 +13,12 @@
             <h1>Daily Memory</h1>
             <div class="nav__list">
                 <a href="{{ url('/perfil') }}">Perfil</a>
-                <a href="{{ url('/logout') }}">Cerrar Sesión</a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: inline;">
+                    @csrf
+                    <button type="submit" style="background: none; border: none; color: #666; font-size: 1.1rem; font-family: inherit; cursor: pointer;">
+                        Cerrar Sesión
+                    </button>
+                </form>
             </div>
         </nav>
 
@@ -24,11 +29,12 @@
                         Juegos para Desestresar
                     </div>
                 </a>
-                <a href="{{ url('/tipodememoria') }}" class="llamanos">
+                <a href="{{ url('/tipomemoria') }}" class="llamanos">
                     <div class="caja">
                         Juegos de Memoria
                     </div>
                 </a>
+
                 <a href="https://charsito12.herokuapp.com" class="llamanos" target="_blank">
                     <div class="caja">
                         Chat

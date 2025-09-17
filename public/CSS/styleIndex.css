@@ -1,14 +1,14 @@
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-body{
+body {
     font-family: 'Coming Soon', cursive;
 }
 
-.contenedor{
+.contenedor {
     width: 90%;
     max-width: 100px;
     margin: auto;
@@ -18,8 +18,7 @@ body{
     top: 50px;
 }
 
-
-.conte{
+.conte {
     width: 90%;
     max-width: 100px;
     margin: auto;
@@ -30,7 +29,7 @@ body{
     font-size: 40px;
 }
 
-.contenedor1{
+.contenedor1 {
     width: 90%;
     max-width: 1200px;
     margin: auto;
@@ -40,7 +39,7 @@ body{
     top: 20px;
 }
 
-.contenedor2{
+.contenedor2 {
     width: 90%;
     max-width: 1200px;
     margin: auto;
@@ -50,7 +49,7 @@ body{
     top: 50px;
 }
 
-.conteneeedor{
+.conteneeedor {
     width: 90%;
     max-width: 1200px;
     margin: auto;
@@ -60,7 +59,7 @@ body{
     left: 500;
 }
 
-.conteneedor a{
+.conteneedor a {
     width: 90%;
     max-width: 1200px;
     margin: auto;
@@ -70,7 +69,7 @@ body{
     left: 1000;
 }
 
-.bg_animate{
+.bg_animate {
     width: 100%;
     height: 100vh;
     background: linear-gradient(to right, #ffffff, #affcef);
@@ -78,55 +77,49 @@ body{
     overflow: hidden;
 }
 
-.header_nav{
+.header_nav {
     width: 100%;
     position: absolute;
     top: 0;
     left: 0;
 }
 
-.header_nav .contenedor{
+.header_nav .contenedor {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 15px 0;
 }
 
-.header_nav h1{
+.header_nav h1 {
     color: rgba(0, 0, 0, 0.514);
 }
 
-.header_nav nav a{
+.header_nav nav a {
     color: rgba(0, 0, 0, 0.514);
     text-decoration: none;
     margin-right: 10px;
 }
 
-
-.nav:hover{
+.nav:hover {
     color: #ffffffe8;
-
 }
 
-
-.banner{
+.banner {
     display: flex;
     justify-content: space-between;
     align-items: center;
     height: 100%;
-
 }
 
-.banner_title h2{
+.banner_title h2 {
     color: rgba(0, 0, 0, 0.514);
     font-size: 60px;
     font-weight: 800;
     margin-bottom: 20px;
 }
 
-
-
-.banner_title .llamanos{
+.banner_title .llamanos {
     color: rgba(0, 0, 0, 0.514);
     opacity: .9;
     font-size: 20px;
@@ -138,307 +131,79 @@ body{
 }
 
 /**/
-.banner_title1{
+.banner_title1 {
     color: rgba(0, 0, 0, 0.514);
     opacity: .9;
     font-size: 20px;
     text-decoration: none;
     display: inline-block;
-    background: rgb(81, 141, 143);
-    border-radius: 30px;
-    overflow: hidden;
-    height: 280px;
-    width: 310px;
-    box-shadow: 0px 15px 40px
-    rgba(0,0,0,.5);
-    padding: 20px;
-    position: fixed;
-    left: 200px;
-    top: 250px;
 }
 
+/* ========== Responsive index ========== */
+@media (max-width: 900px) {
+    .bg_animate {
+        height: auto;
+        min-height: 100vh;
+        padding-bottom: 30px;
+    }
 
+    .banner {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: auto;
+    }
 
-.banner_title1 .capa1{
-    position: absolute;
-    top: 0;
-    left: 0px;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    background: rgba(87, 205, 209, 0.7);
-    text-align: center;
-    transition: all 0ms ease-out;
-    visibility: visible;
+    .banner_title,
+    .banner_title1 {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .banner_title h2,
+    .banner_title1 {
+        font-size: 2rem;
+    }
+
+    .banner_title .llamanos {
+        font-size: 1rem;
+        padding: 12px;
+        margin-top: 16px;
+    }
+
+    .dos img,
+    .cerebro {
+        max-width: 80vw;
+        height: auto;
+        margin: 0 auto;
+        display: block;
+        padding-top: 32px !important;
+    }
+
+    .header_nav .contenedor {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
 }
 
-.banner_title1 .capa1 h1{
-    color: #fff;
-    margin-top:30%;
-}
+@media (max-width: 600px) {
 
+    .banner_title h2,
+    .banner_title1 {
+        font-size: 1.3rem;
+    }
 
-.banner_title1 .capaa1 h1{
-    color: #fff;
-    margin-top:33%;
-    font-size: 50px;
-}
+    .banner_title .llamanos {
+        font-size: 0.9rem;
+        padding: 10px;
+    }
 
-
-
-.banner_title1 .capaa1 a{
-    text-decoration: none;
-}
-
-
-.banner_title2 .capaa2 a{
-    text-decoration: none;
-}
-
-
-.banner_title3 .capaa3 a{
-    text-decoration: none;
-}
-
-.banner_title1 .capaa1{
-    position: absolute;
-    top: 0;
-    left: 0px;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    background: rgba(87, 205, 209, 0.7);
-    text-align: center;
-    visibility: hidden;
-    transition: all 0ms ease-out;
-}
-
-.contenedor figure:hover > .capa1{
-    opacity: 1;
-    visibility: hidden;
-}
-
-.contenedor figure:hover > .capaa1{
-    opacity: 1;
-    visibility: visible;
-}
-
-.banner_title2{
-    color: rgba(0, 0, 0, 0.514);
-    opacity: .9;
-    font-size: 20px;
-    text-decoration: none;
-    display: inline-block;
-    background: rgb(81, 141, 143);
-    border-radius: 30px;
-    overflow: hidden;
-    height: 280px;
-    width: 310px;
-    box-shadow: 0px 15px 40px
-    rgba(0,0,0,.5);
-    padding: 20px;
-    position: fixed;
-    left: 600px;
-    top: 250px;
-}
-
-
-.banner_title2 .capa2{
-    position: absolute;
-    top: 0;
-    left: 0px;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    background: rgba(87, 205, 209, 0.7);
-    text-align: center;
-    transition: all 0ms ease-out;
-    visibility: visible;
-}
-
-.banner_title2 .capa2 h1{
-    color: #fff;
-    margin-top:40%;
-}
-
-
-.banner_title2 .capaa2 h1{
-    color: #fff;
-    margin-top:33%;
-    font-size: 50px;
-}
-
-.banner_title2 .capaa2{
-    position: absolute;
-    top: 0;
-    left: 0px;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    background: rgba(87, 205, 209, 0.7);
-    text-align: center;
-    visibility: hidden;
-    transition: all 0ms ease-out;
-}
-
-.contenedor figure:hover > .capa2{
-    opacity: 1;
-    visibility: hidden;
-}
-
-.contenedor figure:hover > .capaa2{
-    opacity: 1;
-    visibility: visible;
-}
-
-.banner_title3{
-    color: rgba(0, 0, 0, 0.514);
-    opacity: .9;
-    font-size: 20px;
-    text-decoration: none;
-    display: inline-block;
-    background: rgb(81, 141, 143);
-    border-radius: 30px;
-    overflow: hidden;
-    height: 280px;
-    width: 310px;
-    box-shadow: 0px 15px 40px
-    rgba(0,0,0,.5);
-    padding: 20px;
-    position: fixed;
-    left: 1000px;
-    top: 250px;
-}
-
-
-.banner_title3 .capa3{
-    position: absolute;
-    top: 0;
-    left: 0px;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    background: rgba(87, 205, 209, 0.7);
-    text-align: center;
-    transition: all 0ms ease-out;
-    visibility: visible;
-}
-
-.banner_title3 .capa3 h1{
-    color: #fff;
-    margin-top:40%;
-}
-
-
-.banner_title3 .capaa3 h1{
-    color: #fff;
-    margin-top:33%;
-    font-size: 50px;
-}
-
-.banner_title3 .capaa3{
-    position: absolute;
-    top: 0;
-    left: 0px;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    background: rgba(87, 205, 209, 0.7);
-    text-align: center;
-    visibility: hidden;
-    transition: all 0ms ease-out;
-}
-
-.contenedor figure:hover > .capa3{
-    opacity: 1;
-    visibility: hidden;
-}
-
-.contenedor figure:hover > .capaa3{
-    opacity: 1;
-    visibility: visible;
-}
-
-
-.banner_img{
-    animation: movimiento 2.5s linear infinite;
-}
-
-.banner_img img{
-    width: 600px;
-    display: block;
-}
-/*p*/
-.banner_titlee h2{
-    color: rgba(0, 0, 0, 0.914);
-    font-size: 80px;
-    font-weight: 800;
-    margin-bottom: 20px;
-    position: fixed;
-    left: 195px;
-    top: 120px;
-}
-
-.banner_titlee h3{
-    color: rgba(0, 0, 0, 0.614);
-    font-size: 60px;
-    font-weight: 800;
-    margin-bottom: 20px;
-    position: fixed;
-    left: 50px;
-    top: 250px;
-}
-
-.banner_title .llamanos{
-    color: rgba(0, 0, 0, 0.514);
-    opacity: .9;
-    font-size: 20px;
-    text-decoration: none;
-    display: inline-block;
-    background: rgb(102, 255, 171);
-    border-radius: 30px;
-    padding: 20px;
-}
-
-
-.bannerr_img{
-    animation: movimiento 2.5s linear infinite;
-    position: fixed;
-    left: 900px;
-    top: 150px;
-}
-.banner_titlee .llamanos{
-    color: rgba(0, 0, 0, 0.514);
-    opacity: .9;
-    font-size: 20px;
-    text-decoration: none;
-    display: inline-block;
-    background: rgb(102, 255, 171);
-    border-radius: 30px;
-    padding: 20px;
-    position: fixed;
-    left: 380px;
-    top: 400px;
-}
-.banner_titlee a{
-    color: rgba(0, 0, 0, 0.514);
-    font-size: 100px;
-    font-weight: 800;
-    position: fixed;
-    left: 320px;
-    top: 400px;
-}
-
-.banner_titlee .llamanos{
-    color: rgba(0, 0, 0, 0.514);
-    opacity: .9;
-    font-size: 60px;
-    text-decoration: none;
-    display: inline-block;
-    background: linear-gradient(90deg, #78f7cc, #55e7fc);
-    border-radius: 30px;
-    padding: 20px;
-    align-items: center;
-    width: 230px;
-
+    .dos img,
+    .cerebro {
+        max-width: 96vw;
+        height: auto;
+        padding-top: 20px !important;
+    }
 }
