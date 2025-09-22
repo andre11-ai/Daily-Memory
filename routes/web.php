@@ -35,16 +35,28 @@ Route::get('/tipomemoria', function () {
 })->middleware('auth');
 
 
-Route::get('Mmuscular', function () {
-    return view('Mmuscular');
+Route::get('/TiposMemoria/Mmuscular', function () {
+    return view('/TiposMemoria/Mmuscular');
 })->middleware('auth');
 
-Route::get('Mecoica', function () {
-    return view('Mecoica');
+Route::get('/TiposMemoria/Mecoica', function () {
+    return view('/TiposMemoria/Mecoica');
 })->middleware('auth');
 
-Route::get('Miconica', function () {
-    return view('Miconica');
+Route::get('/TiposMemoria/Miconica', function () {
+    return view('/TiposMemoria/Miconica');
 })->middleware('auth');
 
+//Rutas para niveles de memoria muscular
 
+Route::get('/Juegos/Muscular/scary/scary', function () {
+    return view('/Juegos/Muscular/scary/scary');
+})->middleware('auth');
+
+Route::get('/Juegos/Muscular/scary/scaryM', function () {
+    return view('/Juegos/Muscular/scary/scaryM');
+})->middleware('auth');
+
+Route::get('/Juegos/Muscular/scary/scaryD', function () {
+    return view('/Juegos/Muscular/scary/scaryD');
+})->middleware('auth');

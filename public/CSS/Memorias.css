@@ -3,8 +3,10 @@ html {
     height: 100%;
     margin: 0;
     padding: 0;
+    font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
 }
 
+/* Fondo animado */
 .bg_animate {
     min-height: 100vh;
     width: 100vw;
@@ -13,7 +15,7 @@ html {
     overflow: hidden;
 }
 
-/* ====== Navbar igual que el menú principal ====== */
+/* Navbar */
 .navbar {
     position: sticky;
     top: 0;
@@ -40,7 +42,7 @@ html {
     gap: 1.5rem;
 }
 
-.nav__list a {
+.nav-link.volver-btn {
     font-size: 1rem;
     font-weight: 500;
     color: #303333;
@@ -50,9 +52,13 @@ html {
     display: flex;
     align-items: center;
     gap: .5rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    text-decoration: none;
 }
 
-.nav__list a:hover {
+.nav-link.volver-btn:hover {
     background: #00c8a3;
     color: #fff;
 }
@@ -164,49 +170,104 @@ html {
     }
 }
 
-/* ====== Main grid igual que menú principal ====== */
-.memoria-main-menu {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 2rem;
+/* Subtitulo centrado */
+.subtitulo {
     width: 100%;
-    max-width: 1200px;
-    margin: 0 auto 2rem auto;
+    text-indent: 420px;
+    margin: 6rem auto 2rem auto;}
+
+.subtitulo h2 {
+    font-size: 1.7rem;
+    color: #303333;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
 }
 
-/* ====== Tarjetas en grid 2x2 ====== */
-.memoria-cards-grid {
+.subtitulo p {
+    color: #444;
+    font-size: 1.05rem;
+    margin-top: 0.5rem;
+}
+
+.subtitulo i {
+    margin-right: 4px;
+    font-size: 1.1rem;
+
+}
+.niveles-cards-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: 1fr auto;    gap: 2rem;
-    flex: 1 1 780px;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 2rem;
     align-items: center;
     justify-items: center;
-    width: 100%;
 }
-/* Primeras dos tarjetas arriba */
-.memoria-card-iconica {
+
+.card-simon,
+.card-repetir {
     grid-column: 1;
     grid-row: 1;
 }
 
-.memoria-card-muscular {
+.card-palabras,
+.card-memorama {
     grid-column: 2;
     grid-row: 1;
 }
 
-/* Ecoica ocupa ambas columnas en la segunda fila y se centra */
-.memoria-card-ecoica {
+.card-sodoku,
+.card-codificando {
     grid-column: 1 / span 2;
     grid-row: 2;
     justify-self: center;
     width: 60%;
-    /* Puedes ajustar el ancho para que quede centrada y del mismo tamaño, prueba 60-70% */
+    max-width: 350px;
+}
+/* ====== Main layout ====== */
+.memoria-main-menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 2rem;
+    width: 100%;
+    max-width: 1200px;
+    margin: 2rem auto 2rem auto;
+        /* <-- aumenta el margen superior aquí */    position: relative;
+    z-index: 2;
+}
+
+/* ====== Grid de tarjetas juegos en pirámide ====== */
+.niveles-cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr auto;
+    gap: 2rem;
+    align-items: center;
+    justify-items: center;
+    width: 100%;
+    flex: 1 1 760px;
+}
+
+.card-scary {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.card-velocimetro {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.card-hexamano {
+    grid-column: 1 / span 2;
+    grid-row: 2;
+    justify-self: center;
+    width: 60%;
     max-width: 350px;
 }
 
-.memoria-card {
+.niveles-card {
     background: #fff;
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
     border-radius: 1.5rem;
@@ -216,22 +277,16 @@ html {
     display: flex;
     align-items: center;
     gap: 1.2rem;
-    transition: transform .18s;
-    min-height: 120px;
+    transition: transform .18s, box-shadow .18s;
+    min-height: 110px;
 }
 
-.memoria-card:hover {
+.niveles-card:hover {
     transform: translateY(-4px) scale(1.03);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.13);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.14);
 }
 
-.empty-card {
-    background: transparent;
-    box-shadow: none;
-    pointer-events: none;
-}
-
-.card-icon {
+.niveles-card .niveles-icon {
     font-size: 2.2rem;
     color: #00c8a3;
     background: #f8f9fa;
@@ -243,78 +298,94 @@ html {
     justify-content: center;
 }
 
-.card-title {
-    font-size: 1.2rem;
-    font-weight: 600;
+.niveles-card .niveles-content h1 {
+    font-size: 1.08rem;
+    font-weight: bold;
     margin-bottom: .2rem;
+    color: #303333;
 }
 
-.card-desc {
-    font-size: 1rem;
+.niveles-card .niveles-content span {
+    font-size: 0.97rem;
     color: #444;
-    margin-bottom: .4rem;
+    margin-bottom: .3rem;
+    display: block;
 }
 
-.btn-memoria {
+.niveles-levels {
+    display: flex;
+    gap: .5rem;
+    margin-top: .3rem;
+}
+
+.niveles-level-link {
     background: #3e4eff;
     color: #fff;
     border-radius: 8px;
-    padding: 0.42rem 1.1rem;
+    padding: 0.32rem 0.9rem;
+    text-decoration: none;
     font-weight: bold;
     transition: background 0.2s;
-    font-size: 0.88rem;
-    display: inline-block;
-    margin-top: .3rem;
-    text-decoration: none;
+    font-size: 0.83rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
 }
 
-.btn-memoria:hover {
+.niveles-level-link:hover {
     background: #232b8d;
 }
 
-.memoria-image-section {
+/* Imagen cerebro */
+.niveles-image-section {
     flex: 1 1 350px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.memoria-img-cerebro {
+.niveles-img-cerebro {
     width: 100%;
-    max-width: 400px;
+    max-width: 380px;
     border-radius: 1.5rem;
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
     margin-top: 2rem;
 }
 
-/* ======= Responsive igual que menú principal ====== */
-@media (max-width: 900px) {
+/* Responsive */
+@media (max-width: 1000px) {
     .memoria-main-menu {
         flex-direction: column;
         align-items: center;
         gap: 1.5rem;
+        min-height: unset;
     }
 
-    .memoria-cards-grid {
+    .niveles-cards-grid {
         grid-template-columns: 1fr;
         grid-template-rows: auto;
-        gap: 1rem;
+        gap: 1.2rem;
         width: 100%;
     }
 
-    .memoria-image-section {
+    .card-hexamano {
+        width: 95vw;
+        max-width: 350px;
+    }
+
+
+    .niveles-image-section {
         width: 100%;
         justify-content: center;
         align-items: center;
     }
 
-    .memoria-img-cerebro {
-        max-width: 85vw;
-        margin: 2rem auto 0 auto;
-        display: block;
+    .niveles-img-cerebro {
+        max-width: 240px;
+        margin-top: 1.2rem;
     }
 
-    .memoria-card {
+    .niveles-card {
         max-width: 95vw;
     }
 }
@@ -337,20 +408,23 @@ html {
         align-items: center;
     }
 
-    .memoria-cards-grid {
+    .niveles-cards-grid {
         gap: 1rem;
     }
 
-    .memoria-card {
+    .niveles-card {
         padding: 1rem 1.2rem;
         font-size: 1rem;
     }
 
-    .memoria-img-cerebro {
+    .card-hexamano {
+        padding: 1rem 1.2rem;
+        font-size: 1rem;
+        width: 98vw;
+    }
+
+    .niveles-img-cerebro {
         max-width: 98vw;
     }
 
-
-
 }
-

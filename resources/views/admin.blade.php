@@ -18,9 +18,9 @@
             width: 100vw;
             background: linear-gradient(to right, #ffff, #affcef);
             position: relative;
-            overflow: visible; /* Permite scroll si el contenido crece */
-            min-height: 100vh; /* Permite ver el fondo si el contenido es menor */
-            height: auto;      /* Permite crecer el contenido */
+            overflow: visible;
+            min-height: 100vh;
+            height: auto;      
         }
         nav {
             display: flex;

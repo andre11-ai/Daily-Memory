@@ -4,72 +4,68 @@
     <meta charset="UTF-8">
     <title>Menu | Daily Memory</title>
     <link href="{{ asset('CSS/menu.css') }}" rel="stylesheet">
-    <!-- FontAwesome para los íconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <header class="bg_animate">
-        <nav>
-            <h1>Daily Memory</h1>
+        <nav class="navbar">
+            <h1 class="logo">Daily Memory</h1>
             <div class="nav__list">
-                <a href="{{ url('/perfil') }}">Perfil</a>
+                <a href="{{ url('/perfil') }}" class="nav-link"><i class="fas fa-user"></i> Perfil</a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: inline;">
                     @csrf
-                    <button type="submit" style="background: none; border: none; color: #666; font-size: 1.1rem; font-family: inherit; cursor: pointer;">
-                        Cerrar Sesión
+                    <button type="submit" class="nav-link logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
                     </button>
                 </form>
             </div>
         </nav>
-
-        <section>
-            <div class="one contenedor">
-                <a href="{{ url('/estresado') }}" class="llamanos">
-                    <div class="caja">
-                        Juegos para Desestresar
+            <main class="main-menu">
+                <section class="games-section games-section-grid">
+                    <div class="game-card">
+                        <a href="{{ url('/estresado') }}" class="game-link">
+                            <div class="card-icon"><i class="fas fa-gamepad"></i></div>
+                            <div class="card-title">Juegos para Desestresar</div>
+                        </a>
                     </div>
-                </a>
-                <a href="{{ url('/tipomemoria') }}" class="llamanos">
-                    <div class="caja">
-                        Juegos de Memoria
+                    <div class="game-card">
+                        <a href="{{ url('/tipomemoria') }}" class="game-link">
+                            <div class="card-icon"><i class="fas fa-brain"></i></div>
+                            <div class="card-title">Juegos de Memoria</div>
+                        </a>
                     </div>
-                </a>
-
-                <a href="https://charsito12.herokuapp.com" class="llamanos" target="_blank">
-                    <div class="caja">
-                        Chat
+                    <div class="game-card">
+                        <a href="https://charsito12.herokuapp.com" class="game-link" target="_blank">
+                            <div class="card-icon"><i class="fas fa-comments"></i></div>
+                            <div class="card-title">Chat</div>
+                        </a>
                     </div>
-                </a>
-            </div>
-            <div class="dos">
-                <img src="{{ asset('img/kisspng-4-pics-1-word-word-brain-thought-action-game-snoring-transparent-png-5a76bf36785379.6988479815177316384929.png') }}" alt="relax">
-            </div>
-        </section>
-
+                    <div class="game-card">
+                        <a href="{{ url('/historia') }}" class="game-link">
+                            <div class="card-icon"><i class="fas fa-book-open"></i></div>
+                            <div class="card-title">Historia</div>
+                        </a>
+                    </div>
+                </section>
+                <section class="image-section">
+                    <img src="{{ asset('img/kisspng-4-pics-1-word-word-brain-thought-action-game-snoring-transparent-png-5a76bf36785379.6988479815177316384929.png') }}"
+                        alt="relax" class="main-image">
+                </section>
+            </main>
         <footer class="footer">
-            <div class="container">
-                <div class="row">
-                    <div class="footer-col">
+            <div class="footer-container">
+                <div class="footer-row">
+                    <div class="footer-col logo-col">
                         <img src="{{ asset('img/pngwing.com.png') }}" alt="cerebro" class="cerebroo">
                     </div>
-                    <div class="footer-coll">
-                        <h4>Proposito</h4>
-                        <ul>
-                            <a>Daily Memory es un proyecto creado por la compañia SpiderBytes que busca el desarrollo e implementación de la estimulación cognitiva de la memoria por medio de una plataforma de juegos que te ayudarán a estimular diferentes tipos de memoria.</a>
-                        </ul>
-                    </div>
-                    <div class="footer-col" style="padding-top: 220px;">
-                        <h4>Conocenos</h4>
-                        <div class="social-links">
-                            <a href="https://www.facebook.com/Spyderbytes/" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                            <a href="https://twitter.com/Spiderbytes9" target="_blank"><i class="fab fa-twitter"></i></a>
-                            <a href="https://www.instagram.com/spyderbytes9/" target="_blank"><i class="fab fa-instagram"></i></a>
-                        </div>
+                    <div class="footer-col purpose-col" style="flex: 2;">
+                        <h4>Propósito</h4>
+                        <p>
+                            Daily Memory es un proyecto creado por la compañía SpiderBytes que busca el desarrollo e implementación de la estimulación cognitiva de la memoria por medio de una plataforma interactiva y divertida. <br><br>
                     </div>
                 </div>
             </div>
         </footer>
-
         <div class="burbujas">
             @for($i = 0; $i < 10; $i++)
                 <div class="burbuja"></div>
