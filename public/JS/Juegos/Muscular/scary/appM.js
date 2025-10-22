@@ -108,7 +108,7 @@ function spawnEnemy() {
         const angle = Math.atan2(canvas.height / 2 - y, canvas.width / 2 - x);
         const velocity = {x: Math.cos(angle) * 0.5, y: Math.sin(angle) * 0.5};
         enemies.push(new Enemy(x, y, radius, color, velocity, parabraRandom, 14));
-    }, 1000);// aqui es el tiempo de aparicion de los enemigos
+    }, 1200);// aqui es el tiempo de aparicion de los enemigos
 }
 
 function animate() {

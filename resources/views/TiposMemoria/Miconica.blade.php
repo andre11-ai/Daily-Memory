@@ -52,7 +52,7 @@
                         <h1>Sodoku</h1>
                         <span>Entrena tu memoria numérica y lógica.</span>
                         <div class="niveles-levels">
-                            <a href="" class="niveles-level-link"><i class='bx bx-signal-1'></i>Fácil</a>
+                            <a href="/Juegos/Iconica/Sodoku/Sodoku" class="niveles-level-link"><i class='bx bx-signal-1'></i>Fácil</a>
                             <a href="" class="niveles-level-link"><i class='bx bx-signal-2'></i>Medio</a>
                             <a href="" class="niveles-level-link"><i class='bx bx-signal-3'></i>Difícil</a>
                         </div>

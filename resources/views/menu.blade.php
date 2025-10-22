@@ -35,7 +35,7 @@
                         </a>
                     </div>
                     <div class="game-card">
-                        <a href="https://charsito12.herokuapp.com" class="game-link" target="_blank">
+                        <a href="/chat" class="game-link" target="_blank">
                             <div class="card-icon"><i class="fas fa-comments"></i></div>
                             <div class="card-title">Chat</div>
                         </a>
