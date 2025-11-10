@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ScaryGameController;
 use App\Http\Controllers\VelocimetroGameController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\LluviaLetrasGameController;
 use App\Http\Controllers\SonidoParejaGameController;
 use App\Http\Controllers\SimondiceGameController;
 use App\Http\Controllers\RepetirPalabraGameController;
+
 
 
 //Pagina principal
@@ -35,6 +37,10 @@ Route::get('/menu', function () {
 Route::get('/perfil', function () {
     return view('perfil');
 })->name('perfil');
+Route::middleware('auth')->group(function () {
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+});
 
 //Cerrar sesion
 Route::post('/logout', function () {

@@ -49,7 +49,7 @@
                 <div class="niveles-card card-sodoku">
                     <div class="niveles-icon"><i class='bx bx-border-all'></i></div>
                     <div class="niveles-content">
-                        <h1>Secuencia</h1>
+                        <h1>Secuencia de Imagenes</h1>
                         <span>Entrena tu memoria numérica y lógica.</span>
                         <div class="niveles-levels">
                             <a href="/Juegos/Iconica/Secuencia/secuenciaB" class="niveles-level-link"><i class='bx bx-signal-1'></i>Fácil</a>

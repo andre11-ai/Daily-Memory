@@ -6,42 +6,53 @@
     <title>Secuencia - Medio</title>
     <!-- CSS -->
     <link rel="stylesheet" href="{{ asset('/CSS/Juegos/Iconica/Secuencia/secuenciaM.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,600,700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="burbujas">
         @for($i = 0; $i < 10; $i++) <div class="burbuja"></div> @endfor
     </div>
-
-    <a href="/TiposMemoria/Miconica" class="back-button">← Volver a Juegos</a>
-
-    <!-- Contenedor principal para nivel MEDIO -->
+    <header class="header-bar">
+        <h1 class="logo">Memoria Iconica</h1>
+        <div class="header-actions">
+            <a href="/TiposMemoria/Miconica" class="volver-link">← Volver</a>
+        </div>
+    </header>
+    <div class="game-main-title">Secuencia de Imágenes</div>
     <main class="game-container" id="game-container" data-level="6">
-
         <!-- Fase 1: Memorizar -->
         <section class="memorize-phase" id="memorize-phase">
-            <h1>Memoriza bien las imágenes</h1>
+            <h2 class="game-title-secuencia">Memoriza bien las imágenes</h2>
             <div class="image-grid" id="memorize-grid">
-                <!-- imagenes aleatorias-->
+                <!-- imagenes aleatorias -->
             </div>
             <button class="game-button" id="listo-btn" onclick="pressReady()">¡Listo!</button>
         </section>
-
-        <!-- Fase 2: Recordar -->
+        <!-- Fase 2: Recordar/acomodar -->
         <section class="recall-phase" id="recall-phase">
-            <h2>Presiona una imagen para acomodarla</h2>
+            <h3 class="game-subtitle-secuencia">Presiona una imagen para acomodarla</h3>
             <div class="image-grid" id="slot-grid">
-                <!-- cuadros vacios  -->
+                <!-- cuadros vacíos para acomodar -->
             </div>
             <hr class="divider">
             <div class="image-grid" id="pool-grid">
-                <!-- 6 imagenes generadas para selccionar-->
+                <!-- 6 imágenes generadas para selccionar -->
             </div>
             <button class="game-button" id="verificar-btn" onclick="pressVerify()">Verificar</button>
         </section>
-
     </main>
-    <!-- JS -->
     <script src="{{ asset('/JS/Juegos/Iconica/Secuencia/secuenciaM.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("recall-phase").style.display = "none";
+            document.getElementById("memorize-phase").style.display = "block";
+        });
+        function pressReady() {
+            document.getElementById("memorize-phase").style.display = "none";
+            document.getElementById("recall-phase").style.display = "block";
+            if (typeof handleStartRecall === 'function') handleStartRecall();
+        }
+    </script>
 </body>
 </html>

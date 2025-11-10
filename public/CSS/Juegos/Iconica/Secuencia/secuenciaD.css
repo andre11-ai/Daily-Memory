@@ -5,22 +5,70 @@
 }
 
 body {
-    background: linear-gradient(120deg, #d6fff6 0%, #b1f6fc 100%);
-    font-family: 'Poppins', Arial, sans-serif;
     min-height: 100vh;
+    background: linear-gradient(120deg, #d6fff6 0%, #b1f6fc 100%);
+    color: #005f73;
+    margin: 0;
+    font-family: 'Poppins', Arial, sans-serif;
     position: relative;
     overflow-x: hidden;
-    color: #005f73;
 }
 
-/* --- Burbujas de Fondo --- */
+/* HEADER */
+.header-bar {
+    width: 100vw;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 4px 24px rgba(86, 231, 195, 0.08);
+    padding: .2em .5em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.logo {
+    font-size: 2.3em;
+    font-weight: 700;
+    color: #00c8a3;
+    letter-spacing: 0.5px;
+    font-family: 'Poppins', Arial, sans-serif;
+}
+
+.header-actions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2em;
+}
+
+.volver-link {
+    font-size: 1.12em;
+    color: #222;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 0.32em 1em;
+    border-radius: 0.9em;
+    transition: background .12s, color .12s;
+    margin-left: 1em;
+}
+
+.volver-link:hover {
+    background: #00c8a3;
+    color: #fff;
+    text-decoration: none;
+}
+
+/* -- FONDO BURBUJAS -- */
 .burbujas {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    z-index: -1;
+    z-index: 0;
     pointer-events: none;
 }
 
@@ -117,7 +165,7 @@ body {
     }
 
     50% {
-        transform: scale(1.2) translateY(-40px);
+        transform: scale(1.1) translateY(-40px);
     }
 
     100% {
@@ -125,64 +173,94 @@ body {
     }
 }
 
-/* --- Contenedor Principal del Juego --- */
+/* TITULO PRINCIPAL arriba del card */
+.game-main-title {
+    width: 100vw;
+    text-align: center;
+    font-size: 2.4em;
+    font-weight: 700;
+    color: #222;
+    margin-top: 24px;
+    margin-bottom: 10px;
+    font-family: 'Poppins', Arial, sans-serif;
+    letter-spacing: 1px;
+}
+
+@media (max-width:700px) {
+    .game-main-title {
+        font-size: 1.36em;
+        margin-top: 18px;
+    }
+}
+
+/* CONTENEDOR CENTRAL TRANSLUCIDO */
 .game-container {
     width: 95%;
-    max-width: 1000px;
-    margin: 80px auto 40px auto;
-    padding: 20px;
-    position: relative;
-    z-index: 1;
-    background: rgba(255, 255, 255, 0.4);
+    max-width: 900px;
+    margin: 25px auto 30px auto;
+    padding: 32px 0 22px 0;
+    background: rgba(255, 255, 255, 0.47);
     backdrop-filter: blur(10px);
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.19);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.11);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+    min-height: 420px;
+}
+
+/* TITULO SECUENCIA DENTRO DEL CARD */
+.game-title-secuencia {
+    color: #045F73;
     text-align: center;
+    font-size: 2em;
+    font-weight: 700;
+    margin-bottom: 14px;
+    margin-top: 16px;
 }
 
-.game-container h1,
-.game-container h2 {
-    color: #005f73;
-    margin-bottom: 20px;
-}
-
-/* --- Contenedores de Fases --- */
-.recall-phase {
-    display: none;
+.game-subtitle-secuencia {
+    text-align: center;
+    color: #01739b;
+    font-size: 1.18em;
+    font-weight: 600;
+    margin-bottom: 8px;
 }
 
 .divider {
     border: 0;
     height: 2px;
-    background: rgba(0, 95, 115, 0.3);
-    margin: 30px 0;
+    background: rgba(0, 95, 115, 0.13);
+    margin: 27px 0 13px 0;
 }
 
-/* --- Rejilla de Imágenes/Slots --- */
+/* REJILLAS DE IMÁGENES */
 .image-grid {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 15px;
-    min-height: 130px;
+    gap: 13px;
+    min-height: 120px;
+    margin-bottom: 6px;
 }
 
-/* Estilo para las imágenes y los slots */
 .image-box,
 .slot-box {
-    width: 120px;
-    height: 120px;
-    background-color: rgba(255, 255, 255, 0.5);
-    border: 2px solid #0081a7;
-    border-radius: 12px;
+    width: 105px;
+    height: 105px;
+    background-color: rgba(255, 255, 255, 0.67);
+    border: 2px solid #00b2b8;
+    border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    transition: transform .11s;
 }
 
 .slot-box {
-    background-color: rgba(0, 95, 115, 0.1);
+    background-color: rgba(0, 95, 115, 0.13);
     border-style: dashed;
     cursor: pointer;
 }
@@ -193,17 +271,17 @@ body {
 
 .image-box:hover,
 .slot-box:hover {
-    transform: scale(1.05);
+    transform: scale(1.07);
 }
 
-/* Estilo para la imagen dentro de la caja */
 .game-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
 }
 
-/* --- Botones del Juego --- */
+/* BOTONES CENTRADOS */
 .game-button {
     background-color: #0081a7;
     color: white;
@@ -213,32 +291,60 @@ body {
     border: none;
     border-radius: 10px;
     padding: 12px 25px;
+    margin-top: 24px;
+    margin-left: auto;
+    margin-right: auto;
     cursor: pointer;
-    margin-top: 25px;
     transition: background-color 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.13);
+    display: block;
+    /* ¡Esto centra los botones! */
 }
 
 .game-button:hover {
-    background-color: #00a8e8;
+    background-color: #00c8a3;
 }
 
-/* --- Botón de Volver --- */
-.back-button {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    background-color: rgba(255, 255, 255, 0.6);
-    color: #005f73;
-    text-decoration: none;
-    padding: 10px 16px;
-    border-radius: 8px;
-    transition: background-color 0.3s ease;
-    font-weight: bold;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-    z-index: 10;
+/* ORGANIZA FASES */
+.recall-phase {
+    display: none;
 }
 
-.back-button:hover {
-    background-color: rgba(255, 255, 255, 0.9);
+.memorize-phase {
+    display: block;
+}
+
+/* RESPONSIVE */
+@media (max-width: 700px) {
+    .game-container {
+        margin: 18px auto 7px auto;
+        padding: 8px 0 9px 0;
+    }
+
+    .game-title-secuencia {
+        font-size: 1.1em;
+    }
+
+    .game-subtitle-secuencia {
+        font-size: 1em;
+    }
+
+    .image-box,
+    .slot-box {
+        width: 70px;
+        height: 70px;
+    }
+
+    .image-grid {
+        gap: 8px;
+    }
+
+    .game-button {
+        font-size: 1em;
+        padding: 10px 16px;
+    }
+
+    .logo {
+        font-size: 1.15em;
+    }
 }

@@ -1,3 +1,65 @@
+:root {
+    --white: #fff;
+    --shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    --accent-color: #affcef;
+    --primary-color: #3e4eff;
+    --black: #303333;
+}
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    background: #f7f8fc;
+    min-height: 100vh;
+}
+
+.bg_animate {
+    min-height: 100vh;
+    background: linear-gradient(120deg, #affcef 0%, #e2e6ff 100%);
+    position: relative;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--primary-color, #3e4eff);
+    padding: 1rem 2rem;
+    color: var(--white, #fff);
+    box-shadow: var(--shadow, 0 4px 24px rgba(0, 0, 0, 0.08));
+}
+
+.logo {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.nav__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-link {
+    color: var(--white, #fff);
+    text-decoration: none;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.2s;
+}
+
+.nav-link:hover {
+    color: var(--accent-color, #affcef);
+}
+
 .perfil-container {
     display: flex;
     flex-direction: column;
@@ -70,6 +132,33 @@
     text-align: center;
 }
 
+.perfil-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    margin: 1rem 0;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+}
+
+.form-group input {
+    padding: 0.45rem;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    background: #f9f9f9;
+    font-size: 1rem;
+}
+
 .perfil-estadisticas {
     margin-top: 1rem;
     width: 100%;
@@ -87,6 +176,37 @@
     color: var(--black, #303333);
     text-align: center;
     box-shadow: 0 2px 8px #71ffd8;
+}
+
+.scores-juegos,
+.scores-memoria,
+.perfil-extra-estadisticas {
+    width: 100%;
+    margin-top: 1rem;
+    text-align: left;
+}
+
+.scores-juegos h4,
+.scores-memoria h4 {
+    margin-bottom: 0.5rem;
+    font-size: 1.08rem;
+    color: var(--primary-color, #3e4eff);
+    font-weight: 700;
+}
+
+.scores-juegos ul {
+    padding-left: 1.4rem;
+    margin-bottom: 0.5rem;
+}
+
+.scores-memoria b {
+    font-size: 1.1rem;
+    color: #2f9bae;
+}
+
+.perfil-extra-estadisticas ul {
+    padding-left: 1.3rem;
+    margin: 0.3rem 0;
 }
 
 .perfil-btn {
@@ -107,6 +227,42 @@
     background: #232b8d;
 }
 
+.burbujas {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 120px;
+    pointer-events: none;
+    overflow: hidden;
+    display: flex;
+    gap: 14px;
+    align-items: flex-end;
+    justify-content: space-around;
+}
+
+.burbuja {
+    width: 38px;
+    height: 38px;
+    background: var(--accent-color, #affcef);
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: burbujasAnim 6s infinite alternate;
+}
+
+@keyframes burbujasAnim {
+    0% {
+        transform: translateY(0);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: translateY(-70px) scale(0.8);
+        opacity: 0.3;
+    }
+}
+
 @media (max-width: 600px) {
     .perfil-card {
         max-width: 98vw;
@@ -120,5 +276,11 @@
     .perfil-estadisticas {
         flex-direction: column;
         gap: 0.8rem;
+    }
+
+    .scores-juegos,
+    .scores-memoria,
+    .perfil-extra-estadisticas {
+        font-size: 0.95rem;
     }
 }
