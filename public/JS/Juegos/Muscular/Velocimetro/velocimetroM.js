@@ -170,9 +170,9 @@ function isTimer(seconds) {
 function sendAnalytics(wpm, accuracy, total, correct, incorrect, typed) {
     result = wpm+"-"+accuracy+"-"+total+"-"+correct+"-"+incorrect+"-"+typed;
 
-    ga('send', 'event', 'Typetest', 'result', result);
+    //ga('send', 'event', 'Typetest', 'result', result);
 
-    clicky.log('typetest/#result', result);
+    //clicky.log('typetest/#result', result);
 }
 
 var finished = false;
@@ -212,6 +212,7 @@ function calculateWPM(data) {
 
     sendAnalytics(wpm, accuracy, total, correct, incorrect, typed);
     console.log(wordData);
+    guardarScoreVelocimetro(wpm, 'medium');
 }
 
 function typingTest(e) {
@@ -241,4 +242,21 @@ function restartTest() {
     finished = false;
     $("#typebox")[0].value = "";
     location.reload();
+}
+
+function guardarScoreVelocimetro(score, dificultad) {
+    fetch('/velocimetro-game/score', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({
+            score: score,
+            difficulty: dificultad
+        })
+    })
+    .then(res => res.json())
+    .then(data => console.log(data.message))
+    .catch(err => console.error('Error al guardar score:', err));
 }

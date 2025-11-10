@@ -134,6 +134,7 @@ function animate() {
             modal.style.display = 'flex';
             scoreH1.innerHTML = score;
             clearInterval(enemyInterval);
+            guardarScoreEnBD(score, 'hard');
         }
         projectiles.forEach((projectile, projectileIndex) => {
             const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y);
@@ -197,3 +198,25 @@ startGameBtn.addEventListener('click',()=>{
     animate();
     spawnEnemy();
 });
+
+function guardarScoreEnBD(score, dificultad) {
+    fetch('/scary-game/score', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({
+            score: score,
+            difficulty: dificultad
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        console.log(data.message);
+    })
+    .catch(err => {
+        console.error('Error al guardar score:', err);
+    });
+}

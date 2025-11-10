@@ -6,6 +6,7 @@
     <title>Velocímetro | Daily Memory</title>
 
     <link href="{{ asset('CSS/Juegos/Muscular/Velocimetro/velocimetroD.css') }}" rel="stylesheet" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:400,600,700&display=swap" />
 
     <script src="{{ asset('JS/Juegos/Muscular/Velocimetro/velocimetroD.js') }}" defer></script>

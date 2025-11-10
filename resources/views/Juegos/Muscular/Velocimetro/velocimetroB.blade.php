@@ -4,12 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Velocímetro | Daily Memory</title>
-
     <link href="{{ asset('CSS/Juegos/Muscular/Velocimetro/velocimetroB.css') }}" rel="stylesheet" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:400,600,700&display=swap" />
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="{{ asset('JS/Juegos/Muscular/Velocimetro/velocimetroB.js') }}" defer></script>
 </head>
+
 <body class="bg_animate" onload="addWords()">
     <div class="burbujas">
         <div class="burbuja"></div><div class="burbuja"></div>

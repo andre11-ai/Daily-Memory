@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\ScaryGameController;
+use App\Http\Controllers\VelocimetroGameController;
+use App\Http\Controllers\LluviaLetrasGameController;
 
 
 //Pagina principal
@@ -78,6 +81,7 @@ Route::get('/Juegos/Muscular/scary/scaryM', function () {
 Route::get('/Juegos/Muscular/scary/scaryD', function () {
     return view('/Juegos/Muscular/scary/scaryD');
 })->middleware('auth');
+Route::post('/scary-game/score', [ScaryGameController::class, 'storeScore'])->middleware('auth');
 
 //Velocimetro
 Route::get('/Juegos/Muscular/Velocimetro/velocimetroB', function () {
@@ -89,7 +93,7 @@ Route::get('/Juegos/Muscular/Velocimetro/velocimetroM', function () {
 Route::get('/Juegos/Muscular/Velocimetro/velocimetroD', function () {
     return view('/Juegos/Muscular/Velocimetro/velocimetroD');
 })->middleware('auth');
-
+Route::post('/velocimetro-game/score', [VelocimetroGameController::class, 'storeScore'])->middleware('auth');
 
 //Lluvia de letras
 Route::get('/Juegos/Muscular/Lluvia-Letras/lluvia-LetrasB', function () {
@@ -101,6 +105,7 @@ Route::get('/Juegos/Muscular/Lluvia-Letras/lluvia-LetrasM', function () {
 Route::get('/Juegos/Muscular/Lluvia-Letras/lluvia-LetrasD', function () {
     return view('/Juegos/Muscular/Lluvia-Letras/lluvia-LetrasD');
 })->middleware('auth');
+Route::post('/lluvia-letras-game/score', [LluviaLetrasGameController::class, 'storeScore'])->middleware('auth');
 
 //Rutas para niveles de memoria Iconica
 

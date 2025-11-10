@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://unpkg.com/tailwindcss@^2.0/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('CSS/Juegos/Muscular/scary/style.css') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body>
     <div class="burbujas">
@@ -15,7 +16,6 @@
         <div class="burbuja"></div><div class="burbuja"></div>
         <div class="burbuja"></div><div class="burbuja"></div>
     </div>
-    <!-- Header -->
     <header class="w-full bg-white py-2 px-5 flex items-center justify-between shadow-md z-10">
             <h1 class="logo">Memoria Ecoica</h1>
         <a href="/TiposMemoria/Mmuscular" class="text-gray-600 hover:text-[#56e7c3] flex items-center gap-2 font-semibold transition">
