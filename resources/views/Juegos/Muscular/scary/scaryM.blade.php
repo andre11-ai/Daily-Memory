@@ -16,8 +16,8 @@
         <div class="burbuja"></div><div class="burbuja"></div>
     </div>
     <!-- Header -->
-    <header class="w-full bg-white py-4 px-8 flex items-center justify-between shadow-md z-10">
-        <h1 class="text-3xl md:text-4xl font-bold text-[#56e7c3] tracking-tight">Memoria Muscular</h1>
+    <header class="w-full bg-white py-2 px-5 flex items-center justify-between shadow-md z-10">
+            <h1 class="logo">Memoria Ecoica</h1>
         <a href="/TiposMemoria/Mmuscular" class="text-gray-600 hover:text-[#56e7c3] flex items-center gap-2 font-semibold transition">
             <span class="text-xl">&larr;</span> Volver
         </a>

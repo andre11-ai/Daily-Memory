@@ -40,21 +40,21 @@
                         <h1>Velocímetro</h1>
                         <span>Velocidad y precisión con las manos.</span>
                         <div class="niveles-levels">
-                            <a href="" class="niveles-level-link"><i class='bx bx-signal-1'></i>Fácil</a>
-                            <a href="" class="niveles-level-link"><i class='bx bx-signal-2'></i>Medio</a>
-                            <a href="" class="niveles-level-link"><i class='bx bx-signal-3'></i>Difícil</a>
+                            <a href="/Juegos/Muscular/Velocimetro/velocimetroB" class="niveles-level-link"><i class='bx bx-signal-1'></i>Fácil</a>
+                            <a href="/Juegos/Muscular/Velocimetro/velocimetroM" class="niveles-level-link"><i class='bx bx-signal-2'></i>Medio</a>
+                            <a href="/Juegos/Muscular/Velocimetro/velocimetroD" class="niveles-level-link"><i class='bx bx-signal-3'></i>Difícil</a>
                         </div>
                     </div>
                 </div>
                 <div class="niveles-card card-hexamano">
                     <div class="niveles-icon"><i class='bx bx-font'></i></div>
                     <div class="niveles-content">
-                        <h1>Juego Hexamano</h1>
+                        <h1>Lluvia de letras</h1>
                         <span>Memoria de patrones y coordinación manual.</span>
                         <div class="niveles-levels">
-                            <a href="" class="niveles-level-link"><i class='bx bx-signal-1'></i>Fácil</a>
-                            <a href="" class="niveles-level-link"><i class='bx bx-signal-2'></i>Medio</a>
-                            <a href="" class="niveles-level-link"><i class='bx bx-signal-3'></i>Difícil</a>
+                            <a href="/Juegos/Muscular/Lluvia-Letras/lluvia-LetrasB" class="niveles-level-link"><i class='bx bx-signal-1'></i>Fácil</a>
+                            <a href="/Juegos/Muscular/Lluvia-Letras/lluvia-LetrasM" class="niveles-level-link"><i class='bx bx-signal-2'></i>Medio</a>
+                            <a href="/Juegos/Muscular/Lluvia-Letras/lluvia-LetrasD" class="niveles-level-link"><i class='bx bx-signal-3'></i>Difícil</a>
                         </div>
                     </div>
                 </div>

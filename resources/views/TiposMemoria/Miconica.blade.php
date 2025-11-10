@@ -25,7 +25,7 @@
                 <div class="niveles-card card-simon">
                     <div class="niveles-icon"><i class='bx bx-palette'></i></div>
                     <div class="niveles-content">
-                        <h1>Simon</h1>
+                        <h1>---</h1>
                         <span>Juego de colores y memoria visual.</span>
                         <div class="niveles-levels">
                             <a href="" class="niveles-level-link"><i class='bx bx-signal-1'></i>Fácil</a>
@@ -37,7 +37,7 @@
                 <div class="niveles-card card-palabras">
                     <div class="niveles-icon"><i class='bx bx-sort-z-a'></i></div>
                     <div class="niveles-content">
-                        <h1>Palabras Invertidas</h1>
+                        <h1>---</h1>
                         <span>Memoriza y repite palabras al revés.</span>
                         <div class="niveles-levels">
                             <a href="" class="niveles-level-link"><i class='bx bx-signal-1'></i>Fácil</a>
@@ -52,9 +52,9 @@
                         <h1>Sodoku</h1>
                         <span>Entrena tu memoria numérica y lógica.</span>
                         <div class="niveles-levels">
-                            <a href="/Juegos/Iconica/Sodoku/Sodoku" class="niveles-level-link"><i class='bx bx-signal-1'></i>Fácil</a>
-                            <a href="" class="niveles-level-link"><i class='bx bx-signal-2'></i>Medio</a>
-                            <a href="" class="niveles-level-link"><i class='bx bx-signal-3'></i>Difícil</a>
+                            <a href="/Juegos/Iconica/sudoku/sudokuB" class="niveles-level-link"><i class='bx bx-signal-1'></i>Fácil</a>
+                            <a href="/Juegos/Iconica/sudoku/sudokuM" class="niveles-level-link"><i class='bx bx-signal-2'></i>Medio</a>
+                            <a href="/Juegos/Iconica/sudoku/sudokuD" class="niveles-level-link"><i class='bx bx-signal-3'></i>Difícil</a>
                         </div>
                     </div>
                 </div>

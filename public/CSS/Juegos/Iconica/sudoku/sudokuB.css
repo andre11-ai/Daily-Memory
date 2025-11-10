@@ -1,0 +1,262 @@
+/* Archivo CSS con ajustes: añadí estilos para el panel izquierdo de controles y correcciones menores */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Roboto, sans-serif;
+}
+
+html,
+body {
+    background-color: #affcef;
+}
+
+table {
+    border: 2px solid #45c9e0;
+    border-spacing: 0;
+    border-collapse: collapse;
+    transition: all 0.5s;
+}
+
+ul {
+    list-style-type: none;
+}
+
+td {
+    border: 1px solid #000000;
+    text-align: center;
+    vertical-align: middle;
+}
+
+td input {
+    color: #000000;
+    padding: 0;
+    border: 0;
+    text-align: center;
+    width: 48px;
+    height: 48px;
+    font-size: 24px;
+    background-color: #FFFFFF;
+    outline: none;
+    text-transform: uppercase;
+    transition: all 0.5s;
+}
+
+input:disabled {
+    background-color: #bcc0c0;
+}
+
+tr:nth-child(3n) {
+    border-bottom: 4px solid #000000;
+}
+
+tr:nth-child(3n+1) {
+    border-top: 4px solid #000000;
+}
+
+td:nth-child(3n) {
+    border-right: 4px solid #000000;
+}
+
+td:nth-child(3n+1) {
+    border-left: 4px solid #000000;
+}
+
+.right-cell {
+    box-shadow: inset 0px 0px 20px 3px forestgreen;
+}
+
+.wrong-cell {
+    box-shadow: inset 0px 0px 20px 3px tomato
+}
+
+.worning-cell {
+    box-shadow: inset 0px 0px 20px 3px rgb(236, 233, 10);
+}
+
+/*Material Design*/
+
+.app-bar {
+    background: hsl(170, 100%, 39%);
+    width: 100%;
+    position: fixed;
+    height: 64px;
+    color: #fff;
+    font-weight: bold;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .14);
+    z-index: 5;
+    top: 0;
+    display: flex;
+    align-items: center;
+    padding-left: 16px;
+}
+
+.bar-font {
+    font-size: 18px;
+}
+
+/* Layout principal */
+.body {
+    width: 95%;
+    max-width: 1100px;
+    margin: 96px auto 16px auto;
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+}
+
+/* Tarjetas */
+.card {
+    background: rgb(233, 233, 233);
+    width: fit-content;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, .14);
+    padding: 18px;
+}
+
+/* Panel izquierdo de controles */
+.card.controls {
+    width: 180px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.controls-header {
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.control-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #78f7cc;
+    border: none;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* Juego (tablero) */
+.card.game {
+    padding: 32px;
+}
+
+/* Status panel (derecha) */
+.card.status {
+    padding: 16px;
+    min-width: 220px;
+}
+
+/* Resto de estilos originales (remains, timer, etc.) */
+.timer {
+    color: #ffffff;
+    background-color: #444444;
+    font-size: 32px;
+    padding: 4px;
+    box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, .8);
+    text-align: center;
+}
+
+.remain-table {
+    position: relative;
+    left: 0;
+    right: 0;
+    display: inline-block;
+    margin: auto;
+}
+
+.remain-column {
+    float: left;
+    max-width: 64px;
+}
+
+.remain-cell {
+    margin: 10px;
+    text-align: center;
+    border: solid 1px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, .14);
+}
+
+.remain-cell div {
+    padding: 5px 12px;
+}
+
+.remain-cell-header {
+    background-color: #444444;
+    color: white;
+    font-weight: bold;
+    border-bottom: solid 2px rgba(0, 0, 0, 0.2);
+}
+
+.red {
+    background: #ff6659;
+    color: #9a0007;
+}
+
+.gray {
+    background: #808080;
+    color: #404040;
+}
+
+/* burbujas */
+.burbuja {
+    border-radius: 50%;
+    background: rgb(102, 255, 171);
+    opacity: .3;
+    position: absolute;
+    bottom: -150;
+    animation: burbujas 3s linear infinite;
+}
+
+/* corregí la unidad faltante */
+.burbuja:nth-child(8) {
+    width: 100px;
+    height: 100px;
+    left: 52%;
+    animation-duration: 5s;
+    animation-delay: 5s;
+}
+
+@keyframes burbujas {
+    0% {
+        bottom: 0;
+        opacity: 0;
+    }
+
+    30% {
+        transform: translateX(30px);
+    }
+
+    50% {
+        opacity: .4;
+    }
+
+    100% {
+        bottom: 100vh;
+        opacity: 0;
+    }
+}
+
+/* botones */
+.btn {
+    width: 100%;
+    background-color: #78f7cc;
+    border: none;
+    outline: none;
+    height: 44px;
+    border-radius: 10px;
+    color: rgba(8, 8, 8, 0.8);
+    text-transform: uppercase;
+    font-weight: 500;
+    margin: 6px 0;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.button {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}

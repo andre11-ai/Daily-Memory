@@ -1,0 +1,356 @@
+:root {
+    --primary-color: #00c8a3;
+    --accent-color: #45b6fe;
+    --background-light: #f8f9fa;
+    --background-gradient: linear-gradient(90deg, #e0fffa 0%, #affcef 100%);
+    --white: #ffffff;
+    --black: #303333;
+    --shadow: 0 10px 38px rgba(0, 200, 163, 0.12);
+    --radius-large: 2rem;
+    --radius-small: .5rem;
+}
+
+* {
+    box-sizing: border-box
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: var(--black);
+    background: var(--background-gradient);
+    margin: 0;
+    min-height: 100vh;
+    font-size: 1.15rem;
+}
+
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: var(--shadow);
+    padding: 0 2rem;
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    font-size: 2.7rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    letter-spacing: 1px
+}
+
+.nav__list {
+    display: flex;
+    align-items: center;
+    gap: 1rem
+}
+
+.volver-btn {
+    font-size: 1.05rem;
+    color: var(--black);
+    background: none;
+    border: none;
+    padding: .5rem 1rem;
+    border-radius: .6rem;
+    text-decoration: none
+}
+
+.volver-btn:hover {
+    background: var(--primary-color);
+    color: #fff
+}
+
+.burbujas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.burbuja {
+    border-radius: 50%;
+    background: var(--accent-color);
+    opacity: .13;
+    position: absolute;
+    bottom: -120px;
+    animation: burbujas 8s linear infinite
+}
+
+.burbuja:nth-child(1) {
+    width: 80px;
+    height: 80px;
+    left: 5%;
+    animation-delay: 1s
+}
+
+.burbuja:nth-child(2) {
+    width: 100px;
+    height: 100px;
+    left: 35%;
+    animation-delay: 2.5s
+}
+
+.burbuja:nth-child(3) {
+    width: 20px;
+    height: 20px;
+    left: 15%;
+    animation-delay: .8s
+}
+
+.burbuja:nth-child(4) {
+    width: 50px;
+    height: 50px;
+    left: 90%;
+    animation-delay: 2.2s
+}
+
+.burbuja:nth-child(5) {
+    width: 70px;
+    height: 70px;
+    left: 65%;
+    animation-delay: 2.8s
+}
+
+.burbuja:nth-child(6) {
+    width: 20px;
+    height: 20px;
+    left: 50%;
+    animation-delay: 1.5s
+}
+
+.burbuja:nth-child(7) {
+    width: 20px;
+    height: 20px;
+    left: 50%;
+    animation-delay: 1.9s
+}
+
+.burbuja:nth-child(8) {
+    width: 100px;
+    height: 100px;
+    left: 52%;
+    animation-delay: 2.8s
+}
+
+.burbuja:nth-child(9) {
+    width: 65px;
+    height: 65px;
+    left: 51%;
+    animation-delay: 2.5s
+}
+
+.burbuja:nth-child(10) {
+    width: 40px;
+    height: 40px;
+    left: 35%;
+    animation-delay: 1.8s
+}
+
+@keyframes burbujas {
+    0% {
+        bottom: 0;
+        opacity: 0
+    }
+
+    50% {
+        opacity: .3;
+        transform: translateX(30px)
+    }
+
+    100% {
+        bottom: 100vh;
+        opacity: 0
+    }
+}
+
+.desestresar-main {
+    padding-top: 1rem;
+}
+
+.desestresar-section {
+    width: 100%;
+    max-width: 1200px;
+    margin: 2rem auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.4rem;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+    padding: 0 1.2rem;
+}
+
+.desestresar-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2.3rem;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding-left: 1rem
+}
+
+.intro-text {
+    max-width: 550px
+}
+
+.intro-text h2 {
+    font-size: 2rem;
+    margin: 0 0 1rem 0;
+    color: var(--black);
+    font-weight: 700
+}
+
+.intro-text p {
+    color: #444;
+    line-height: 1.7;
+    font-size: 1.15rem;
+    margin: 0;
+}
+
+.desestresar-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+    gap: 2rem;
+    align-items: center;
+    width: 100%;
+    justify-items: stretch;
+}
+
+.game-card {
+    background: var(--white);
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow);
+    padding: 1.1rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+    width: 100%;
+    font-size: 1.25rem;
+    transition: transform .11s, box-shadow .11s;
+    justify-content: flex-start;
+}
+
+.game-card:hover {
+    transform: translateY(-6px) scale(1.04);
+    box-shadow: 0 16px 44px rgba(0, 200, 163, 0.22);
+}
+
+.game-link {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    color: var(--black);
+    width: 100%;
+    text-decoration: none;
+    font-size: 1.23rem;
+    font-weight: 600;
+}
+
+.card-icon {
+    font-size: 2.7rem;
+    color: var(--primary-color);
+    background: var(--background-light);
+    padding: 1rem;
+    border-radius: 1.2rem;
+    box-shadow: 0 2px 12px rgba(0, 200, 163, .14);
+    min-width: 64px;
+    min-height: 64px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-title {
+    font-weight: 700;
+    font-size: 1.33rem;
+}
+
+.desestresar-right {
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.image-wrap {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.main-image {
+    width: 100%;
+    max-width: 440px;
+    height: auto;
+    border-radius: 1.2rem;
+    box-shadow: var(--shadow);
+    background: rgba(255, 255, 255, 0.34);
+    padding: .8rem
+}
+
+.main-menu,
+.desestresar-section {
+    z-index: 2
+}
+
+a:focus {
+    outline: 3px solid rgba(0, 200, 163, 0.15);
+    outline-offset: 3px
+}
+
+@media (max-width: 900px) {
+    .desestresar-section {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+    }
+
+    .desestresar-left {
+        align-items: center;
+        padding-left: 0
+    }
+
+    .intro-text {
+        text-align: center
+    }
+
+    .desestresar-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 1.2rem;
+        justify-items: center;
+    }
+
+    .main-image {
+        max-width: 75%;
+        margin-top: 10px
+    }
+
+    .image-wrap {
+        order: 2;
+    }
+}
+
+@media (max-width:600px) {
+    .desestresar-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem
+    }
+
+    .main-image {
+        max-width: 98%
+    }
+
+    .intro-text h2 {
+        font-size: 1.3rem
+    }
+
+    .card-title,
+    .game-link {
+        font-size: 1.15rem
+    }
+}

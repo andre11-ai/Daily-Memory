@@ -36,6 +36,22 @@ Route::post('/logout', function () {
     return redirect('/menu');
 })->name('logout');
 
+//Desestresar
+Route::get('/Desestresar', function () {
+    return view('Desestresar');
+})->middleware('auth');
+
+//Juegos para Desestresar
+Route::get('/Desestresar/Galaxy-attack', function () {
+    return view('/Desestresar/Galaxy-attack');
+})->middleware('auth');
+
+Route::get('/Desestresar/Tetris', function () {
+    return view('/Desestresar/Tetris');
+})->middleware('auth');
+
+
+
 //Tipos de memoria
 Route::get('/tipomemoria', function () {
     return view('tipomemoria');
@@ -51,6 +67,8 @@ Route::get('/TiposMemoria/Miconica', function () {
 })->middleware('auth');
 
 //Rutas para niveles de memoria muscular
+
+//Scary
 Route::get('/Juegos/Muscular/scary/scary', function () {
     return view('/Juegos/Muscular/scary/scary');
 })->middleware('auth');
@@ -61,10 +79,79 @@ Route::get('/Juegos/Muscular/scary/scaryD', function () {
     return view('/Juegos/Muscular/scary/scaryD');
 })->middleware('auth');
 
-//Rutas para niveles de memoria Iconica
-Route::get('/Juegos/Iconica/Sodoku/Sodoku', function () {
-    return view('/Juegos/Iconica/Sodoku/Sodoku');
+//Velocimetro
+Route::get('/Juegos/Muscular/Velocimetro/velocimetroB', function () {
+    return view('/Juegos/Muscular/Velocimetro/velocimetroB');
 })->middleware('auth');
+Route::get('/Juegos/Muscular/Velocimetro/velocimetroM', function () {
+    return view('/Juegos/Muscular/Velocimetro/velocimetroM');
+})->middleware('auth');
+Route::get('/Juegos/Muscular/Velocimetro/velocimetroD', function () {
+    return view('/Juegos/Muscular/Velocimetro/velocimetroD');
+})->middleware('auth');
+
+
+//Lluvia de letras
+Route::get('/Juegos/Muscular/Lluvia-Letras/lluvia-LetrasB', function () {
+    return view('/Juegos/Muscular/Lluvia-Letras/lluvia-LetrasB');
+})->middleware('auth');
+Route::get('/Juegos/Muscular/Lluvia-Letras/lluvia-LetrasM', function () {
+    return view('/Juegos/Muscular/Lluvia-Letras/lluvia-LetrasM');
+})->middleware('auth');
+Route::get('/Juegos/Muscular/Lluvia-Letras/lluvia-LetrasD', function () {
+    return view('/Juegos/Muscular/Lluvia-Letras/lluvia-LetrasD');
+})->middleware('auth');
+
+//Rutas para niveles de memoria Iconica
+
+//Sudoku
+Route::get('/Juegos/Iconica/sudoku/sudokuB', function () {
+    return view('/Juegos/Iconica/sudoku/sudokuB');
+})->middleware('auth');
+Route::get('/Juegos/Iconica/sudoku/sudokuM', function () {
+    return view('/Juegos/Iconica/sudoku/sudokuM');
+})->middleware('auth');
+Route::get('/Juegos/Iconica/sudoku/sudokuD', function () {
+    return view('/Juegos/Iconica/sudoku/sudokuD');
+})->middleware('auth');
+
+
+
+//Rutas para niveles de memoria Ecoica
+
+//Simon
+Route::get('/Juegos/Ecoica/Simon/simonB', function () {
+    return view('/Juegos/Ecoica/Simon/simonB');
+})->middleware('auth');
+Route::get('/Juegos/Ecoica/Simon/simonM', function () {
+    return view('/Juegos/Ecoica/Simon/simonM');
+})->middleware('auth');
+Route::get('/Juegos/Ecoica/Simon/simonD', function () {
+    return view('/Juegos/Ecoica/Simon/simonD');
+})->middleware('auth');
+
+//Repetir la Palabra
+Route::get('/Juegos/Ecoica/repetirPalabra/repetirPalabraB', function () {
+    return view('/Juegos/Ecoica/repetirPalabra/repetirPalabraB');
+})->middleware('auth');
+Route::get('/Juegos/Ecoica/repetirPalabra/repetirPalabraM', function () {
+    return view('/Juegos/Ecoica/repetirPalabra/repetirPalabraM');
+})->middleware('auth');
+Route::get('/Juegos/Ecoica/repetirPalabra/repetirPalabraD', function () {
+    return view('/Juegos/Ecoica/repetirPalabra/repetirPalabraD');
+})->middleware('auth');
+
+//Encuentra  el Sonido Pareja
+Route::get('/Juegos/Ecoica/sonidoPareja/sonidoParejaB', function () {
+    return view('/Juegos/Ecoica/sonidoPareja/sonidoParejaB');
+})->middleware('auth');
+Route::get('/Juegos/Ecoica/sonidoPareja/sonidoParejaM', function () {
+    return view('/Juegos/Ecoica/sonidoPareja/sonidoParejaM');
+})->middleware('auth');
+Route::get('/Juegos/Ecoica/sonidoPareja/sonidoParejaD', function () {
+    return view('/Juegos/Ecoica/sonidoPareja/sonidoParejaD');
+})->middleware('auth');
+
 
 //Chat
 Route::get('/chat', function () {

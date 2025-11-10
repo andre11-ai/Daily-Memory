@@ -6,7 +6,6 @@ html {
     font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
 }
 
-/* Fondo animado */
 .bg_animate {
     min-height: 100vh;
     width: 100vw;
@@ -15,7 +14,6 @@ html {
     overflow: hidden;
 }
 
-/* Navbar */
 .navbar {
     position: sticky;
     top: 0;
@@ -63,7 +61,6 @@ html {
     color: #fff;
 }
 
-/* Animación de burbujas */
 .burbujas {
     position: absolute;
     width: 100vw;
@@ -170,7 +167,6 @@ html {
     }
 }
 
-/* Subtitulo centrado */
 .subtitulo {
     width: 100%;
     text-indent: 420px;
@@ -223,7 +219,6 @@ html {
     width: 60%;
     max-width: 350px;
 }
-/* ====== Main layout ====== */
 .memoria-main-menu {
     display: flex;
     flex-wrap: wrap;
@@ -233,11 +228,9 @@ html {
     width: 100%;
     max-width: 1200px;
     margin: 2rem auto 2rem auto;
-        /* <-- aumenta el margen superior aquí */    position: relative;
     z-index: 2;
 }
 
-/* ====== Grid de tarjetas juegos en pirámide ====== */
 .niveles-cards-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -336,7 +329,6 @@ html {
     background: #232b8d;
 }
 
-/* Imagen cerebro */
 .niveles-image-section {
     flex: 1 1 350px;
     display: flex;
@@ -352,7 +344,6 @@ html {
     margin-top: 2rem;
 }
 
-/* Responsive */
 @media (max-width: 1000px) {
     .memoria-main-menu {
         flex-direction: column;

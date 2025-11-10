@@ -23,7 +23,7 @@
             <main class="main-menu">
                 <section class="games-section games-section-grid">
                     <div class="game-card">
-                        <a href="{{ url('/estresado') }}" class="game-link">
+                        <a href="{{ url('/Desestresar') }}" class="game-link">
                             <div class="card-icon"><i class="fas fa-gamepad"></i></div>
                             <div class="card-title">Juegos para Desestresar</div>
                         </a>

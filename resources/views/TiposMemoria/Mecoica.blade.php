@@ -25,36 +25,36 @@
                 <div class="niveles-card card-repetir">
                     <div class="niveles-icon"><i class='bx bx-bold'></i></div>
                     <div class="niveles-content">
-                        <h1>Repetir la palabra</h1>
+                        <h1>Simon</h1>
                         <span>Escucha y repite palabras para entrenar tu memoria auditiva.</span>
                         <div class="niveles-levels">
-                            <a href="" class="niveles-level-link"><i class='bx bx-signal-1'></i>Fácil</a>
-                            <a href="" class="niveles-level-link"><i class='bx bx-signal-2'></i>Medio</a>
-                            <a href="" class="niveles-level-link"><i class='bx bx-signal-3'></i>Difícil</a>
+                            <a href="/Juegos/Ecoica/Simon/simonB" class="niveles-level-link"><i class='bx bx-signal-1'></i>Fácil</a>
+                            <a href="/Juegos/Ecoica/Simon/simonM" class="niveles-level-link"><i class='bx bx-signal-2'></i>Medio</a>
+                            <a href="/Juegos/Ecoica/Simon/simonD" class="niveles-level-link"><i class='bx bx-signal-3'></i>Difícil</a>
                         </div>
                     </div>
                 </div>
                 <div class="niveles-card card-memorama">
                     <div class="niveles-icon"><i class='bx bx-collection'></i></div>
                     <div class="niveles-content">
-                        <h1>Memorama</h1>
+                        <h1>Repetir La Palabra</h1>
                         <span>Encuentra pares de sonidos y palabras.</span>
                         <div class="niveles-levels">
-                            <a href="" class="niveles-level-link"><i class='bx bx-signal-1'></i>Fácil</a>
-                            <a href="" class="niveles-level-link"><i class='bx bx-signal-2'></i>Medio</a>
-                            <a href="" class="niveles-level-link"><i class='bx bx-signal-3'></i>Difícil</a>
+                            <a href="/Juegos/Ecoica/repetirPalabra/repetirPalabraB" class="niveles-level-link"><i class='bx bx-signal-1'></i>Fácil</a>
+                            <a href="/Juegos/Ecoica/repetirPalabra/repetirPalabraM" class="niveles-level-link"><i class='bx bx-signal-2'></i>Medio</a>
+                            <a href="/Juegos/Ecoica/repetirPalabra/repetirPalabraD" class="niveles-level-link"><i class='bx bx-signal-3'></i>Difícil</a>
                         </div>
                     </div>
                 </div>
                 <div class="niveles-card card-codificando">
                     <div class="niveles-icon"><i class='bx bx-search'></i></div>
                     <div class="niveles-content">
-                        <h1>Codificando mensajes</h1>
+                        <h1>Encuentra el Sonido Pareja</h1>
                         <span>Reconoce y descifra mensajes auditivos.</span>
                         <div class="niveles-levels">
-                            <a href="" class="niveles-level-link"><i class='bx bx-signal-1'></i>Fácil</a>
-                            <a href="" class="niveles-level-link"><i class='bx bx-signal-2'></i>Medio</a>
-                            <a href="" class="niveles-level-link"><i class='bx bx-signal-3'></i>Difícil</a>
+                            <a href="/Juegos/Ecoica/sonidoPareja/sonidoParejaB" class="niveles-level-link"><i class='bx bx-signal-1'></i>Fácil</a>
+                            <a href="/Juegos/Ecoica/sonidoPareja/sonidoParejaM" class="niveles-level-link"><i class='bx bx-signal-2'></i>Medio</a>
+                            <a href="/Juegos/Ecoica/sonidoPareja/sonidoParejaD" class="niveles-level-link"><i class='bx bx-signal-3'></i>Difícil</a>
                         </div>
                     </div>
                 </div>
