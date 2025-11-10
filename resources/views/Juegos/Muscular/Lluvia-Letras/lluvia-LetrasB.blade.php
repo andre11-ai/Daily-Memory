@@ -11,6 +11,11 @@
 </head>
 <body>
     <div class="burbujas">
+            <div class="burbuja"></div><div class="burbuja"></div>
+        <div class="burbuja"></div><div class="burbuja"></div>
+        <div class="burbuja"></div><div class="burbuja"></div>
+        <div class="burbuja"></div><div class="burbuja"></div>
+        <div class="burbuja"></div><div class="burbuja"></div>
     </div>
     <header class="header-bar">
         <h1 class="logo">Memoria Muscular</h1>

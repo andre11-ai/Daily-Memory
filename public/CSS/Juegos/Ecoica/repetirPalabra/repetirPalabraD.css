@@ -367,3 +367,74 @@ p {
         padding: 7px 7px;
     }
 }
+
+.ecoica-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3em;
+    margin: 24px 0 10px 0;
+}
+
+.ecoica-title {
+    font-size: 2.2em;
+    font-weight: 700;
+    color: #222;
+    letter-spacing: 1px;
+    margin-right: 1.2em;
+}
+
+.ecoica-bar {
+    display: flex;
+    gap: 2em;
+    align-items: center;
+}
+
+#score-label,
+#ronda-label {
+    background: #fff;
+    color: #222;
+    font-weight: bold;
+    border-radius: 1.8em;
+    padding: 8px 26px;
+    font-size: 1.18em;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 12px rgba(86, 231, 195, 0.09);
+}
+
+.modal-gameover {
+    position: fixed;
+    inset: 0;
+    background: rgba(33, 33, 33, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99;
+}
+
+.modal-content {
+    background: #fff;
+    box-shadow: 0 4px 32px #56e7c399;
+    border-radius: 2em;
+    padding: 45px 38px 28px 38px;
+    min-width: 300px;
+    text-align: center;
+}
+
+#restart-btn {
+    margin-top: 20px;
+    background: #56e7c3;
+    color: #fff;
+    font-weight: 700;
+    border-radius: 1em;
+    padding: 12px 24px;
+    font-size: 1.1em;
+    border: none;
+    cursor: pointer;
+    transition: background .16s;
+}
+
+#restart-btn:hover {
+    background: #222;
+    color: #56e7c3;
+}

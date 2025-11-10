@@ -6,6 +6,9 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ScaryGameController;
 use App\Http\Controllers\VelocimetroGameController;
 use App\Http\Controllers\LluviaLetrasGameController;
+use App\Http\Controllers\SonidoParejaGameController;
+use App\Http\Controllers\SimondiceGameController;
+use App\Http\Controllers\RepetirPalabraGameController;
 
 
 //Pagina principal
@@ -120,6 +123,39 @@ Route::get('/Juegos/Iconica/sudoku/sudokuD', function () {
     return view('/Juegos/Iconica/sudoku/sudokuD');
 })->middleware('auth');
 
+//Memorizar Color
+Route::get('/Juegos/Iconica/Color/colorB', function () {
+    return view('/Juegos/Iconica/Color/colorB');
+});
+Route::get('/Juegos/Iconica/Color/colorM', function () {
+    return view('/Juegos/Iconica/Color/colorM');
+});
+Route::get('/Juegos/Iconica/Color/colorD', function () {
+    return view('/Juegos/Iconica/Color/colorD');
+});
+
+//Memorama
+Route::get('/Juegos/Iconica/Memorama/memoramaB', function () {
+    return view('/Juegos/Iconica/Memorama/memoramaB');
+})->middleware('auth');
+Route::get('/Juegos/Iconica/Memorama/memoramaM', function () {
+    return view('/Juegos/Iconica/Memorama/memoramaM');
+})->middleware('auth');
+Route::get('/Juegos/Iconica/Memorama/memoramaD', function () {
+    return view('/Juegos/Iconica/Memorama/memoramaD');
+})->middleware('auth');
+
+
+//Secuencia
+Route::get('/Juegos/Iconica/Secuencia/secuenciaB', function () {
+    return view('/Juegos/Iconica/Secuencia/secuenciaB');
+})->middleware('auth');
+Route::get('/Juegos/Iconica/Secuencia/secuenciaM', function () {
+    return view('/Juegos/Iconica/Secuencia/secuenciaM');
+})->middleware('auth');
+Route::get('/Juegos/Iconica/Secuencia/secuenciaD', function () {
+    return view('/Juegos/Iconica/Secuencia/secuenciaD');
+})->middleware('auth');
 
 
 //Rutas para niveles de memoria Ecoica
@@ -134,6 +170,7 @@ Route::get('/Juegos/Ecoica/Simon/simonM', function () {
 Route::get('/Juegos/Ecoica/Simon/simonD', function () {
     return view('/Juegos/Ecoica/Simon/simonD');
 })->middleware('auth');
+Route::post('/simondice-game/score', [SimondiceGameController::class, 'storeScore'])->middleware('auth');
 
 //Repetir la Palabra
 Route::get('/Juegos/Ecoica/repetirPalabra/repetirPalabraB', function () {
@@ -145,6 +182,7 @@ Route::get('/Juegos/Ecoica/repetirPalabra/repetirPalabraM', function () {
 Route::get('/Juegos/Ecoica/repetirPalabra/repetirPalabraD', function () {
     return view('/Juegos/Ecoica/repetirPalabra/repetirPalabraD');
 })->middleware('auth');
+Route::post('/repetir-palabra-game/score', [RepetirPalabraGameController::class, 'storeScore'])->middleware('auth');
 
 //Encuentra  el Sonido Pareja
 Route::get('/Juegos/Ecoica/sonidoPareja/sonidoParejaB', function () {
@@ -156,6 +194,7 @@ Route::get('/Juegos/Ecoica/sonidoPareja/sonidoParejaM', function () {
 Route::get('/Juegos/Ecoica/sonidoPareja/sonidoParejaD', function () {
     return view('/Juegos/Ecoica/sonidoPareja/sonidoParejaD');
 })->middleware('auth');
+Route::post('/sonido-pareja-game/score', [SonidoParejaGameController::class, 'storeScore'])->middleware('auth');
 
 
 //Chat

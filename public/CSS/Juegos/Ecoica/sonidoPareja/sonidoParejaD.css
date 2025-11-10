@@ -282,3 +282,165 @@ body {
         padding: 6vw 0;
     }
 }
+
+.game-info-bar {
+    display: flex;
+    font-size: 1.15em;
+    gap: 2em;
+    align-items: center;
+    justify-content: flex-end;
+    background: #e2fff8;
+    border-radius: 1em;
+    margin: 14px 0 16px 0;
+    padding: 6px 36px 6px 12px;
+}
+
+.game-bar {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 2em;
+    margin-top: 16px;
+    margin-bottom: 8px;
+}
+
+#score-label,
+#tiempo-label {
+    background: #fff;
+    color: #222;
+    font-weight: bold;
+    border-radius: 1.8em;
+    padding: 8px 26px;
+    font-size: 1.23em;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 12px rgba(86, 231, 195, 0.09);
+}
+
+.game-bar {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 2em;
+    margin-top: 16px;
+    margin-bottom: 8px;
+}
+
+#score-label,
+#tiempo-label {
+    background: #fff;
+    color: #222;
+    font-weight: bold;
+    border-radius: 1.8em;
+    padding: 8px 26px;
+    font-size: 1.23em;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 12px rgba(86, 231, 195, 0.09);
+}
+
+.modal-gameover {
+    position: fixed;
+    inset: 0;
+    background: rgba(33, 33, 33, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99;
+}
+
+.modal-content {
+    background: #fff;
+    box-shadow: 0 4px 32px #56e7c399;
+    border-radius: 2em;
+    padding: 45px 38px 28px 38px;
+    min-width: 300px;
+    text-align: center;
+}
+
+#restart-btn {
+    margin-top: 20px;
+    background: #56e7c3;
+    color: #fff;
+    font-weight: 700;
+    border-radius: 1em;
+    padding: 12px 24px;
+    font-size: 1.1em;
+    border: none;
+    cursor: pointer;
+    transition: background .16s;
+}
+
+#restart-btn:hover {
+    background: #222;
+    color: #56e7c3;
+}
+
+.ecoica-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3em;
+    margin: 38px 0 10px 0;
+}
+
+.ecoica-title {
+    font-size: 2.2em;
+    font-weight: 700;
+    color: #222;
+    letter-spacing: 1px;
+    margin-right: 1.2em;
+}
+
+.ecoica-bar {
+    display: flex;
+    gap: 1em;
+    align-items: center;
+}
+
+#score-label,
+#tiempo-label {
+    background: #fff;
+    color: #222;
+    font-weight: bold;
+    border-radius: 1.8em;
+    padding: 8px 26px;
+    font-size: 1.18em;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 12px rgba(86, 231, 195, 0.09);
+}
+
+.modal-gameover {
+    position: fixed;
+    inset: 0;
+    background: rgba(33, 33, 33, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99;
+}
+
+.modal-content {
+    background: #fff;
+    box-shadow: 0 4px 32px #56e7c399;
+    border-radius: 2em;
+    padding: 45px 38px 28px 38px;
+    min-width: 300px;
+    text-align: center;
+}
+
+#restart-btn {
+    margin-top: 20px;
+    background: #56e7c3;
+    color: #fff;
+    font-weight: 700;
+    border-radius: 1em;
+    padding: 12px 24px;
+    font-size: 1.1em;
+    border: none;
+    cursor: pointer;
+    transition: background .16s;
+}
+
+#restart-btn:hover {
+    background: #222;
+    color: #56e7c3;
+}
