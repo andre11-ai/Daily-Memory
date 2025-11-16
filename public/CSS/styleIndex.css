@@ -194,7 +194,6 @@ body {
     color: #3e4eff;
 }
 
-/* Responsive */
 @media (max-width: 800px) {
     .hero {
         flex-direction: column;

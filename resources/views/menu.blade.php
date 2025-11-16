@@ -20,7 +20,14 @@
                 </form>
             </div>
         </nav>
+
             <main class="main-menu">
+                @php $user = auth()->user(); @endphp
+
+                <div class="welcome-banner" role="status" aria-live="polite">
+                    Bienvenido, <strong>{{ $user ? ($user->username ?? $user->name) : 'Usuario' }}</strong>
+                </div>
+
                 <section class="games-section games-section-grid">
                     <div class="game-card">
                         <a href="{{ url('/Desestresar') }}" class="game-link">
@@ -52,6 +59,7 @@
                         alt="relax" class="main-image">
                 </section>
             </main>
+
         <footer class="footer">
             <div class="footer-container">
                 <div class="footer-row">
@@ -61,7 +69,7 @@
                     <div class="footer-col purpose-col" style="flex: 2;">
                         <h4>Propósito</h4>
                         <p>
-                            Daily Memory es un proyecto creado por la compañía SpiderBytes que busca el desarrollo e implementación de la estimulación cognitiva de la memoria por medio de una plataforma interactiva y divertida. <br><br>
+                            Daily Memory es un proyecto creado por la compañía SpiderBytes que busca el desarrollo e implementación de la estimulación cognitiva de la memoria por medio de una plat[...]
                     </div>
                 </div>
             </div>

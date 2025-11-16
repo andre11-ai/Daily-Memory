@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <title>Memoriza el Color | Daily Memory</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="/CSS/Juegos/Iconica/Color/colorD.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('/CSS/Juegos/Iconica/Color/colorD.css') }}">
     <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
 </head>
 <body>
@@ -13,35 +15,47 @@
         <div class="burbuja"></div><div class="burbuja"></div>
         <div class="burbuja"></div><div class="burbuja"></div>
         <div class="burbuja"></div><div class="burbuja"></div>
-        <div class="burbuja"></div><div class="burbuja"></div>
-    </div>
-
+        <div class="burbuja"></div><div class="burbuja"></div>    </div>
     <header class="header-bar">
         <h1 class="logo">Memoria Iconica</h1>
         <div class="header-actions">
             <a href="/TiposMemoria/Miconica" class="volver-link">← Volver</a>
         </div>
     </header>
-
+    <div class="color-title-bar">
+        <div class="game-title">Memoriza el color</div>
+        <div class="color-score-bar">
+            <span id="score-label"><b>Score:</b> 0</span>
+            <span id="vidas-label"><b>Vidas:</b>
+                <span id="vidas-dots">
+                    <span class="vida-dot active"></span>
+                    <span class="vida-dot active"></span>
+                    <span class="vida-dot active"></span>
+                </span>
+            </span>
+        </div>
+    </div>
     <main>
-        <div class="game-title-standalone">Memoriza bien los colores</div>
         <div class="game-container" id="game-container" data-level="D">
             <div class="memorize-phase" id="memorize-phase">
-                <div class="memorize-grid" id="memorize-grid">
-                    <!-- aquí van las imágenes o los bloques de color -->
-                </div>
-                <button class="game-button" onclick="pressReady()">¡Listo!</button>
+                <div class="memorize-grid" id="memorize-grid"></div>
+                <button class="game-button" id="ready-btn">¡Listo!</button>
             </div>
             <div class="select-phase" id="select-phase" style="display:none;">
                 <div class="game-title-standalone">Selecciona los colores que aparecían</div>
-                <div class="color-grid" id="select-grid">
-                    <!-- tarjetas de selección de colores -->
-                </div>
-                <button class="game-button" onclick="pressVerify()">Verificar</button>
+                <div class="color-grid" id="select-grid"></div>
+                <button class="game-button" id="verify-btn">Verificar</button>
             </div>
         </div>
     </main>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <div id="modal-gameover" class="modal-gameover" style="display:none;">
+        <div class="modal-content">
+            <h2>¡Fin del juego!</h2>
+            <p>Puntaje final: <span id="score-modal">0</span></p>
+            <button id="restart-btn">Reiniciar</button>
+            <a href="/TiposMemoria/Miconica" class="volver-link" style="display:block;margin-top:14px;">← Volver</a>
+        </div>
+    </div>
     <script src="/JS/Juegos/Iconica/Color/colorD.js"></script>
 </body>
 </html>

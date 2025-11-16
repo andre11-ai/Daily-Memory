@@ -60,7 +60,6 @@ body {
     text-decoration: none;
 }
 
-/* ---FONDO--- */
 .burbujas {
     position: fixed;
     top: 0;
@@ -172,11 +171,10 @@ body {
     }
 }
 
-/* ---LAYOUT FLEX PARA MEMORAMA--- */
 .main-memorama {
     width: 100%;
     max-width: 1100px;
-    margin: 60px auto 0 auto;
+    margin: 10px auto 0 auto;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -186,7 +184,6 @@ body {
     z-index: 1;
 }
 
-/* Izquierda: estadísticas */
 .section2 {
     background-color: rgba(255, 255, 255, 0.4);
     backdrop-filter: blur(8px);
@@ -219,13 +216,11 @@ body {
     margin-bottom: 8px;
 }
 
-/* Derecha: nombre y tablero */
 .section-memorama {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
-    /* ¡Más pegado el título y tablero! */
 }
 
 .game-title-memorama {
@@ -234,11 +229,10 @@ body {
     font-weight: 700;
     color: #222;
     margin-bottom: 4px;
-    margin-top: -50px;
-    /* Ahora el título está más arriba */
+    margin-top: 20px;
     letter-spacing: 1px;
     font-family: 'Poppins', Arial, sans-serif;
-    margin-left: 300px;
+    margin-left: 0px;
 }
 
 .section1 {
@@ -250,7 +244,6 @@ body {
     box-shadow: 0 8px 32px rgba(180, 180, 180, 0.10);
 }
 
-/* Tablero y botones */
 table {
     border-spacing: 14px;
 }
@@ -269,7 +262,6 @@ button {
     overflow: hidden;
 }
 
-/* Imágenes dentro del tablero */
 button img {
     width: 85%;
     height: 85%;
@@ -280,14 +272,12 @@ button img {
     pointer-events: none;
 }
 
-/* Hover de botón */
 button:hover {
     cursor: pointer;
     background-color: #00a8e8;
     transform: translateY(-5px);
 }
 
-/* RESPONSIVE */
 @media (max-width:900px) {
     .main-memorama {
         flex-direction: column;
@@ -304,4 +294,73 @@ button:hover {
         width: 100vw;
         align-items: center;
     }
+}
+
+.game-bar-top {
+    background: #fff;
+    border-radius: 2em;
+    box-shadow: 0 2px 14px #56e7c324;
+    display: flex;
+    align-items: center;
+    gap: 2.3em;
+    padding: 10px 34px;
+    font-size: 1.13em;
+    font-weight: 600;
+    margin: 24px auto 0 auto;
+    max-width: 600px;
+    justify-content: center;
+}
+#score-label, #mov-label, #tiempo-label {
+    font-weight: bold;
+    color: #226;
+    margin-right: 4px;
+}
+
+.modal-gameover {
+    position: fixed;
+    inset: 0;
+    background: rgba(33,33,33,0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99;
+}
+.modal-content {
+    background: #fff;
+    box-shadow: 0 4px 32px #56e7c399;
+    border-radius: 2em;
+    padding: 45px 38px 28px 38px;
+    min-width: 300px;
+    text-align: center;
+}
+#restart-btn {
+    margin-top: 20px;
+    background: #4568dc;
+    color: #fff;
+    font-weight: 700;
+    border-radius: 1em;
+    padding: 12px 24px;
+    font-size: 1.1em;
+    border: none;
+    cursor: pointer;
+    transition: background .16s;
+}
+#restart-btn:hover {
+    background: #222; color: #4568dc;
+}
+
+.estadisticas {
+    font-weight: 600;
+    font-size: 1.24em;
+    color: #045F73;
+    margin-bottom: 17px;
+    background: #e3feff;
+    border: 2px solid #bdf0eb;
+    border-radius: 0.9em;
+    padding: 13px 18px 13px 18px;
+    text-align: center;
+}
+
+.estadisticas:first-child {
+    margin-top: 9px;
 }

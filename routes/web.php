@@ -10,7 +10,9 @@ use App\Http\Controllers\LluviaLetrasGameController;
 use App\Http\Controllers\SonidoParejaGameController;
 use App\Http\Controllers\SimondiceGameController;
 use App\Http\Controllers\RepetirPalabraGameController;
-
+use App\Http\Controllers\ColorGameController;
+use App\Http\Controllers\SecuenciaColorGameController;
+use App\Http\Controllers\MemoramaGameController;
 
 
 //Pagina principal
@@ -34,13 +36,24 @@ Route::get('/menu', function () {
 })->middleware('auth');
 
 //Perfil
-Route::get('/perfil', function () {
-    return view('perfil');
-})->name('perfil');
-Route::middleware('auth')->group(function () {
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+Route::group([], function () {
+    Route::get('/perfil', [ProfileController::class, 'show'])->name('profile.show')->middleware('auth');
+    Route::get('/profile', [ProfileController::class, 'show'])->middleware('auth'); // alias opcional
 });
+Route::group(['middleware' => 'auth'], function () {
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+});
+Route::get('/user-avatar/{path}', [ProfileController::class, 'avatar'])
+    ->where('path', '.*')
+    ->name('user.avatar');
+Route::get('/user-avatar/{path}', [ProfileController::class, 'avatar'])
+    ->where('path', '.*')
+    ->name('user.avatar');
+Route::get('/profile/stats', [\App\Http\Controllers\ProfileController::class, 'statsJson'])
+    ->name('profile.stats')
+    ->middleware('auth');
+
 
 //Cerrar sesion
 Route::post('/logout', function () {
@@ -118,17 +131,6 @@ Route::post('/lluvia-letras-game/score', [LluviaLetrasGameController::class, 'st
 
 //Rutas para niveles de memoria Iconica
 
-//Sudoku
-Route::get('/Juegos/Iconica/sudoku/sudokuB', function () {
-    return view('/Juegos/Iconica/sudoku/sudokuB');
-})->middleware('auth');
-Route::get('/Juegos/Iconica/sudoku/sudokuM', function () {
-    return view('/Juegos/Iconica/sudoku/sudokuM');
-})->middleware('auth');
-Route::get('/Juegos/Iconica/sudoku/sudokuD', function () {
-    return view('/Juegos/Iconica/sudoku/sudokuD');
-})->middleware('auth');
-
 //Memorizar Color
 Route::get('/Juegos/Iconica/Color/colorB', function () {
     return view('/Juegos/Iconica/Color/colorB');
@@ -139,6 +141,7 @@ Route::get('/Juegos/Iconica/Color/colorM', function () {
 Route::get('/Juegos/Iconica/Color/colorD', function () {
     return view('/Juegos/Iconica/Color/colorD');
 });
+Route::post('/color-game/score', [ColorGameController::class, 'storeScore'])->middleware('auth');
 
 //Memorama
 Route::get('/Juegos/Iconica/Memorama/memoramaB', function () {
@@ -150,7 +153,7 @@ Route::get('/Juegos/Iconica/Memorama/memoramaM', function () {
 Route::get('/Juegos/Iconica/Memorama/memoramaD', function () {
     return view('/Juegos/Iconica/Memorama/memoramaD');
 })->middleware('auth');
-
+Route::post('/memorama-game/score', [MemoramaGameController::class, 'storeScore'])->middleware('auth');
 
 //Secuencia
 Route::get('/Juegos/Iconica/Secuencia/secuenciaB', function () {
@@ -162,7 +165,7 @@ Route::get('/Juegos/Iconica/Secuencia/secuenciaM', function () {
 Route::get('/Juegos/Iconica/Secuencia/secuenciaD', function () {
     return view('/Juegos/Iconica/Secuencia/secuenciaD');
 })->middleware('auth');
-
+Route::post('/secuencia-color-game/score', [SecuenciaColorGameController::class, 'storeScore'])->middleware('auth');
 
 //Rutas para niveles de memoria Ecoica
 

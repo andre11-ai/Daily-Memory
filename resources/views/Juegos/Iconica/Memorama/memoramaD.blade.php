@@ -4,30 +4,23 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Memorama - Fácil</title>
-    <!-- CSS -->
+    <title>Memorama - Difícil</title>
     <link rel="stylesheet" href="{{ asset('/CSS/Juegos/Iconica/Memorama/memoramaD.css') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://fonts.googleapis.com/css?family=Poppins:400,600,700&display=swap" rel="stylesheet">
-    <!--sweetAlert-->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-    <!-- Fondo de burbujas -->
-    <div class="burbujas">
-        @for($i = 0; $i < 10; $i++) <div class="burbuja"></div> @endfor
-    </div>
-    <!-- Header -->
+    <div class="burbujas">@for($i = 0; $i < 10; $i++) <div class="burbuja"></div> @endfor</div>
     <header class="header-bar">
         <h1 class="logo">Memoria Iconica</h1>
         <div class="header-actions">
             <a href="/TiposMemoria/Miconica" class="volver-link">← Volver</a>
         </div>
     </header>
-    <!-- Contenedor principal, tablero a la izquierda y estadísticas a la derecha -->
+    <div class="game-title-standalone game-title-memorama">Memorama</div>
     <main class="main-memorama">
-        <!-- Tablero y título de juego -->
         <section class="section-memorama" id="game-container" data-time="60">
-            <div class="game-title-standalone game-title-memorama">Memorama</div>
             <section class="section1">
                 <table>
                     <tr>
@@ -57,14 +50,22 @@
                 </table>
             </section>
         </section>
-        <!-- Estadísticas a la derecha del tablero -->
         <section class="section2">
+            <div class="estadisticas" id="Score"></div>
             <div class="estadisticas" id="t-restante"></div>
             <div class="estadisticas" id="Movimientos"></div>
             <div class="estadisticas" id="Aciertos"></div>
         </section>
     </main>
-    <!-- JS-->
-    <script src="{{ asset('/JS/Juegos/Iconica/Memorama/memoramaD.js') }}"></script>
+    <div id="modal-gameover" class="modal-gameover" style="display:none;">
+        <div class="modal-content">
+            <h2>¡Fin del juego!</h2>
+            <p>Score final: <span id="score-modal">0</span></p>
+            <p>Movimientos: <span id="mov-modal">0</span></p>
+            <button id="restart-btn">Reiniciar</button>
+            <a href="/TiposMemoria/Miconica" class="volver-link" style="display:block;margin-top:14px;">← Volver</a>
+        </div>
+    </div>
+    <script src="/JS/Juegos/Iconica/Memorama/memoramaD.js"></script>
 </body>
 </html>
