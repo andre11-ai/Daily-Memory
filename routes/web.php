@@ -13,6 +13,8 @@ use App\Http\Controllers\RepetirPalabraGameController;
 use App\Http\Controllers\ColorGameController;
 use App\Http\Controllers\SecuenciaColorGameController;
 use App\Http\Controllers\MemoramaGameController;
+use App\Http\Controllers\AdminController;
+
 
 
 //Pagina principal
@@ -26,10 +28,37 @@ Route::post('/signin', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
 //Admin
-Route::get('/admin', function () {
-    return view('admin');
-})->middleware('auth');
 
+// --- bloque admin: pega esto en routes/web.php reemplazando las rutas admin actuales ---
+Route::get('/admin', [AdminController::class, 'index'])
+    ->middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])
+    ->name('admin.dashboard');
+
+// API para gestión de usuarios (usar FQCN del middleware para evitar alias)
+Route::get('/admin/api/users', [AdminController::class, 'usersList'])
+    ->middleware(['auth', \App\Http\Middleware\AdminMiddleware::class]);
+
+Route::get('/admin/api/users/{id}', [AdminController::class, 'show'])
+    ->middleware(['auth', \App\Http\Middleware\AdminMiddleware::class]);
+
+Route::put('/admin/api/users/{id}', [AdminController::class, 'update'])
+    ->middleware(['auth', \App\Http\Middleware\AdminMiddleware::class]);
+
+Route::delete('/admin/api/users/{id}', [AdminController::class, 'destroy'])
+    ->middleware(['auth', \App\Http\Middleware\AdminMiddleware::class]);
+
+// Rutas API de estadísticas (ya estaban usando FQCN, OK)
+Route::get('/admin/api/stats/meta', [AdminController::class, 'statsMeta'])
+    ->middleware(['auth', \App\Http\Middleware\AdminMiddleware::class]);
+
+Route::get('/admin/api/stats/scores', [AdminController::class, 'statsScores'])
+    ->middleware(['auth', \App\Http\Middleware\AdminMiddleware::class]);
+
+Route::get('/admin/api/stats/top-games', [AdminController::class, 'statsTopGames'])
+    ->middleware(['auth', \App\Http\Middleware\AdminMiddleware::class]);
+
+Route::get('/admin/api/stats/top-difficulty', [AdminController::class, 'statsTopDifficulty'])
+    ->middleware(['auth', \App\Http\Middleware\AdminMiddleware::class]);
 //Menu principal
 Route::get('/menu', function () {
     return view('menu');

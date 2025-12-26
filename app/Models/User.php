@@ -18,6 +18,7 @@ class User extends Authenticatable{
         'password',
         'role',
         'profile_image',
+        'is_admin',
     ];
 
     protected $hidden = [
@@ -32,6 +33,11 @@ class User extends Authenticatable{
             'password' => 'hashed',
         ];
     }
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'is_admin' => 'boolean',
+    ];
 
     public function chatGroups(){
         return $this->belongsToMany(ChatGroup::class, 'chat_group_user');

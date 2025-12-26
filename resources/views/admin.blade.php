@@ -1,270 +1,208 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Administrador | Daily Memory</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="{{ asset('CSS/menu.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
-    <style>
-       body, html {
-            min-height: 100vh;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        .bg_animate {
-            width: 100vw;
-            background: linear-gradient(to right, #ffff, #affcef);
-            position: relative;
-            overflow: visible;
-            min-height: 100vh;
-            height: auto;      
-        }
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 2rem 2rem 1rem 2rem;
-            background: transparent;
-            position: relative;
-            z-index: 2;
-        }
-        nav h1 {
-            font-size: 2.2rem;
-            color: #303333;
-            font-weight: 700;
-        }
-        .nav__list {
-            display: flex;
-            gap: 2rem;
-        }
-        .nav__list a {
-            color: #666;
-            font-size: 1.1rem;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .admin-container {
-            z-index: 2;
-            position: relative;
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
-        }
-        .admin-title {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #222;
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-
-        .admin-cards {
-            display: flex;
-            gap: 2rem;
-            justify-content: center;
-            margin-bottom: 3rem;
-        }
-        .admin-card {
-            background: #fff;
-            border-radius: 20px;
-            box-shadow: 0 4px 18px rgba(0,0,0,0.10);
-            padding: 1.5rem 2rem;
-            min-width: 170px;
-            text-align: center;
-            flex: 1 1 180px;
-        }
-        .admin-card-title {
-            font-size: 1.1rem;
-            color: #303333;
-            font-weight: 600;
-        }
-        .admin-card-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #3e4eff;
-            margin-top: 0.5rem;
-        }
-
-        .admin-table-box {
-            background: #fff;
-            border-radius: 20px;
-            box-shadow: 0 4px 18px rgba(0,0,0,0.10);
-            padding: 2rem;
-            margin-top: 2rem;
-            overflow-x: auto;
-        }
-        .admin-table-title {
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: #222;
-            margin-bottom: 1rem;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 1rem;
-        }
-        th, td {
-            padding: 0.75rem 0.5rem;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-        th {
-            background: #eafff9;
-            color: #303333;
-            font-weight: 600;
-        }
-        td {
-            color: #333;
-        }
-        .admin-action-btn {
-            background: #3e4eff;
-            color: #fff;
-            border-radius: 6px;
-            padding: 0.3rem 0.9rem;
-            border: none;
-            font-size: 0.94rem;
-            margin-right: 0.4rem;
-            cursor: pointer;
-        }
-        .admin-action-btn.delete {
-            background: #e91e63;
-        }
-        .admin-action-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .burbujas {
-            position: absolute;
-            width: 100vw;
-            height: 100vh;
-            left: 0;
-            top: 0;
-            z-index: 1;
-            pointer-events: none;
-        }
-        .burbuja {
-            border-radius: 50%;
-            background: rgb(102, 255, 171);
-            opacity: .3;
-            position: absolute;
-            bottom: -150px;
-            animation: burbujas 8s linear infinite;
-        }
-        .burbuja:nth-child(1) { width: 80px; height: 80px; left: 5%; animation-delay: 3s;}
-        .burbuja:nth-child(2) { width: 100px; height: 100px; left: 35%; animation-delay: 5s;}
-        .burbuja:nth-child(3) { width: 20px; height: 20px; left: 15%; animation-delay: 7s;}
-        .burbuja:nth-child(4) { width: 50px; height: 50px; left: 90%; animation-delay: 3s;}
-        .burbuja:nth-child(5) { width: 70px; height: 70px; left: 65%; animation-delay: 1s;}
-        .burbuja:nth-child(6) { width: 20px; height: 20px; left: 50%; animation-delay: 5s;}
-        .burbuja:nth-child(7) { width: 20px; height: 20px; left: 80%; animation-delay: 2s;}
-        .burbuja:nth-child(8) { width: 100px; height: 100px; left: 52%; animation-delay: 5s;}
-        .burbuja:nth-child(9) { width: 65px; height: 65px; left: 51%; animation-delay: 2s;}
-        .burbuja:nth-child(10){ width: 40px; height: 40px; left: 35%; animation-delay: 4s;}
-        @keyframes burbujas {
-            0% { bottom: -150px; opacity: 0;}
-            40% { opacity: .4;}
-            100% { bottom: 100vh; opacity: 0;}
-        }
-        @media (max-width: 900px) {
-            .admin-cards { flex-direction: column; gap: 1.2rem;}
-            .admin-container { padding: 1.2rem 0.2rem;}
-            .admin-table-box { padding: 1rem 0.2rem;}
-        }
-    </style>
+    <meta charset="utf-8" />
+    <title>Panel de Administrador | Daily Memory</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link href="{{ asset('/CSS/Admin.css') }}" rel="stylesheet">
 </head>
 <body>
-    <div class="bg_animate">
-        <nav>
-            <h1>Daily Memory</h1>
-            <div class="nav__list">
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: inline;">
-                    @csrf
-                    <button type="submit" style="background: none; border: none; color: #666; font-size: 1.1rem; font-family: inherit; cursor: pointer;">
-                        Cerrar Sesión
-                    </button>
-                </form>
+    <header class="site-header">
+        <div class="header-inner">
+            <a class="logo" href="{{ url('/') }}">Daily Memory</a>
+
+            <nav class="header-nav" role="navigation" aria-label="Navegación principal">
+                <a href="{{ url('/menu') }}" class="nav-link"><i class="bx bx-game"></i> Menu</a>
+
+                <div style="display:flex; gap:12px; align-items:center;">
+                    <div class="muted">Bienvenido, {{ auth()->user()->name ?? 'Admin' }}</div>
+
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:inline;">
+                        @csrf
+                        <button type="submit" class="nav-link logout-btn">Cerrar Sesión</button>
+                    </form>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container" role="main">
+        <h1 style="margin-bottom:18px;">Panel de Administrador</h1>
+
+        <!-- Cards -->
+        <div class="admin-cards" style="margin-bottom:8px;">
+            <div class="admin-card">
+                <div class="admin-card-title">Usuarios</div>
+                <div class="admin-card-value">{{ $usersCount ?? 0 }}</div>
             </div>
-        </nav>
-        <div class="admin-container">
-            <div class="admin-title">Panel de Administrador</div>
-            <div class="admin-cards">
-                <div class="admin-card">
-                    <div class="admin-card-title">Usuarios</div>
-                    <div class="admin-card-value">24</div>
-                </div>
-                <div class="admin-card">
-                    <div class="admin-card-title">Juegos</div>
-                    <div class="admin-card-value">7</div>
-                </div>
-                <div class="admin-card">
-                    <div class="admin-card-title">Visitas</div>
-                    <div class="admin-card-value">120</div>
-                </div>
-                <div class="admin-card">
-                    <div class="admin-card-title">Reportes</div>
-                    <div class="admin-card-value">3</div>
+            <div class="admin-card">
+                <div class="admin-card-title">Juegos</div>
+                <div class="admin-card-value">{{ $gamesCount ?? 0 }}</div>
+            </div>
+            <div class="admin-card">
+                <div class="admin-card-title">Partidas totales</div>
+                <div class="admin-card-value">{{ $playsTotal ?? 0 }}</div>
+            </div>
+            <div class="admin-card">
+                <div class="admin-card-title">Fácil (total)</div>
+                <div class="admin-card-value">{{ $playsPerDifficulty['facil'] ?? 0 }}</div>
+            </div>
+            <div class="admin-card">
+                <div class="admin-card-title">Medio (total)</div>
+                <div class="admin-card-value">{{ $playsPerDifficulty['medio'] ?? 0 }}</div>
+            </div>
+            <div class="admin-card">
+                <div class="admin-card-title">Difícil (total)</div>
+                <div class="admin-card-value">{{ $playsPerDifficulty['dificil'] ?? 0 }}</div>
+            </div>
+        </div>
+
+        <!-- Users table box -->
+        <section class="admin-table-box" aria-labelledby="users-title" style="margin-top:8px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px;">
+                <h2 id="users-title" style="font-size:1.05rem;">Usuarios registrados</h2>
+
+                <div style="display:flex; gap:8px; align-items:center;">
+                    <input id="admin-users-search" name="q" placeholder="Buscar por nombre o email" value="{{ $q ?? '' }}" class="search-input" aria-label="Buscar usuarios">
+                    <button id="admin-users-search-btn" class="btn btn-small btn-ghost">Buscar</button>
                 </div>
             </div>
-            <div class="admin-table-box">
-                <div class="admin-table-title">Usuarios registrados</div>
-                <table>
+
+            <div style="overflow:auto;">
+                <table aria-describedby="tabla-usuarios" style="min-width:760px;">
                     <thead>
                         <tr>
                             <th>Nombre</th>
                             <th>Email</th>
-                            <th>Nivel</th>
-                            <th>Puntos</th>
+                            <th>Admin</th>
+                            <th>Creado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>Juan Pérez</td>
-                            <td>juan@email.com</td>
-                            <td>7</td>
-                            <td>1850</td>
-                            <td>
-                                <button class="admin-action-btn" disabled><i class='bx bx-edit-alt'></i></button>
-                                <button class="admin-action-btn delete" disabled><i class='bx bx-trash'></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Ana García</td>
-                            <td>ana@email.com</td>
-                            <td>5</td>
-                            <td>1200</td>
-                            <td>
-                                <button class="admin-action-btn" disabled><i class='bx bx-edit-alt'></i></button>
-                                <button class="admin-action-btn delete" disabled><i class='bx bx-trash'></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Pedro Ruiz</td>
-                            <td>pedro@email.com</td>
-                            <td>3</td>
-                            <td>900</td>
-                            <td>
-                                <button class="admin-action-btn" disabled><i class='bx bx-edit-alt'></i></button>
-                                <button class="admin-action-btn delete" disabled><i class='bx bx-trash'></i></button>
-                            </td>
-                        </tr>
+                    <tbody id="admin-users-tbody">
+                        @forelse($users as $u)
+                            <tr>
+                                <td>{{ $u->name }}</td>
+                                <td>{{ $u->email }}</td>
+                                <td>{{ $u->is_admin ? 'Sí' : 'No' }}</td>
+                                <td>{{ $u->created_at->format('Y-m-d H:i') }}</td>
+                                <td class="actions-cell">
+                                    <button class="admin-action-btn edit btn small" data-id="{{ $u->id }}" data-name="{{ e($u->name) }}" data-email="{{ e($u->email) }}" data-username="{{ e($u->username ?? '') }}">Editar</button>
+                                    <button class="admin-action-btn delete btn small btn-ghost" data-id="{{ $u->id }}" data-name="{{ e($u->name) }}" data-email="{{ e($u->email) }}">Borrar</button>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr><td colspan="5">No hay usuarios registrados.</td></tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
-        </div>
-        <div class="burbujas">
-            @for($i = 0; $i < 10; $i++)
-                <div class="burbuja"></div>
-            @endfor
+
+            <div id="admin-users-pagination" style="display:flex; justify-content:flex-end; margin-top:12px; gap:8px;">
+                @if($users->onFirstPage() == false)
+                    <a class="btn btn-ghost" href="{{ $users->previousPageUrl() }}">« Anterior</a>
+                @endif
+                <div class="muted" style="align-self:center;">Página {{ $users->currentPage() }} de {{ $users->lastPage() }}</div>
+                @if($users->hasMorePages())
+                    <a class="btn btn-ghost" href="{{ $users->nextPageUrl() }}">Siguiente »</a>
+                @endif
+            </div>
+        </section>
+
+        <!-- Stats section (concise) -->
+        <section style="margin-top:18px;">
+            <h3 style="margin-bottom:12px;">Estadísticas</h3>
+            <div class="scores-and-chart" style="gap:18px;">
+                <div class="scores-summary" style="padding:12px;">
+                    <h4 style="margin-bottom:8px;">Puntuaciones (filtros)</h4>
+                    <div id="scores-badges">
+                        <!-- Filled by server or JS -->
+                    </div>
+                </div>
+                <div class="chart-wrap" style="padding:12px;">
+                    <h4 style="margin-bottom:8px;">Top Juegos</h4>
+                    <canvas id="top-games-chart" style="width:100%;height:200px;"></canvas>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Edit modal (same design as profile) -->
+    <div id="admin-user-modal-backdrop" class="modal-backdrop" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-edit-title">
+            <div class="modal-header">
+                <h3 id="modal-edit-title">Editar usuario</h3>
+                <button id="admin-user-modal-close" class="modal-close-btn" aria-label="Cerrar">✕</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="modal-left">
+                    <img id="modal-user-avatar" class="preview-avatar" src="{{ asset('img/default-user.png') }}" alt="Avatar">
+                    <label class="file-label" for="modal-avatar-input">Cambiar imagen</label>
+                    <input id="modal-avatar-input" type="file" accept="image/*" style="display:none">
+                    <div style="font-size:.85rem;color:var(--muted);margin-top:8px;">ID: <span id="modal-user-id-display"></span></div>
+                </div>
+
+                <div class="modal-right">
+                    <form id="admin-user-modal-form">
+                        <input type="hidden" id="modal-user-id" />
+                        <div class="form-row">
+                            <label for="modal-user-name">Nombre</label>
+                            <input id="modal-user-name" type="text" />
+                        </div>
+
+                        <div class="form-row">
+                            <label for="modal-user-email">Email</label>
+                            <input id="modal-user-email" type="email" />
+                        </div>
+
+                        <div class="form-row">
+                            <label for="modal-user-username">Usuario</label>
+                            <input id="modal-user-username" type="text" />
+                        </div>
+
+                        <div class="form-row">
+                            <label for="modal-user-password">Nueva contraseña (dejar vacío para no cambiar)</label>
+                            <div class="input-icon-wrapper">
+                                <input id="modal-user-password" type="password" />
+                                <button id="toggle-password-visibility" type="button" class="password-toggle" aria-label="Mostrar contraseña">👁</button>
+                            </div>
+                        </div>
+
+                        <div class="form-row" style="display:flex;align-items:center;gap:8px;">
+                            <input id="modal-user-isadmin" type="checkbox" />
+                            <label for="modal-user-isadmin" style="margin:0;">Es administrador</label>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button id="admin-user-modal-cancel" type="button" class="btn btn-ghost">Cancelar</button>
+                            <button id="admin-user-modal-save" type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
+
+    <!-- Delete modal (styled like other modals with colored buttons) -->
+    <div id="admin-delete-modal-backdrop" class="modal-backdrop" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-delete-title">
+            <div class="modal-header">
+                <h3 id="modal-delete-title">Confirmar eliminación</h3>
+                <button id="admin-delete-modal-close" class="modal-close-btn" aria-label="Cerrar">✕</button>
+            </div>
+            <div class="modal-body" style="flex-direction:column;gap:12px;">
+                <p id="delete-user-desc">¿Estás seguro de eliminar este usuario? Esta acción es irreversible.</p>
+                <div style="display:flex;justify-content:flex-end;gap:8px;">
+                    <button id="admin-delete-cancel" type="button" class="btn btn-ghost">Cancelar</button>
+                    <button id="admin-delete-confirm" type="button" class="btn btn-save" style="background:#e53e3e;">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+    <script src="{{ asset('/JS/admin-users.js') }}" defer></script>
 </body>
 </html>

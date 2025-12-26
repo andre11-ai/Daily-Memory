@@ -69,7 +69,7 @@
                     <div class="footer-col purpose-col" style="flex: 2;">
                         <h4>Propósito</h4>
                         <p>
-                            Daily Memory es un proyecto creado por la compañía SpiderBytes que busca el desarrollo e implementación de la estimulación cognitiva de la memoria por medio de una plat[...]
+                            Daily Memory es un proyecto que busca el desarrollo e implementación de la estimulación cognitiva de la memoria por medio de una platforma web.
                     </div>
                 </div>
             </div>
