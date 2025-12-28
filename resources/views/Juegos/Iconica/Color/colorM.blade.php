@@ -2,26 +2,26 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Memoriza el Color | Daily Memory</title>
+    <title>Memoriza el Color (Medio) | Daily Memory</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link href="/CSS/Juegos/Iconica/Color/colorM.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('/CSS/Juegos/Iconica/Color/colorM.css') }}">
+
+    <link href="{{ asset('/CSS/Juegos/Iconica/Color/colorM.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:400,600,700&display=swap">
     <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
 </head>
 <body>
-    <div class="burbujas">
-        <div class="burbuja"></div><div class="burbuja"></div>
-        <div class="burbuja"></div><div class="burbuja"></div>
-        <div class="burbuja"></div><div class="burbuja"></div>
-        <div class="burbuja"></div><div class="burbuja"></div>
-        <div class="burbuja"></div><div class="burbuja"></div>    </div>
-    <header class="header-bar">
-        <h1 class="logo">Memoria Iconica</h1>
-        <div class="header-actions">
-            <a href="/TiposMemoria/Miconica" class="volver-link">← Volver</a>
-        </div>
+    <header class="site-header">
+        <nav class="navbar">
+            <h1 class="logo">Memoria Icónica</h1>
+            <div class="nav__list">
+                <a href="/TiposMemoria/Miconica" class="nav-link volver-btn">
+                    <i class='bx bx-left-arrow-alt'></i> Volver
+                </a>
+            </div>
+        </nav>
     </header>
+
     <div class="color-title-bar">
         <div class="game-title">Memoriza el color</div>
         <div class="color-score-bar">
@@ -35,6 +35,7 @@
             </span>
         </div>
     </div>
+
     <main>
         <div class="game-container" id="game-container" data-level="M">
             <div class="memorize-phase" id="memorize-phase">
@@ -48,14 +49,24 @@
             </div>
         </div>
     </main>
+
     <div id="modal-gameover" class="modal-gameover" style="display:none;">
         <div class="modal-content">
             <h2>¡Fin del juego!</h2>
             <p>Puntaje final: <span id="score-modal">0</span></p>
             <button id="restart-btn">Reiniciar</button>
-            <a href="/TiposMemoria/Miconica" class="volver-link" style="display:block;margin-top:14px;">← Volver</a>
+            <a href="/TiposMemoria/Miconica" class="nav-link volver-btn" style="justify-content:center; margin-top:10px;">
+                <i class='bx bx-left-arrow-alt'></i> Volver al Menú
+            </a>
         </div>
     </div>
+
+    <div class="burbujas">
+        @for($i = 0; $i < 10; $i++)
+            <div class="burbuja"></div>
+        @endfor
+    </div>
+
     <script src="/JS/Juegos/Iconica/Color/colorM.js"></script>
 </body>
 </html>

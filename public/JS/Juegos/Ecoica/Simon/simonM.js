@@ -4,7 +4,6 @@
   const speedByRound = r => Math.max(220, SPEED_BASE - r*30);
   const colors = ["#28cf5f","#f54f4f","#ffd43b","#2fb7ff","#b06cff"];
   const freqs = [329.63, 261.63, 392.00, 220.00, 440.00];
-
   const svg = document.getElementById('board');
   const countEl = document.getElementById('count');
   const startBtn = document.getElementById('start');
@@ -27,6 +26,7 @@
   let gameEnded = false;
 
   function ensureAudio(){ if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+
   function playTone(freq, duration=350, when=0){
     if(!soundEnabled) return;
     ensureAudio();
@@ -49,6 +49,7 @@
     const rad = (angleDeg-90) * Math.PI/180.0;
     return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
   }
+
   function describeArc(cx, cy, r, startAngle, endAngle){
     const start = polarToCartesian(cx,cy,r,endAngle);
     const end = polarToCartesian(cx,cy,r,startAngle);
@@ -58,7 +59,7 @@
 
   function build(){
     svg.innerHTML = "";
-    const r = 230;
+    const r = 240;
     for(let i=0;i<NUM_BUTTONS;i++){
       const start = i*(360/NUM_BUTTONS);
       const end = (i+1)*(360/NUM_BUTTONS);
@@ -88,7 +89,7 @@
 
   async function playSequence(){
     unlocked = false;
-    playerPos = 0;    // <-- REINICIA la posición del jugador
+    playerPos = 0;
     for(let i=0;i<sequence.length;i++){
       const idx = sequence[i];
       flash(idx, Math.min(420, speedByRound(sequence.length)-60));

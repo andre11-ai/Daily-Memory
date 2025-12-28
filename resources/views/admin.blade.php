@@ -6,31 +6,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="{{ asset('/CSS/Admin.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+
     <header class="site-header">
-        <div class="header-inner">
-            <a class="logo" href="{{ url('/') }}">Daily Memory</a>
-
-            <nav class="header-nav" role="navigation" aria-label="Navegación principal">
-                <a href="{{ url('/menu') }}" class="nav-link"><i class="bx bx-game"></i> Menu</a>
-
-                <div style="display:flex; gap:12px; align-items:center;">
-                    <div class="muted">Bienvenido, {{ auth()->user()->name ?? 'Admin' }}</div>
-
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:inline;">
-                        @csrf
-                        <button type="submit" class="nav-link logout-btn">Cerrar Sesión</button>
-                    </form>
-                </div>
-            </nav>
-        </div>
+        <nav class="navbar">
+            <h1 class="logo">Daily Memory</h1>
+            <div class="nav__list">
+                <a href="{{ url('/perfil') }}" class="nav-link"><i class="fas fa-user"></i> Perfil</a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: inline;">
+                    @csrf
+                    <button type="submit" class="nav-link logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                    </button>
+                </form>
+            </div>
+        </nav>
     </header>
 
     <main class="container" role="main">
         <h1 style="margin-bottom:18px;">Panel de Administrador</h1>
 
-        <!-- Cards -->
         <div class="admin-cards" style="margin-bottom:8px;">
             <div class="admin-card">
                 <div class="admin-card-title">Usuarios</div>
@@ -56,13 +54,15 @@
                 <div class="admin-card-title">Difícil (total)</div>
                 <div class="admin-card-value">{{ $playsPerDifficulty['dificil'] ?? 0 }}</div>
             </div>
+             <div class="admin-card">
+                <div class="admin-card-title">Niveles Historia</div>
+                <div class="admin-card-value">0</div>
+            </div>
         </div>
 
-        <!-- Users table box -->
         <section class="admin-table-box" aria-labelledby="users-title" style="margin-top:8px;">
             <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px;">
                 <h2 id="users-title" style="font-size:1.05rem;">Usuarios registrados</h2>
-
                 <div style="display:flex; gap:8px; align-items:center;">
                     <input id="admin-users-search" name="q" placeholder="Buscar por nombre o email" value="{{ $q ?? '' }}" class="search-input" aria-label="Buscar usuarios">
                     <button id="admin-users-search-btn" class="btn btn-small btn-ghost">Buscar</button>
@@ -110,32 +110,57 @@
             </div>
         </section>
 
-        <!-- Stats section (concise) -->
         <section style="margin-top:18px;">
-            <h3 style="margin-bottom:12px;">Estadísticas</h3>
-            <div class="scores-and-chart" style="gap:18px;">
-                <div class="scores-summary" style="padding:12px;">
-                    <h4 style="margin-bottom:8px;">Puntuaciones (filtros)</h4>
-                    <div id="scores-badges">
-                        <!-- Filled by server or JS -->
-                    </div>
+            <h3 style="margin-bottom:8px;">Top juegos más jugados</h3>
+            <div style="background:#fff; border-radius:10px; padding:12px; box-shadow:0 2px 6px rgba(0,0,0,0.08);">
+                <canvas id="top-games-chart" style="width:100%; height:240px;"></canvas>
+            </div>
+        </section>
+
+        <section style="margin-top:18px;">
+            <h3 style="margin-bottom:12px;">Distribuciones</h3>
+            <div style="display:flex; gap:16px; flex-wrap:wrap;">
+                <div style="flex:1; min-width:280px; background:#fff; border-radius:10px; padding:12px; box-shadow:0 2px 6px rgba(0,0,0,0.08);">
+                    <h4 style="margin-bottom:8px;">Por tipo de memoria</h4>
+                    <canvas id="memory-types-pie" style="width:100%; height:220px;"></canvas>
                 </div>
-                <div class="chart-wrap" style="padding:12px;">
-                    <h4 style="margin-bottom:8px;">Top Juegos</h4>
-                    <canvas id="top-games-chart" style="width:100%;height:200px;"></canvas>
+                <div style="flex:1; min-width:280px; background:#fff; border-radius:10px; padding:12px; box-shadow:0 2px 6px rgba(0,0,0,0.08);">
+                    <h4 style="margin-bottom:8px;">Por dificultad</h4>
+                    <canvas id="difficulty-pie" style="width:100%; height:220px;"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section style="margin-top:18px;">
+            <h3 style="margin-bottom:12px;">Dispersión de partidas por juego</h3>
+
+            <div class="scatter-wrapper">
+                <div class="scatter-filters">
+                    <label>Memoria:
+                        <select id="scatter-memory">
+                            <option value="">Todas</option>
+                        </select>
+                    </label>
+                    <label>Dificultad:
+                        <select id="scatter-difficulty">
+                            <option value="">Todas</option>
+                        </select>
+                    </label>
+                    <button id="scatter-apply" type="button" class="btn btn-primary btn-apply">Aplicar</button>
+                </div>
+                <div style="position: relative; width: 100%; height: 300px;">
+                    <canvas id="scatter-chart"></canvas>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Edit modal (same design as profile) -->
     <div id="admin-user-modal-backdrop" class="modal-backdrop" aria-hidden="true">
         <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-edit-title">
             <div class="modal-header">
                 <h3 id="modal-edit-title">Editar usuario</h3>
                 <button id="admin-user-modal-close" class="modal-close-btn" aria-label="Cerrar">✕</button>
             </div>
-
             <div class="modal-body">
                 <div class="modal-left">
                     <img id="modal-user-avatar" class="preview-avatar" src="{{ asset('img/default-user.png') }}" alt="Avatar">
@@ -176,7 +201,7 @@
                         </div>
 
                         <div class="modal-footer">
-                            <button id="admin-user-modal-cancel" type="button" class="btn btn-ghost">Cancelar</button>
+                            <button id="admin-user-modal-cancel" type="button" class="btn btn-danger">Cancelar</button>
                             <button id="admin-user-modal-save" type="submit" class="btn btn-primary">Guardar</button>
                         </div>
                     </form>
@@ -185,7 +210,6 @@
         </div>
     </div>
 
-    <!-- Delete modal (styled like other modals with colored buttons) -->
     <div id="admin-delete-modal-backdrop" class="modal-backdrop" aria-hidden="true">
         <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-delete-title">
             <div class="modal-header">
@@ -200,6 +224,12 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="burbujas">
+        @for($i = 0; $i < 10; $i++)
+            <div class="burbuja"></div>
+        @endfor
     </div>
 
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>

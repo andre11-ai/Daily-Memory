@@ -4,7 +4,6 @@
   const speedByRound = r => Math.max(160, SPEED_BASE - r*36);
   const colors = ["#2fe27a","#ff5b5b","#ffd648","#2db6ff","#c86dff","#ff8a4b"];
   const freqs = [440.00, 392.00, 329.63, 293.66, 261.63, 220.00];
-
   const svg = document.getElementById('board');
   const countEl = document.getElementById('count');
   const startBtn = document.getElementById('start');
@@ -27,6 +26,7 @@
   let gameEnded = false;
 
   function ensureAudio(){ if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+
   function playTone(freq, duration=280, when=0){
     if(!soundEnabled) return;
     ensureAudio();
@@ -49,6 +49,7 @@
     const rad = (angleDeg-90) * Math.PI/180.0;
     return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
   }
+
   function describeArc(cx, cy, r, startAngle, endAngle){
     const start = polarToCartesian(cx,cy,r,endAngle);
     const end = polarToCartesian(cx,cy,r,startAngle);
@@ -58,7 +59,7 @@
 
   function build(){
     svg.innerHTML = "";
-    const r = 230;
+    const r = 240;
     for(let i=0;i<NUM_BUTTONS;i++){
       const start = i*(360/NUM_BUTTONS);
       const end = (i+1)*(360/NUM_BUTTONS);
@@ -88,7 +89,7 @@
 
   async function playSequence(){
     unlocked = false;
-    playerPos = 0; 
+    playerPos = 0;
     for(let i=0;i<sequence.length;i++){
       flash(sequence[i], Math.max(140, speedByRound(sequence.length)-40));
       await new Promise(r => setTimeout(r, speedByRound(sequence.length)));

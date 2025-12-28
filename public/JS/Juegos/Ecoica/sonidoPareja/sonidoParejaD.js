@@ -21,10 +21,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     function iniciarTimer() {
+        if (timer) clearInterval(timer);
         tiempoRestante = SEGUNDOS;
         document.getElementById('tiempo-label').textContent = `Tiempo: ${tiempoRestante}s`;
         timer = setInterval(() => {
             tiempoRestante--;
+            if (tiempoRestante < 0) tiempoRestante = 0;
             document.getElementById('tiempo-label').textContent = `Tiempo: ${tiempoRestante}s`;
             if (tiempoRestante <= 0) {
                 terminarJuego();
@@ -40,6 +42,8 @@ document.addEventListener('DOMContentLoaded', function() {
         guardarScore(Math.max(score, 0));
     }
     function crearJuego() {
+        if (timer) clearInterval(timer);
+
         pares = palabras.concat(palabras);
         mezclar(pares);
         score = 0;

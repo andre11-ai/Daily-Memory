@@ -48,7 +48,7 @@
                         </a>
                     </div>
                     <div class="game-card">
-                        <a href="{{ url('/historia') }}" class="game-link">
+                        <a href="{{ url('/story') }}" class="game-link">
                             <div class="card-icon"><i class="fas fa-book-open"></i></div>
                             <div class="card-title">Historia</div>
                         </a>
@@ -69,8 +69,7 @@
                     <div class="footer-col purpose-col" style="flex: 2;">
                         <h4>Propósito</h4>
                         <p>
-                            Daily Memory es un proyecto que busca el desarrollo e implementación de la estimulación cognitiva de la memoria por medio de una platforma web.
-                    </div>
+                        Daily Memory es una plataforma web de estimulación cognitiva centrada en la memoria. Combina juegos diseñados para trabajar distintos tipos de memoria (muscular, ecoica, icónica). Su objetivo es brindar una experiencia accesible, medible y administrable para fortalecer la memoria a través de actividades lúdicas y seguimiento de resultados.                    </div>
                 </div>
             </div>
         </footer>

@@ -1,36 +1,53 @@
-body,
-html {
-    height: 100%;
+:root {
+    --primary-color: #00c8a3;
+    --background-gradient: linear-gradient(90deg, #e0fffa 0%, #affcef 100%);
+    --white: #ffffff;
+    --black: #303333;
+    --header-height: 3.5rem;
+    --font-main: 'Poppins', sans-serif;
+    --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
+* {
     margin: 0;
     padding: 0;
-    font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+    box-sizing: border-box;
 }
 
-.bg_animate {
+body {
+    font-family: var(--font-main);
+    background: var(--background-gradient);
+    color: var(--black);
     min-height: 100vh;
-    width: 100vw;
-    position: relative;
-    background: linear-gradient(90deg, #e0fffa 0%, #affcef 100%);
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
-.navbar {
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.site-header {
     position: sticky;
     top: 0;
     z-index: 100;
+}
+
+.navbar {
     background: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-card);
     padding: 0 2rem;
-    height: 3.5rem;
+    height: var(--header-height);
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
 }
 
 .logo {
     font-size: 2.5rem;
     font-weight: 700;
-    color: #00c8a3;
+    color: var(--primary-color);
     letter-spacing: 1px;
 }
 
@@ -43,40 +60,173 @@ html {
 .nav-link.volver-btn {
     font-size: 1rem;
     font-weight: 500;
-    color: #303333;
+    color: #333;
     padding: .5rem 1rem;
-    border-radius: .5rem;
-    transition: background .2s, color .2s;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     gap: .5rem;
-    border: none;
-    background: none;
-    cursor: pointer;
-    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+    background: transparent;
 }
 
 .nav-link.volver-btn:hover {
-    background: #00c8a3;
+    background: var(--primary-color);
     color: #fff;
 }
 
+.subtitulo {
+    text-align: center;
+    margin: 2rem 0 1rem 0;
+    position: relative;
+    z-index: 2;
+}
+
+.subtitulo h2 {
+    font-size: 1.8rem;
+    color: #303333;
+    font-weight: 700;
+}
+
+.memoria-main-menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+    width: 100%;
+    max-width: 1300px;
+    margin: 0 auto 2rem auto;
+    padding: 2rem;
+    position: relative;
+    z-index: 2;
+    min-height: 60vh;
+}
+
+.niveles-cards-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    justify-items: center;
+    min-width: 600px;
+}
+
+.card-hexamano,
+.card-sodoku,
+.card-codificando {
+    grid-column: 1 / -1;
+    width: 60%;
+    min-width: 420px;
+    justify-self: center;
+}
+
+.niveles-card {
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    border-radius: 1.5rem;
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.2rem;
+    transition: transform .2s, box-shadow .2s;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.niveles-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+.niveles-icon {
+    font-size: 2rem;
+    color: var(--primary-color);
+    background: #f8f9fa;
+    border-radius: .5rem;
+    padding: 0.8rem;
+    box-shadow: 0 2px 8px rgba(0, 200, 163, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.niveles-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.niveles-content h1 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+    color: #333;
+}
+
+.niveles-content span {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 0.8rem;
+    display: block;
+    line-height: 1.4;
+}
+
+.niveles-levels {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.niveles-level-link {
+    background: #3e4eff;
+    color: #fff;
+    border-radius: 6px;
+    padding: 0.4rem 0.8rem;
+    font-weight: 600;
+    font-size: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: background 0.2s;
+}
+
+.niveles-level-link:hover {
+    background: #232b8d;
+}
+
+.niveles-image-section {
+    flex: 0 0 350px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.niveles-img-cerebro {
+    width: 100%;
+    max-width: 380px;
+    height: auto;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
+}
+
 .burbujas {
-    position: absolute;
-    width: 100vw;
+    position: fixed;
+    width: 100%;
     height: 100vh;
-    left: 0;
     top: 0;
-    z-index: 1;
+    left: 0;
     pointer-events: none;
+    z-index: 0;
 }
 
 .burbuja {
     border-radius: 50%;
     background: #45b6fe;
-    opacity: .18;
+    opacity: .15;
     position: absolute;
-    bottom: -150px;
+    bottom: -100px;
     animation: burbujas 8s linear infinite;
 }
 
@@ -152,13 +302,12 @@ html {
 
 @keyframes burbujas {
     0% {
-        bottom: 0;
+        bottom: -100px;
         opacity: 0;
     }
 
     50% {
-        opacity: .3;
-        transform: translateX(30px);
+        opacity: .2;
     }
 
     100% {
@@ -167,255 +316,56 @@ html {
     }
 }
 
-.subtitulo {
-    width: 100%;
-    text-indent: 420px;
-    margin: 6rem auto 2rem auto;}
-
-.subtitulo h2 {
-    font-size: 1.7rem;
-    color: #303333;
-    font-weight: 700;
-    margin-bottom: 0.3rem;
-}
-
-.subtitulo p {
-    color: #444;
-    font-size: 1.05rem;
-    margin-top: 0.5rem;
-}
-
-.subtitulo i {
-    margin-right: 4px;
-    font-size: 1.1rem;
-
-}
-.niveles-cards-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 2rem;
-    align-items: center;
-    justify-items: center;
-}
-
-.card-simon,
-.card-repetir {
-    grid-column: 1;
-    grid-row: 1;
-}
-
-.card-palabras,
-.card-memorama {
-    grid-column: 2;
-    grid-row: 1;
-}
-
-.card-sodoku,
-.card-codificando {
-    grid-column: 1 / span 2;
-    grid-row: 2;
-    justify-self: center;
-    width: 60%;
-    max-width: 350px;
-}
-.memoria-main-menu {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 2rem;
-    width: 100%;
-    max-width: 1200px;
-    margin: 2rem auto 2rem auto;
-    z-index: 2;
-}
-
-.niveles-cards-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr auto;
-    gap: 2rem;
-    align-items: center;
-    justify-items: center;
-    width: 100%;
-    flex: 1 1 760px;
-}
-
-.card-scary {
-    grid-column: 1;
-    grid-row: 1;
-}
-
-.card-velocimetro {
-    grid-column: 2;
-    grid-row: 1;
-}
-
-.card-hexamano {
-    grid-column: 1 / span 2;
-    grid-row: 2;
-    justify-self: center;
-    width: 60%;
-    max-width: 350px;
-}
-
-.niveles-card {
-    background: #fff;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-    border-radius: 1.5rem;
-    padding: 1rem 1.5rem;
-    width: 100%;
-    max-width: 350px;
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
-    transition: transform .18s, box-shadow .18s;
-    min-height: 110px;
-}
-
-.niveles-card:hover {
-    transform: translateY(-4px) scale(1.03);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.14);
-}
-
-.niveles-card .niveles-icon {
-    font-size: 2.2rem;
-    color: #00c8a3;
-    background: #f8f9fa;
-    border-radius: .5rem;
-    padding: .7rem;
-    box-shadow: 0 2px 8px rgba(0, 200, 163, 0.08);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.niveles-card .niveles-content h1 {
-    font-size: 1.08rem;
-    font-weight: bold;
-    margin-bottom: .2rem;
-    color: #303333;
-}
-
-.niveles-card .niveles-content span {
-    font-size: 0.97rem;
-    color: #444;
-    margin-bottom: .3rem;
-    display: block;
-}
-
-.niveles-levels {
-    display: flex;
-    gap: .5rem;
-    margin-top: .3rem;
-}
-
-.niveles-level-link {
-    background: #3e4eff;
-    color: #fff;
-    border-radius: 8px;
-    padding: 0.32rem 0.9rem;
-    text-decoration: none;
-    font-weight: bold;
-    transition: background 0.2s;
-    font-size: 0.83rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.niveles-level-link:hover {
-    background: #232b8d;
-}
-
-.niveles-image-section {
-    flex: 1 1 350px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.niveles-img-cerebro {
-    width: 100%;
-    max-width: 380px;
-    border-radius: 1.5rem;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-    margin-top: 2rem;
-}
-
 @media (max-width: 1000px) {
     .memoria-main-menu {
-        flex-direction: column;
-        align-items: center;
-        gap: 1.5rem;
-        min-height: unset;
+        flex-direction: column-reverse;
+        gap: 2rem;
     }
 
     .niveles-cards-grid {
         grid-template-columns: 1fr;
-        grid-template-rows: auto;
-        gap: 1.2rem;
+        min-width: 100%;
         width: 100%;
+        gap: 1.5rem;
     }
 
-    .card-hexamano {
-        width: 95vw;
-        max-width: 350px;
-    }
-
-
-    .niveles-image-section {
+    .card-hexamano,
+    .card-sodoku,
+    .card-codificando {
+        grid-column: auto;
         width: 100%;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .niveles-img-cerebro {
-        max-width: 240px;
-        margin-top: 1.2rem;
+        max-width: 100%;
     }
 
     .niveles-card {
-        max-width: 95vw;
+        max-width: 100%;
+    }
+
+    .niveles-image-section {
+        flex: auto;
+        max-width: 300px;
     }
 }
 
 @media (max-width: 600px) {
     .navbar {
         flex-direction: column;
-        gap: .5rem;
-        padding: .5rem 1rem;
         height: auto;
-    }
-
-    .logo {
-        font-size: 2rem;
-    }
-
-    .nav__list {
-        flex-direction: column;
-        gap: .7rem;
-        align-items: center;
-    }
-
-    .niveles-cards-grid {
-        gap: 1rem;
+        padding: 1rem;
     }
 
     .niveles-card {
-        padding: 1rem 1.2rem;
-        font-size: 1rem;
+        padding: 1rem;
+        flex-direction: column;
+        text-align: center;
+        align-items: center;
     }
 
-    .card-hexamano {
-        padding: 1rem 1.2rem;
-        font-size: 1rem;
-        width: 98vw;
+    .niveles-content {
+        align-items: center;
     }
 
-    .niveles-img-cerebro {
-        max-width: 98vw;
+    .niveles-levels {
+        justify-content: center;
     }
-
 }

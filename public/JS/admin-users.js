@@ -1,46 +1,66 @@
-// public/js/admin_users_management4.js
-// Modal estilo "Editar perfil" + admin checkbox + delete modal
-
 document.addEventListener('DOMContentLoaded', function () {
-    const tableBody = document.getElementById('admin-users-tbody');
-    const paginationBox = document.getElementById('admin-users-pagination');
-    const searchInput = document.getElementById('admin-users-search');
-    const csrfMeta = document.querySelector('meta[name="csrf-token"]');
-    const csrfToken = csrfMeta ? csrfMeta.getAttribute('content') : null;
+    const tableBody      = document.getElementById('admin-users-tbody');
+    const paginationBox  = document.getElementById('admin-users-pagination');
+    const searchInput    = document.getElementById('admin-users-search');
+    const searchBtn      = document.getElementById('admin-users-search-btn');
+    const csrfToken      = document.querySelector('meta[name="csrf-token"]')?.content || '';
+    const topGamesCanvas = document.getElementById('top-games-chart');
 
-    // Modales / campos
-    const editBackdrop = document.getElementById('admin-user-modal-backdrop');
-    const editForm = document.getElementById('admin-user-modal-form');
-    const modalUserId = document.getElementById('modal-user-id');
+    const editBackdrop   = document.getElementById('admin-user-modal-backdrop');
+    const editForm       = document.getElementById('admin-user-modal-form');
+    const modalUserId    = document.getElementById('modal-user-id');
     const modalUserIdDisplay = document.getElementById('modal-user-id-display');
-    const modalUserName = document.getElementById('modal-user-name');
+    const modalUserName  = document.getElementById('modal-user-name');
     const modalUserEmail = document.getElementById('modal-user-email');
     const modalUserUsername = document.getElementById('modal-user-username');
     const modalUserPassword = document.getElementById('modal-user-password');
-    const modalUserIsAdmin = document.getElementById('modal-user-isadmin');
-    const modalUserAvatar = document.getElementById('modal-user-avatar');
+    const modalUserIsAdmin  = document.getElementById('modal-user-isadmin');
+    const modalUserAvatar   = document.getElementById('modal-user-avatar');
+    const modalAvatarInput  = document.getElementById('modal-avatar-input');
     const togglePasswordBtn = document.getElementById('toggle-password-visibility');
-    const editCancelBtn = document.getElementById('admin-user-modal-cancel');
-    const editCloseBtn = document.getElementById('admin-user-modal-close');
+    const editCancelBtn     = document.getElementById('admin-user-modal-cancel');
+    const editCloseBtn      = document.getElementById('admin-user-modal-close');
 
     const deleteBackdrop = document.getElementById('admin-delete-modal-backdrop');
-    const deleteDesc = document.getElementById('delete-user-desc');
+    const deleteDesc     = document.getElementById('delete-user-desc');
     const deleteConfirmBtn = document.getElementById('admin-delete-confirm');
-    const deleteCancelBtn = document.getElementById('admin-delete-cancel');
+    const deleteCancelBtn  = document.getElementById('admin-delete-cancel');
+    const deleteCloseBtn   = document.getElementById('admin-delete-modal-close');
+
+    const memoryPieCanvas    = document.getElementById('memory-types-pie');
+    const difficultyPieCanvas= document.getElementById('difficulty-pie');
+    const scatterCanvas      = document.getElementById('scatter-chart');
+    const scatterMemorySel   = document.getElementById('scatter-memory');
+    const scatterDiffSel     = document.getElementById('scatter-difficulty');
+    const scatterApplyBtn    = document.getElementById('scatter-apply');
+
+    if (!tableBody) return;
+
+    if (scatterCanvas) {
+        scatterCanvas.style.maxHeight = '320px';
+        scatterCanvas.height = 320;
+    }
 
     let currentPage = 1;
     let currentQuery = '';
     let deleteTargetId = null;
     let lastFocusedElement = null;
+    let topGamesChart = null;
+    let memoryPieChart = null;
+    let difficultyPieChart = null;
+    let scatterChart = null;
 
-    if (!tableBody) return;
+    const palette = [
+        '#EF476F','#FFD166','#06D6A0','#118AB2','#073B4C',
+        '#F38BA0','#FFB703','#8ECAE6','#219EBC','#9B5DE5',
+        '#00BBF9','#F15BB5','#FF6D00','#4CC9F0','#B5179E'
+    ];
+    const getColors = n => Array.from({length:n}, (_,i)=>palette[i % palette.length]);
+    const debounce = (fn, wait=250) => { let t; return (...a)=>{clearTimeout(t); t=setTimeout(()=>fn(...a),wait);}};
 
-    // --- Utility: focus management ---
     function saveFocus() { lastFocusedElement = document.activeElement; }
     function restoreFocus() { try { lastFocusedElement && lastFocusedElement.focus(); } catch(e) {} }
-
     function showBackdrop(backdrop) {
-        if (!backdrop) return;
         saveFocus();
         backdrop.style.display = 'flex';
         backdrop.setAttribute('aria-hidden', 'false');
@@ -48,363 +68,45 @@ document.addEventListener('DOMContentLoaded', function () {
         if (dlg) { dlg.setAttribute('tabindex','-1'); dlg.focus(); }
     }
     function hideBackdrop(backdrop) {
-        if (!backdrop) return;
         backdrop.style.display = 'none';
         backdrop.setAttribute('aria-hidden', 'true');
         restoreFocus();
     }
-
-    // --- Fetch users (paginated) ---
-    async function fetchUsers(page = 1, q = '') {
-        currentPage = page;
-        currentQuery = q;
-        const url = `/admin/api/users?page=${page}&q=${encodeURIComponent(q)}`;
-
-        try {
-            const res = await fetch(url, { headers: { 'Accept': 'application/json' }, credentials: 'same-origin' });
-            if (!res.ok) {
-                const txt = await res.text().catch(()=>null);
-                console.error('fetchUsers error', res.status, txt);
-                throw new Error('Error al obtener usuarios');
-            }
-            const data = await res.json();
-            renderTable(data.data || []);
-            renderPagination(data);
-        } catch (err) {
-            console.error(err);
-            alert(err.message || 'Error al obtener usuarios');
-        }
-    }
-
-    function renderTable(users) {
-        tableBody.innerHTML = '';
-        if (!users || users.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="5">No hay usuarios.</td></tr>';
-            return;
-        }
-        users.forEach(user => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${escapeHtml(user.name)}</td>
-                <td>${escapeHtml(user.email)}</td>
-                <td>${user.is_admin ? 'Sí' : 'No'}</td>
-                <td>${new Date(user.created_at).toLocaleString()}</td>
-                <td>
-                    <button class="admin-action-btn edit btn" data-id="${user.id}" data-name="${escapeAttr(user.name)}" data-email="${escapeAttr(user.email)}" data-username="${escapeAttr(user.username || '')}">Editar</button>
-                    <button class="admin-action-btn delete btn" data-id="${user.id}" data-name="${escapeAttr(user.name)}" data-email="${escapeAttr(user.email)}">Borrar</button>
-                </td>
-            `;
-            tableBody.appendChild(tr);
-        });
-        attachRowEvents(tableBody);
-    }
-
-    function renderPagination(meta) {
-        if (!paginationBox) return;
-        const current = meta.current_page || 1;
-        const last = meta.last_page || 1;
-        if (last <= 1) { paginationBox.innerHTML = ''; return; }
-        let html = '';
-        if (current > 1) html += `<button data-page="${current-1}" class="page-btn btn">Anterior</button>`;
-        html += ` <span class="muted"> ${current} / ${last} </span> `;
-        if (current < last) html += `<button data-page="${current+1}" class="page-btn btn">Siguiente</button>`;
-        paginationBox.innerHTML = html;
-        paginationBox.querySelectorAll('.page-btn').forEach(b => b.addEventListener('click', () => fetchUsers(Number(b.dataset.page), currentQuery)));
-    }
-
-    function attachRowEvents(root = document) {
-        root.querySelectorAll('.admin-action-btn.edit').forEach(btn => {
-            if (btn._boundEdit) return;
-            btn._boundEdit = true;
-            btn.addEventListener('click', () => openEditModalFromRow(btn));
-        });
-        root.querySelectorAll('.admin-action-btn.delete').forEach(btn => {
-            if (btn._boundDelete) return;
-            btn._boundDelete = true;
-            btn.addEventListener('click', () => openDeleteModalFromRow(btn));
-        });
-    }
-
-    // --- Edit modal ---
-    async function openEditModalFromRow(btn) {
-        const id = btn.dataset.id;
-        if (!id) return;
-        try {
-            const res = await fetch(`/admin/api/users/${id}`, { headers:{ 'Accept':'application/json' }, credentials:'same-origin' });
-            if (!res.ok) {
-                const txt = await res.text().catch(()=>null);
-                console.error('openEditModalFromRow error', res.status, txt);
-                throw new Error('Error al cargar usuario');
-            }
-            const user = await res.json();
-            fillEditForm(user);
-            showBackdrop(editBackdrop);
-        } catch (err) {
-            console.error(err);
-            alert(err.message || 'Error al cargar usuario');
-        }
-    }
-
-    function fillEditForm(user) {
-        modalUserId.value = user.id;
-        modalUserIdDisplay.textContent = user.id;
-        modalUserName.value = user.name || '';
-        modalUserEmail.value = user.email || '';
-        modalUserUsername.value = user.username || '';
-        modalUserPassword.value = '';
-        modalUserIsAdmin.checked = !!user.is_admin;
-        if (user.avatar_url) modalUserAvatar.src = user.avatar_url;
-    }
-
-    // toggle password visibility
-    if (togglePasswordBtn) {
-        togglePasswordBtn.addEventListener('click', function () {
-            if (modalUserPassword.type === 'password') modalUserPassword.type = 'text';
-            else modalUserPassword.type = 'password';
-        });
-    }
-
-    function hideEditModal() { hideBackdrop(editBackdrop); }
-
-    // Save edits
-    if (editForm) {
-        editForm.addEventListener('submit', async function (e) {
-            e.preventDefault();
-            const id = modalUserId.value;
-            const payload = {
-                name: modalUserName.value.trim(),
-                email: modalUserEmail.value.trim(),
-                username: modalUserUsername.value.trim(),
-                is_admin: modalUserIsAdmin.checked,
-                password: modalUserPassword.value || null
-            };
-            try {
-                const res = await fetch(`/admin/api/users/${id}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type':'application/json','Accept':'application/json','X-CSRF-TOKEN': csrfToken || '' },
-                    credentials: 'same-origin',
-                    body: JSON.stringify(payload)
-                });
-                const text = await res.text();
-                let data = null;
-                try { data = text ? JSON.parse(text) : null; } catch(_) { data = { message: text }; }
-                if (!res.ok) throw data || { message:'Error al actualizar' };
-                hideEditModal();
-                updateRowAfterEdit(data.user || { id, name:payload.name, email:payload.email, is_admin:payload.is_admin });
-                alert(data.message || 'Usuario actualizado.');
-            } catch (err) {
-                console.error('Error actualizando usuario:', err);
-                alert((err && err.message) ? err.message : 'Error al actualizar usuario');
-            }
-        });
-    }
-
-    function updateRowAfterEdit(user) {
-        if (!user) return;
-        const btn = tableBody.querySelector(`.admin-action-btn.edit[data-id="${user.id}"]`);
-        if (btn) {
-            const row = btn.closest('tr');
-            if (row) {
-                const tds = row.querySelectorAll('td');
-                if (tds.length >= 4) {
-                    tds[0].textContent = user.name || '';
-                    tds[1].textContent = user.email || '';
-                    tds[2].textContent = user.is_admin ? 'Sí' : 'No';
-                }
-                btn.dataset.name = user.name || '';
-                btn.dataset.email = user.email || '';
-            }
-        }
-    }
-
-    // --- Delete modal ---
-    function openDeleteModalFromRow(btn) {
-        const id = btn.dataset.id;
-        const name = btn.dataset.name;
-        if (!id) return;
-        deleteTargetId = id;
-        deleteDesc.textContent = `¿Estás seguro de eliminar al usuario "${name || id}"? Esta acción es irreversible.`;
-        showBackdrop(deleteBackdrop);
-    }
-    function hideDeleteModal() { hideBackdrop(deleteBackdrop); }
-
-    if (deleteConfirmBtn) {
-        deleteConfirmBtn.addEventListener('click', async function () {
-            if (!deleteTargetId) return;
-            try {
-                const res = await fetch(`/admin/api/users/${deleteTargetId}`, {
-                    method: 'DELETE',
-                    headers: { 'Accept':'application/json','X-CSRF-TOKEN': csrfToken || '' },
-                    credentials: 'same-origin'
-                });
-                const text = await res.text();
-                let data = null;
-                try { data = text ? JSON.parse(text) : null; } catch(_) { data = { message:text }; }
-                if (!res.ok) throw data || { message:'Error al eliminar' };
-                hideDeleteModal();
-                removeRowAfterDelete(deleteTargetId);
-                alert(data.message || 'Usuario eliminado.');
-            } catch (err) {
-                console.error('Error eliminando usuario:', err);
-                alert((err && err.message) ? err.message : 'Error al eliminar usuario');
-            }
-        });
-    }
-
-    function removeRowAfterDelete(id) {
-        const btn = tableBody.querySelector(`.admin-action-btn.delete[data-id="${id}"]`);
-        if (btn) {
-            const row = btn.closest('tr');
-            if (row) row.remove();
-        }
-    }
-
-    // attach cancel/close
-    if (editCancelBtn) editCancelBtn.addEventListener('click', hideEditModal);
-    if (editCloseBtn) editCloseBtn.addEventListener('click', hideEditModal);
-    if (deleteCancelBtn) deleteCancelBtn.addEventListener('click', hideDeleteModal);
-
-    // simple escape click outside to close
-    function setupOutsideClick(backdrop) {
-        if (!backdrop) return;
-        backdrop.addEventListener('click', function (e) {
-            if (e.target === backdrop) hideBackdrop(backdrop);
-        });
-    }
-    setupOutsideClick(editBackdrop);
-    setupOutsideClick(deleteBackdrop);
-
-    // helpers
-    function escapeHtml(unsafe) {
-        if (!unsafe) return '';
-        return String(unsafe).replace(/[&<"'>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-    }
-    function escapeAttr(s) { return s ? String(s).replace(/"/g,'&quot;') : ''; }
-
-    // search form
-    const usersForm = document.getElementById('admin-users-form');
-    if (usersForm) usersForm.addEventListener('submit', function(e){ e.preventDefault(); fetchUsers(1, (searchInput ? searchInput.value.trim() : '')); });
-
-    // initialize
-    attachRowEvents(document);
-    fetchUsers();
-});
-// public/js/admin_users_management5.js
-// Enhanced admin users management script:
-// - live search (debounced)
-// - edit modal loads avatar and admin checkbox
-// - delete modal styled like other modals
-// - updates table row after edit/delete
-
-document.addEventListener('DOMContentLoaded', function () {
-    const tableBody = document.getElementById('admin-users-tbody');
-    const paginationBox = document.getElementById('admin-users-pagination');
-    const searchInput = document.getElementById('admin-users-search');
-    const searchBtn = document.getElementById('admin-users-search-btn');
-    const csrfMeta = document.querySelector('meta[name="csrf-token"]');
-    const csrfToken = csrfMeta ? csrfMeta.getAttribute('content') : null;
-
-    // modals and form elements
-    const editBackdrop = document.getElementById('admin-user-modal-backdrop');
-    const editForm = document.getElementById('admin-user-modal-form');
-    const modalUserId = document.getElementById('modal-user-id');
-    const modalUserIdDisplay = document.getElementById('modal-user-id-display');
-    const modalUserName = document.getElementById('modal-user-name');
-    const modalUserEmail = document.getElementById('modal-user-email');
-    const modalUserUsername = document.getElementById('modal-user-username');
-    const modalUserPassword = document.getElementById('modal-user-password');
-    const modalUserIsAdmin = document.getElementById('modal-user-isadmin');
-    const modalUserAvatar = document.getElementById('modal-user-avatar');
-    const togglePasswordBtn = document.getElementById('toggle-password-visibility');
-    const editCancelBtn = document.getElementById('admin-user-modal-cancel');
-    const editCloseBtn = document.getElementById('admin-user-modal-close');
-
-    const deleteBackdrop = document.getElementById('admin-delete-modal-backdrop');
-    const deleteDesc = document.getElementById('delete-user-desc');
-    const deleteConfirmBtn = document.getElementById('admin-delete-confirm');
-    const deleteCancelBtn = document.getElementById('admin-delete-cancel');
-    const deleteCloseBtn = document.getElementById('admin-delete-modal-close');
-
-    let currentPage = 1;
-    let currentQuery = '';
-    let deleteTargetId = null;
-    let lastFocusedElement = null;
-
-    if (!tableBody) return;
-
-    // Debounce helper
-    function debounce(fn, wait) {
-        let t;
-        return function (...args) {
-            clearTimeout(t);
-            t = setTimeout(() => fn.apply(this, args), wait);
-        };
-    }
-
-    // Focus management
-    function saveFocus() { lastFocusedElement = document.activeElement; }
-    function restoreFocus() { try { lastFocusedElement && lastFocusedElement.focus(); } catch(e) {} }
-
-    function showBackdrop(backdrop) {
-        if (!backdrop) return;
-        saveFocus();
-        backdrop.style.display = 'flex';
-        backdrop.setAttribute('aria-hidden', 'false');
-        const dlg = backdrop.querySelector('.modal');
-        if (dlg) { dlg.setAttribute('tabindex','-1'); dlg.focus(); }
-    }
-    function hideBackdrop(backdrop) {
-        if (!backdrop) return;
-        backdrop.style.display = 'none';
-        backdrop.setAttribute('aria-hidden', 'true');
-        restoreFocus();
-    }
-
-    // Build avatar url helper (fallbacks)
     function avatarUrlFromUser(user) {
-        if (!user) return '';
-        if (user.avatar_url) return user.avatar_url;
-        if (user.profile_image) return `/user-avatar/${encodeURIComponent(user.profile_image)}`;
+        if (user?.avatar_url) return user.avatar_url;
+        if (user?.profile_image) return `/storage/${user.profile_image}`;
         return '/img/default-user.png';
     }
-
-    // Fetch users
-    async function fetchUsers(page = 1, q = '') {
-        currentPage = page;
-        currentQuery = q;
-        const url = `/admin/api/users?page=${page}&q=${encodeURIComponent(q)}`;
-
-        try {
-            const res = await fetch(url, { headers: { 'Accept': 'application/json' }, credentials: 'same-origin' });
-            if (!res.ok) {
-                const txt = await res.text().catch(()=>null);
-                console.error('fetchUsers error', res.status, txt);
-                throw new Error('Error al obtener usuarios');
-            }
-            const data = await res.json();
-            renderTable(data.data || []);
-            renderPagination(data);
-        } catch (err) {
-            console.error(err);
-            // silent fail in UI
-        }
-    }
-
-    // Live search: debounce input
-    const debouncedFetch = debounce(() => fetchUsers(1, searchInput.value.trim()), 300);
-    if (searchInput) {
-        searchInput.addEventListener('input', debouncedFetch);
-    }
-    if (searchBtn) {
-        searchBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            fetchUsers(1, searchInput.value.trim());
+    function toast(msg, type='ok') {
+        const div = document.createElement('div');
+        div.textContent = msg;
+        Object.assign(div.style, {
+            position:'fixed', top:'16px', right:'16px', padding:'12px 14px',
+            borderRadius:'8px', color:'#fff', zIndex:9999,
+            background: type === 'error' ? '#e53e3e' : '#2f855a'
         });
+        document.body.appendChild(div);
+        setTimeout(()=>div.remove(), 2800);
+    }
+    function escapeHtml(unsafe='') {
+        return String(unsafe).replace(/[&<"'>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+    }
+    function escapeAttr(s='') { return String(s).replace(/"/g,'&quot;'); }
+
+    async function fetchUsers(page=1, q='') {
+        currentPage = page; currentQuery = q;
+        const res = await fetch(`/admin/api/users?page=${page}&q=${encodeURIComponent(q)}`, {
+            headers:{Accept:'application/json'}, credentials:'same-origin'
+        });
+        if (!res.ok) { console.error(await res.text()); return; }
+        const data = await res.json();
+        renderTable(data.data || []);
+        renderPagination(data);
     }
 
     function renderTable(users) {
         tableBody.innerHTML = '';
-        if (!users || users.length === 0) {
+        if (!users.length) {
             tableBody.innerHTML = '<tr><td colspan="5">No hay usuarios.</td></tr>';
             return;
         }
@@ -416,10 +118,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 <td>${user.is_admin ? 'Sí' : 'No'}</td>
                 <td>${new Date(user.created_at).toLocaleString()}</td>
                 <td>
-                    <button class="admin-action-btn edit btn small" data-id="${user.id}" data-name="${escapeAttr(user.name)}" data-email="${escapeAttr(user.email)}" data-username="${escapeAttr(user.username || '')}">Editar</button>
-                    <button class="admin-action-btn delete btn small btn-ghost" data-id="${user.id}" data-name="${escapeAttr(user.name)}" data-email="${escapeAttr(user.email)}">Borrar</button>
-                </td>
-            `;
+                    <button class="admin-action-btn edit btn small"
+                        data-id="${user.id}"
+                        data-name="${escapeAttr(user.name)}"
+                        data-email="${escapeAttr(user.email)}"
+                        data-username="${escapeAttr(user.username || '')}">Editar</button>
+                    <button class="admin-action-btn delete btn small btn-ghost"
+                        data-id="${user.id}"
+                        data-name="${escapeAttr(user.name)}"
+                        data-email="${escapeAttr(user.email)}">Borrar</button>
+                </td>`;
             tableBody.appendChild(tr);
         });
         attachRowEvents(tableBody);
@@ -427,18 +135,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function renderPagination(meta) {
         if (!paginationBox) return;
-        const current = meta.current_page || 1;
-        const last = meta.last_page || 1;
-        if (last <= 1) { paginationBox.innerHTML = ''; return; }
+        const c = meta.current_page || 1;
+        const l = meta.last_page || 1;
+        if (l <= 1) { paginationBox.innerHTML=''; return; }
         let html = '';
-        if (current > 1) html += `<button data-page="${current-1}" class="page-btn btn">Anterior</button>`;
-        html += ` <span class="muted"> ${current} / ${last} </span> `;
-        if (current < last) html += `<button data-page="${current+1}" class="page-btn btn">Siguiente</button>`;
+        if (c > 1) html += `<button data-page="${c-1}" class="page-btn btn">Anterior</button>`;
+        html += ` <span class="muted">${c} / ${l}</span> `;
+        if (c < l) html += `<button data-page="${c+1}" class="page-btn btn">Siguiente</button>`;
         paginationBox.innerHTML = html;
-        paginationBox.querySelectorAll('.page-btn').forEach(b => b.addEventListener('click', () => fetchUsers(Number(b.dataset.page), currentQuery)));
+        paginationBox.querySelectorAll('.page-btn').forEach(b =>
+            b.addEventListener('click', ()=>fetchUsers(Number(b.dataset.page), currentQuery))
+        );
     }
 
-    function attachRowEvents(root = document) {
+    function attachRowEvents(root=document) {
         root.querySelectorAll('.admin-action-btn.edit').forEach(btn => {
             if (btn._boundEdit) return;
             btn._boundEdit = true;
@@ -451,24 +161,14 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Edit modal logic
     async function openEditModalFromRow(btn) {
         const id = btn.dataset.id;
         if (!id) return;
-        try {
-            const res = await fetch(`/admin/api/users/${id}`, { headers:{ 'Accept':'application/json' }, credentials:'same-origin' });
-            if (!res.ok) {
-                const txt = await res.text().catch(()=>null);
-                console.error('openEditModalFromRow error', res.status, txt);
-                throw new Error('Error al cargar usuario');
-            }
-            const user = await res.json();
-            fillEditForm(user);
-            showBackdrop(editBackdrop);
-        } catch (err) {
-            console.error(err);
-            alert(err.message || 'Error al cargar usuario');
-        }
+        const res = await fetch(`/admin/api/users/${id}`, { headers:{Accept:'application/json'}, credentials:'same-origin' });
+        if (!res.ok) { console.error(await res.text()); toast('Error al cargar usuario','error'); return; }
+        const user = await res.json();
+        fillEditForm(user);
+        showBackdrop(editBackdrop);
     }
 
     function fillEditForm(user) {
@@ -479,143 +179,295 @@ document.addEventListener('DOMContentLoaded', function () {
         modalUserUsername.value = user.username || '';
         modalUserPassword.value = '';
         modalUserIsAdmin.checked = !!user.is_admin;
-        modalUserAvatar.src = avatarUrlFromUser(user) || '/img/default-user.png';
+        modalUserAvatar.src = avatarUrlFromUser(user);
     }
 
     if (togglePasswordBtn) {
-        togglePasswordBtn.addEventListener('click', function () {
-            if (modalUserPassword.type === 'password') modalUserPassword.type = 'text';
-            else modalUserPassword.type = 'password';
+        togglePasswordBtn.addEventListener('click', () => {
+            modalUserPassword.type = (modalUserPassword.type === 'password') ? 'text' : 'password';
         });
     }
 
     function hideEditModal() { hideBackdrop(editBackdrop); }
 
-    // Save edits
     if (editForm) {
-        editForm.addEventListener('submit', async function (e) {
+        editForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const id = modalUserId.value;
-            const payload = {
-                name: modalUserName.value.trim(),
-                email: modalUserEmail.value.trim(),
-                username: modalUserUsername.value.trim(),
-                is_admin: modalUserIsAdmin.checked,
-                password: modalUserPassword.value || null
-            };
-            try {
-                const res = await fetch(`/admin/api/users/${id}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type':'application/json','Accept':'application/json','X-CSRF-TOKEN': csrfToken || '' },
-                    credentials: 'same-origin',
-                    body: JSON.stringify(payload)
-                });
-                const text = await res.text();
-                let data = null;
-                try { data = text ? JSON.parse(text) : null; } catch(_) { data = { message: text }; }
-                if (!res.ok) throw data || { message:'Error al actualizar' };
-                hideEditModal();
-                updateRowAfterEdit(data.user || { id, name:payload.name, email:payload.email, is_admin:payload.is_admin });
-            } catch (err) {
-                console.error('Error actualizando usuario:', err);
-                alert((err && err.message) ? err.message : 'Error al actualizar usuario');
-            }
+            const fd = new FormData();
+            fd.append('name', modalUserName.value.trim());
+            fd.append('email', modalUserEmail.value.trim());
+            fd.append('username', modalUserUsername.value.trim());
+            fd.append('is_admin', modalUserIsAdmin.checked ? 1 : 0);
+            if (modalUserPassword.value.trim()) fd.append('password', modalUserPassword.value.trim());
+            if (modalAvatarInput?.files?.[0]) fd.append('profile_image', modalAvatarInput.files[0]);
+
+            const res = await fetch(`/admin/api/users/${id}`, {
+                method: 'POST',
+                headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept':'application/json' },
+                credentials: 'same-origin',
+                body: fd
+            });
+            const text = await res.text();
+            let data = null; try { data = text ? JSON.parse(text) : {}; } catch(_) { data = { message:text }; }
+            if (!res.ok) { toast(data?.message || 'Error al actualizar','error'); return; }
+
+            hideEditModal();
+            updateRowAfterEdit(data.user || { id, name:fd.get('name'), email:fd.get('email'), is_admin:!!fd.get('is_admin') });
+            toast(data.message || 'Usuario actualizado');
         });
     }
 
     function updateRowAfterEdit(user) {
-        if (!user) return;
         const btn = tableBody.querySelector(`.admin-action-btn.edit[data-id="${user.id}"]`);
-        if (btn) {
-            const row = btn.closest('tr');
-            if (row) {
-                const tds = row.querySelectorAll('td');
-                if (tds.length >= 4) {
-                    tds[0].textContent = user.name || '';
-                    tds[1].textContent = user.email || '';
-                    tds[2].textContent = user.is_admin ? 'Sí' : 'No';
-                }
-                btn.dataset.name = user.name || '';
-                btn.dataset.email = user.email || '';
-            }
+        if (!btn) return;
+        const row = btn.closest('tr');
+        if (!row) return;
+        const tds = row.querySelectorAll('td');
+        if (tds.length >= 4) {
+            tds[0].textContent = user.name || '';
+            tds[1].textContent = user.email || '';
+            tds[2].textContent = user.is_admin ? 'Sí' : 'No';
         }
+        btn.dataset.name = user.name || '';
+        btn.dataset.email = user.email || '';
     }
 
-    // Delete modal logic
     function openDeleteModalFromRow(btn) {
-        const id = btn.dataset.id;
-        const name = btn.dataset.name;
-        if (!id) return;
-        deleteTargetId = id;
-        deleteDesc.textContent = `¿Estás seguro de eliminar al usuario "${name || id}"? Esta acción es irreversible.`;
+        deleteTargetId = btn.dataset.id;
+        deleteDesc.textContent = `¿Estás seguro de eliminar al usuario "${btn.dataset.name || deleteTargetId}"? Esta acción es irreversible.`;
         showBackdrop(deleteBackdrop);
     }
     function hideDeleteModal() { hideBackdrop(deleteBackdrop); }
 
     if (deleteConfirmBtn) {
-        deleteConfirmBtn.addEventListener('click', async function () {
+        deleteConfirmBtn.addEventListener('click', async () => {
             if (!deleteTargetId) return;
-            try {
-                const res = await fetch(`/admin/api/users/${deleteTargetId}`, {
-                    method: 'DELETE',
-                    headers: { 'Accept':'application/json','X-CSRF-TOKEN': csrfToken || '' },
-                    credentials: 'same-origin'
-                });
-                const text = await res.text();
-                let data = null;
-                try { data = text ? JSON.parse(text) : null; } catch(_) { data = { message:text }; }
-                if (!res.ok) throw data || { message:'Error al eliminar' };
-                hideDeleteModal();
-                removeRowAfterDelete(deleteTargetId);
-                deleteTargetId = null;
-            } catch (err) {
-                console.error('Error eliminando usuario:', err);
-                alert((err && err.message) ? err.message : 'Error al eliminar usuario');
-            }
+            const res = await fetch(`/admin/api/users/${deleteTargetId}`, {
+                method: 'DELETE',
+                headers: { 'Accept':'application/json','X-CSRF-TOKEN': csrfToken },
+                credentials:'same-origin'
+            });
+            const text = await res.text();
+            let data = null; try { data = text ? JSON.parse(text) : {}; } catch(_) { data = { message:text }; }
+            if (!res.ok) { toast(data?.message || 'Error al eliminar','error'); return; }
+            removeRowAfterDelete(deleteTargetId);
+            deleteTargetId = null;
+            hideDeleteModal();
+            toast(data.message || 'Usuario eliminado');
         });
     }
 
     function removeRowAfterDelete(id) {
         const btn = tableBody.querySelector(`.admin-action-btn.delete[data-id="${id}"]`);
-        if (btn) {
-            const row = btn.closest('tr');
-            if (row) row.remove();
+        const row = btn?.closest('tr');
+        if (row) row.remove();
+    }
+
+    if (editCancelBtn) editCancelBtn.addEventListener('click', hideEditModal);
+    if (editCloseBtn)  editCloseBtn.addEventListener('click', hideEditModal);
+    if (deleteCancelBtn) deleteCancelBtn.addEventListener('click', hideDeleteModal);
+    if (deleteCloseBtn)  deleteCloseBtn.addEventListener('click', hideDeleteModal);
+
+    [editBackdrop, deleteBackdrop].forEach(backdrop => {
+        if (!backdrop) return;
+        backdrop.addEventListener('click', (e) => { if (e.target === backdrop) hideBackdrop(backdrop); });
+    });
+
+    if (searchInput) {
+        const debouncedSearch = debounce(() => fetchUsers(1, searchInput.value.trim()), 250);
+        searchInput.addEventListener('input', debouncedSearch);
+    }
+    if (searchBtn) {
+        searchBtn.addEventListener('click', (e)=>{ e.preventDefault(); fetchUsers(1, searchInput.value.trim()); });
+    }
+
+
+    async function fetchTopGames() {
+        if (!topGamesCanvas) return;
+        const res = await fetch('/admin/api/stats/top-games', { headers:{Accept:'application/json'}, credentials:'same-origin' });
+        if (!res.ok) { console.error(await res.text()); return; }
+        const rows = await res.json();
+        const labels = rows.map(r => r.game);
+        const data   = rows.map(r => r.plays);
+        const colors = data.map((_, i) => palette[i % palette.length]);
+
+        if (topGamesChart) topGamesChart.destroy();
+        topGamesChart = new Chart(topGamesCanvas.getContext('2d'), {
+            type: 'bar',
+            data: { labels, datasets: [{ label:'Partidas', data, backgroundColor: colors, borderColor:'#fff', borderWidth:1, borderRadius:6 }] },
+            options: { responsive:true, plugins:{ legend:{ display:false } }, scales:{ y:{ beginAtZero:true, ticks:{ precision:0 } } } }
+        });
+    }
+
+    async function fetchMemoryPie() {
+        if (!memoryPieCanvas) return;
+        const res = await fetch('/admin/api/stats/memory-types', { headers:{Accept:'application/json'}, credentials:'same-origin' });
+        if (!res.ok) { console.error(await res.text()); return; }
+        let rows = await res.json();
+
+        const memoryMap = {
+            iconica:   ['color', 'memorama', 'secuencia', 'secuencia-color', 'secuencia-color-game'],
+            ecoica:    ['simon', 'repetir', 'sonido', 'sonido-pareja'],
+            muscular:  ['scary', 'velocimetro', 'velocímetro', 'lluvia', 'lluvia-letras']
+        };
+
+        const totalFromDB = (rows || []).reduce((a,r)=>a+Number(r.plays||0),0);
+        if (!rows || rows.length === 0 || totalFromDB === 0) {
+            const allRes = await fetch('/admin/api/stats/scatter-plays', { headers:{Accept:'application/json'}, credentials:'same-origin' });
+            if (allRes.ok) {
+                const gameRows = await allRes.json();
+                const sums = { muscular:0, ecoica:0, iconica:0 };
+                gameRows.forEach(r => {
+                    const g = String(r.game || '').toLowerCase();
+                    const plays = Number(r.plays||0);
+                    const belongs = (list)=>list.some(k=>g.includes(k));
+                    if (belongs(memoryMap.iconica)) sums.iconica += plays;
+                    else if (belongs(memoryMap.ecoica)) sums.ecoica += plays;
+                    else if (belongs(memoryMap.muscular)) sums.muscular += plays;
+                });
+                rows = [
+                    { memory_type:'muscular', plays: sums.muscular },
+                    { memory_type:'ecoica',   plays: sums.ecoica   },
+                    { memory_type:'iconica',  plays: sums.iconica  },
+                ];
+            }
+        }
+
+        const dataRaw = rows.map(r => Number(r.plays)||0);
+        const total = dataRaw.reduce((a,b)=>a+b,0);
+        const data   = total === 0 ? [1,1,1] : dataRaw;
+
+        const labelMap = {
+            'muscular':'muscular',
+            'ecoica':'ecoica',
+            'econica':'ecoica',
+            'iconica':'iconica',
+            'icónica':'iconica'
+        };
+        const labels = rows.map(r => labelMap[String(r.memory_type || '').toLowerCase()] || (r.memory_type || 'N/D'));
+
+        if (memoryPieChart) memoryPieChart.destroy();
+        memoryPieChart = new Chart(memoryPieCanvas.getContext('2d'), {
+            type: 'pie',
+            data: { labels, datasets:[{ data, backgroundColor: getColors(data.length) }] },
+            options: { responsive:true, plugins:{ legend:{ position:'bottom' } } }
+        });
+    }
+
+    async function fetchDifficultyPie() {
+        if (!difficultyPieCanvas) return;
+        const res = await fetch('/admin/api/stats/difficulty-counts', { headers:{Accept:'application/json'}, credentials:'same-origin' });
+        if (!res.ok) { console.error(await res.text()); return; }
+        const rows = await res.json();
+        const labels = rows.map(r => r.difficulty || 'N/D');
+        const data   = rows.map(r => r.plays);
+        if (difficultyPieChart) difficultyPieChart.destroy();
+        difficultyPieChart = new Chart(difficultyPieCanvas.getContext('2d'), {
+            type: 'pie',
+            data: { labels, datasets:[{ data, backgroundColor: getColors(data.length) }] },
+            options: { responsive:true, plugins:{ legend:{ position:'bottom' } } }
+        });
+    }
+
+    async function loadMetaForScatter() {
+        const res = await fetch('/admin/api/stats/meta', { headers:{Accept:'application/json'}, credentials:'same-origin' });
+        if (!res.ok) { console.error(await res.text()); return; }
+        const meta = await res.json();
+        if (scatterMemorySel) {
+            scatterMemorySel.innerHTML = '<option value="">Todas</option>';
+            const baseMemories = ['muscular','ecoica','iconica'];
+            const apiMemories = (meta.memory_types || []).filter(Boolean);
+            const merged = Array.from(new Set([...baseMemories, ...apiMemories]));
+            merged.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m; opt.textContent = m;
+                scatterMemorySel.appendChild(opt);
+            });
+        }
+        if (scatterDiffSel) {
+            scatterDiffSel.innerHTML = '<option value="">Todas</option>';
+            (meta.difficulties || []).forEach(d => {
+                const opt = document.createElement('option');
+                opt.value = d; opt.textContent = d;
+                scatterDiffSel.appendChild(opt);
+            });
         }
     }
 
-    // attach cancel/close
-    if (editCancelBtn) editCancelBtn.addEventListener('click', hideEditModal);
-    if (editCloseBtn) editCloseBtn.addEventListener('click', hideEditModal);
-    if (deleteCancelBtn) deleteCancelBtn.addEventListener('click', hideDeleteModal);
-    if (deleteCloseBtn) deleteCloseBtn.addEventListener('click', hideDeleteModal);
+    async function fetchScatter() {
+        if (!scatterCanvas) return;
 
-    // click outside to close
-    function setupOutsideClick(backdrop) {
-        if (!backdrop) return;
-        backdrop.addEventListener('click', function (e) {
-            if (e.target === backdrop) hideBackdrop(backdrop);
+        const difficulty = scatterDiffSel?.value || '';
+        const selectedMemory = scatterMemorySel?.value || '';
+        const memoryMap = {
+            iconica:   ['color', 'memorama', 'secuencia', 'secuencia-color', 'secuencia-color-game'],
+            ecoica:    ['simon', 'repetir', 'repetir-palabra', 'sonido', 'sonido-pareja'],
+            muscular:  ['scary', 'velocimetro', 'velocímetro', 'lluvia', 'lluvia-letras']
+        };
+
+        const params = new URLSearchParams();
+        if (difficulty) params.append('difficulty', difficulty);
+
+        const res = await fetch(`/admin/api/stats/scatter-plays?${params.toString()}`, { headers:{Accept:'application/json'}, credentials:'same-origin' });
+        if (!res.ok) { console.error(await res.text()); return; }
+        const gameRows = await res.json(); // [{game, plays}, ...]
+
+        const memorySumsByGame = { muscular:{}, ecoica:{}, iconica:{} };
+        gameRows.forEach(r => {
+            const g = String(r.game || '').toLowerCase();
+            const plays = Number(r.plays || 0);
+            const belongs = (list)=>list.some(k=>g.includes(k));
+            if (belongs(memoryMap.iconica)) memorySumsByGame.iconica[g] = plays;
+            else if (belongs(memoryMap.ecoica)) memorySumsByGame.ecoica[g] = plays;
+            else if (belongs(memoryMap.muscular)) memorySumsByGame.muscular[g] = plays;
+        });
+
+        const memories = selectedMemory ? [selectedMemory] : ['muscular','ecoica','iconica'];
+        const allLabelsSet = new Set();
+        memories.forEach(mem => Object.keys(memorySumsByGame[mem] || {}).forEach(g => allLabelsSet.add(g)));
+        const labels = Array.from(allLabelsSet);
+
+        const colors = getColors(memories.length);
+        const chartDatasets = memories.map((mem, idx) => {
+            const mapPlays = memorySumsByGame[mem] || {};
+            const data = labels.map(lbl => ({ x: lbl, y: mapPlays[lbl] || 0 }));
+            return {
+                label: mem,
+                data,
+                parsing: false,
+                showLine: true,
+                borderColor: colors[idx],
+                backgroundColor: colors[idx],
+                pointBackgroundColor: colors[idx],
+                pointBorderColor: '#fff',
+                pointRadius: 5,
+                tension: 0.25
+            };
+        });
+
+        if (scatterChart) scatterChart.destroy();
+        scatterChart = new Chart(scatterCanvas.getContext('2d'), {
+            type: 'line',
+            data: { labels, datasets: chartDatasets },
+            options: {
+                responsive:true,
+                maintainAspectRatio:false,
+                plugins:{ legend:{ display:true, position:'bottom' } },
+                parsing:false,
+                scales:{
+                    x:{ type:'category', title:{display:true, text:'Juego'} },
+                    y:{ beginAtZero:true, title:{display:true, text:'Partidas'}, ticks:{ precision:0 } }
+                }
+            }
         });
     }
-    setupOutsideClick(editBackdrop);
-    setupOutsideClick(deleteBackdrop);
+    if (scatterApplyBtn) scatterApplyBtn.addEventListener('click', fetchScatter);
 
-    // helpers
-    function escapeHtml(unsafe) {
-        if (!unsafe) return '';
-        return String(unsafe).replace(/[&<"'>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-    }
-    function escapeAttr(s) { return s ? String(s).replace(/"/g,'&quot;') : ''; }
-
-    // search form submit prevention and linkage
-    const usersForm = document.getElementById('admin-users-form');
-    if (usersForm) {
-        usersForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            fetchUsers(1, searchInput.value.trim());
-        });
-    }
-
-    // initialize
     attachRowEvents(document);
     fetchUsers();
+    fetchTopGames();
+    fetchMemoryPie();
+    fetchDifficultyPie();
+    loadMetaForScatter().then(fetchScatter);
 });

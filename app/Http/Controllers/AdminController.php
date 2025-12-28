@@ -15,11 +15,9 @@ class AdminController extends Controller
 {
     public function __construct()
     {
-        // Protege por autenticación y por middleware admin (usa FQCN si prefieres)
         $this->middleware(['auth', \App\Http\Middleware\AdminMiddleware::class]);
     }
 
-    // vista del panel
     public function index(Request $request)
     {
         $q = $request->query('q', null);
@@ -37,13 +35,8 @@ class AdminController extends Controller
         }
 
         $users = $usersQuery->paginate($perPage)->withQueryString();
-
-        // Contadores para las tarjetas
         $usersCount = User::count();
-        $gamesCount = 9; // actualiza si lo necesitas (número de juegos disponibles)
-
-        // --- NUEVO: partidas totales y por dificultad ---
-        // total de partidas (cada registro en GameScore se considera una partida)
+        $gamesCount = 9;
         $playsTotal = 0;
         $playsPerDifficulty = [
             'facil' => 0,
@@ -51,25 +44,20 @@ class AdminController extends Controller
             'dificil' => 0,
         ];
 
-        // comprobar si la tabla de GameScore existe antes de consultar
         $gameScoreTable = (new GameScore)->getTable();
         if (Schema::hasTable($gameScoreTable)) {
             $playsTotal = GameScore::count();
 
-            // agrupamos por difficulty
             $difficultyCounts = GameScore::whereNotNull('difficulty')
                 ->select('difficulty', DB::raw('COUNT(*) as plays'))
                 ->groupBy('difficulty')
                 ->pluck('plays', 'difficulty')
                 ->toArray();
 
-            // normalizamos y mapeamos a nuestras 3 categorías
             foreach ($difficultyCounts as $diffLabel => $count) {
-                // normalizar: quitar acentos y pasar a ascii, luego minúsculas y quitar espacios
                 $key = Str::ascii((string)$diffLabel);
-                $key = strtolower(preg_replace('/\s+/', '', $key)); // ej: "Fácil" -> "facil"
+                $key = strtolower(preg_replace('/\s+/', '', $key)); 
 
-                // heurística: identificar por fragmentos
                 if (strpos($key, 'fac') !== false || $key === 'b' || strpos($key, 'easy') !== false) {
                     $playsPerDifficulty['facil'] += (int) $count;
                 } elseif (strpos($key, 'med') !== false || $key === 'm' || strpos($key, 'medium') !== false) {
@@ -77,20 +65,17 @@ class AdminController extends Controller
                 } elseif (strpos($key, 'dif') !== false || $key === 'd' || strpos($key, 'hard') !== false) {
                     $playsPerDifficulty['dificil'] += (int) $count;
                 } else {
-                    // si no encaja en las 3 categorías, podríamos ignorarlo o añadir una categoría "otros"
-                    // por ahora lo dejamos fuera de las 3 contadas específicamente
+                    //
                 }
             }
         }
 
-        // antes teníamos visits/reports; las eliminamos en favor de las métricas de partidas
         return view('admin', compact(
             'users','usersCount','gamesCount',
             'playsTotal','playsPerDifficulty','q'
         ));
     }
 
-    // listado paginado y con busqueda (q)
     public function usersList(Request $request)
     {
         $q = $request->query('q');
@@ -105,95 +90,94 @@ class AdminController extends Controller
         return response()->json($users);
     }
 
-    // ver un usuario
     public function show($id)
     {
-        $user = User::select('id','name','email','is_admin','created_at')->find($id);
+        $user = User::find($id);
 
         if (! $user) {
             return response()->json(['message' => 'Usuario no encontrado.'], 404);
         }
 
-        return response()->json($user);
+        $userArray = $user->only(['id','name','email','username','is_admin','created_at','profile_image']);
+        $userArray['avatar_url'] = $user->profile_image
+            ? asset('storage/' . ltrim($user->profile_image, '/'))
+            : asset('img/default-user.png');
+
+        return response()->json($userArray);
     }
 
-    // actualizar usuario
-public function update(Request $request, $id)
-{
-    $user = User::find($id);
+    public function update(Request $request, $id)
+    {
+        $user = User::find($id);
 
-    if (! $user) {
-        return response()->json(['message' => 'Usuario no encontrado.'], 404);
-    }
+        if (!$user) {
+            return response()->json(['message' => 'Usuario no encontrado.'], 404);
+        }
 
-    $data = $request->validate([
-        'name' => ['required','string','max:255'],
-        'email' => ['required','email','max:255', Rule::unique('users')->ignore($user->id)],
-        'is_admin' => ['sometimes','boolean'],
-        'password' => ['nullable','string','min:6'],
-    ]);
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'username' => 'required|string|max:255',
+            'profile_image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'password' => 'nullable|string|min:6',
+            'is_admin' => 'sometimes|boolean',
+        ]);
 
-    // ¿La tabla users tiene las columnas is_admin y role?
-    $hasIsAdminColumn = Schema::hasColumn((new User)->getTable(), 'is_admin');
-    $hasRoleColumn = Schema::hasColumn((new User)->getTable(), 'role');
+        $user->username = $data['username'];
+        $user->name     = $data['name'];
+        $user->email    = $data['email'];
 
-    // Antes de quitar admin a un administrador, comprobar que exista otro admin
-    if (array_key_exists('is_admin', $data)) {
-        $wantsToRemoveAdmin = ! (bool) $data['is_admin'];
+        if ($request->hasFile('profile_image')) {
+            $path = $request->file('profile_image')->store('profile_images', 'public');
+            $user->profile_image = $path;
+        }
 
-        $currentIsAdmin = $hasIsAdminColumn ? (bool)$user->is_admin : ($hasRoleColumn ? ($user->role === 'admin') : false);
+        $hasIsAdminColumn = Schema::hasColumn((new User)->getTable(), 'is_admin');
+        $hasRoleColumn    = Schema::hasColumn((new User)->getTable(), 'role');
 
-        if ($currentIsAdmin && $wantsToRemoveAdmin) {
-            $otherAdminsCount = $hasIsAdminColumn
-                ? User::where('is_admin', true)->where('id', '!=', $user->id)->count()
-                : ($hasRoleColumn ? User::where('role', 'admin')->where('id', '!=', $user->id)->count() : 0);
+        if (array_key_exists('is_admin', $data)) {
+            $wantsToRemoveAdmin = !(bool)$data['is_admin'];
+            $currentIsAdmin = $hasIsAdminColumn ? (bool)$user->is_admin : ($hasRoleColumn ? ($user->role === 'admin') : false);
 
-            if ($otherAdminsCount === 0) {
-                return response()->json([
-                    'message' => 'No se puede quitar el rol de admin: debe existir al menos un administrador.'
-                ], 422);
+            if ($currentIsAdmin && $wantsToRemoveAdmin) {
+                $otherAdminsCount = $hasIsAdminColumn
+                    ? User::where('is_admin', true)->where('id', '!=', $user->id)->count()
+                    : ($hasRoleColumn ? User::where('role', 'admin')->where('id', '!=', $user->id)->count() : 0);
+
+                if ($otherAdminsCount === 0) {
+                    return response()->json([
+                        'message' => 'No se puede quitar el rol de admin: debe existir al menos un administrador.'
+                    ], 422);
+                }
             }
-        }
-    }
 
-    // Actualizar campos básicos
-    $user->name = $data['name'];
-    $user->email = $data['email'];
-
-    // Manejar admin: actualizar BOTH is_admin y role (si existen) para mantener sincronía
-    if (array_key_exists('is_admin', $data)) {
-        $isAdminValue = (bool) $data['is_admin'];
-
-        if ($hasIsAdminColumn) {
-            $user->is_admin = $isAdminValue;
+            if ($hasIsAdminColumn) $user->is_admin = (bool)$data['is_admin'];
+            if ($hasRoleColumn)    $user->role    = $data['is_admin'] ? 'admin' : 'user';
         }
 
-        if ($hasRoleColumn) {
-            $user->role = $isAdminValue ? 'admin' : 'user';
+        if (!empty($data['password'])) {
+            $user->password = Hash::make($data['password']);
         }
+
+        $user->save();
+
+        $userArray = $user->toArray();
+        $userArray['is_admin'] = $hasIsAdminColumn ? (bool)$user->is_admin : ($hasRoleColumn ? ($user->role === 'admin') : false);
+        if (!$hasRoleColumn && $hasIsAdminColumn) {
+            $userArray['role'] = $userArray['is_admin'] ? 'admin' : 'user';
+        }
+        $userArray['avatar_url'] = $user->profile_image
+            ? asset('storage/' . ltrim($user->profile_image, '/'))
+            : asset('img/default-user.png');
+
+        return response()->json([
+            'message' => 'Usuario actualizado correctamente.',
+            'user' => $userArray,
+        ]);
     }
 
-    // Actualizar contraseña solo si se envía
-    if (! empty($data['password'])) {
-        $user->password = Hash::make($data['password']);
-    }
 
-    $user->save();
 
-    // Asegurar que la respuesta JSON incluya is_admin y role para que el frontend lo use
-    $userArray = $user->toArray();
-    $userArray['is_admin'] = $hasIsAdminColumn ? (bool)$user->is_admin : ($hasRoleColumn ? ($user->role === 'admin') : false);
-    if (! $hasRoleColumn && $hasIsAdminColumn) {
-        // Si no hay role pero sí is_admin, devolver role calculado para compatibilidad frontend
-        $userArray['role'] = $userArray['is_admin'] ? 'admin' : 'user';
-    }
-
-    return response()->json([
-        'message' => 'Usuario actualizado correctamente.',
-        'user' => $userArray
-    ]);
-}
-    // borrar usuario
     public function destroy(Request $request, $id)
     {
         $user = User::find($id);
@@ -220,10 +204,6 @@ public function update(Request $request, $id)
         return response()->json(['message' => 'Usuario eliminado correctamente.']);
     }
 
-    // ---------------- Estadísticas / Métodos nuevos ----------------
-
-    // GET /admin/api/stats/meta
-    // Devuelve juegos, dificultades y memory_types disponibles (para llenar selects)
     public function statsMeta()
     {
         $games = GameScore::select('game')
@@ -254,8 +234,7 @@ public function update(Request $request, $id)
         ]);
     }
 
-    // GET /admin/api/stats/scores
-    // Retorna avg score y plays por juego aplicando filtros opcionales
+
     public function statsScores(Request $request)
     {
         $game = $request->query('game');
@@ -282,8 +261,7 @@ public function update(Request $request, $id)
         return response()->json($rows);
     }
 
-    // GET /admin/api/stats/top-games
-    // Top 5 juegos más jugados (por plays), admite mismos filtros
+
     public function statsTopGames(Request $request)
     {
         $game = $request->query('game');
@@ -311,8 +289,6 @@ public function update(Request $request, $id)
         return response()->json($rows);
     }
 
-    // GET /admin/api/stats/top-difficulty
-    // Recuento por difficulty (y devuelve la más jugada)
     public function statsTopDifficulty(Request $request)
     {
         $game = $request->query('game');
@@ -340,8 +316,52 @@ public function update(Request $request, $id)
         ]);
     }
 
-    // ---------------- fin estadísticas ----------------
-    // el resto de métodos users show/update/destroy siguen aquí...
+    public function statsMemoryTypes(Request $request)
+    {
+        if (!Schema::hasColumn((new GameScore)->getTable(), 'memory_type')) {
+            return response()->json([]);
+        }
 
+        $rows = GameScore::whereNotNull('memory_type')
+            ->select('memory_type', DB::raw('COUNT(*) as plays'))
+            ->groupBy('memory_type')
+            ->orderBy('plays', 'desc')
+            ->get();
+
+        return response()->json($rows);
+    }
+
+    public function statsDifficultyCounts(Request $request)
+    {
+        $rows = GameScore::whereNotNull('difficulty')
+            ->select('difficulty', DB::raw('COUNT(*) as plays'))
+            ->groupBy('difficulty')
+            ->orderBy('plays', 'desc')
+            ->get();
+
+        return response()->json($rows);
+    }
+
+    public function statsScatterPlays(Request $request)
+    {
+        $memoryType = $request->query('memory_type');
+        $difficulty = $request->query('difficulty');
+
+        $q = GameScore::query();
+
+        if ($memoryType && Schema::hasColumn((new GameScore)->getTable(), 'memory_type')) {
+            $q->where('memory_type', $memoryType);
+        }
+        if ($difficulty) {
+            $q->where('difficulty', $difficulty);
+        }
+
+        $rows = $q->select('game', DB::raw('COUNT(*) as plays'))
+            ->groupBy('game')
+            ->orderBy('plays', 'desc')
+            ->get();
+
+        return response()->json($rows);
+    }
 
 }
