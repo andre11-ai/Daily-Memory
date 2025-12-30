@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('game');
             $table->integer('score');
-            $table->string('difficulty'); // <-- NUEVO CAMPO
+            $table->string('difficulty'); 
             $table->timestamps();
         });
     }

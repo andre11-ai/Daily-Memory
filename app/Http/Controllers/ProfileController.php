@@ -9,6 +9,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use App\Models\GameScore;
+use App\Models\Progress;
 
 class ProfileController extends Controller
 {
@@ -363,6 +364,8 @@ class ProfileController extends Controller
 
         $difficultyTotals = $difficultyTotals ?? [];
 
+        $storyLevel = Progress::where('user_id', $user->id)->value('level') ?? 0;
+
         return view('perfil', compact(
             'user',
             'scoresPorJuego',
@@ -383,7 +386,8 @@ class ProfileController extends Controller
             'chartDifficultyDatasets',
             'memoryScoreTotals',
             'difficultyTotals',
-            'levelInfo'
+            'levelInfo',
+            'storyLevel'
         ));
     }
 

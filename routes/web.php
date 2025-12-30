@@ -267,5 +267,26 @@ Route::post('/chat/personal/{userId}/delete', [ChatController::class, 'deletePer
 Route::middleware(['auth'])->group(function () {
     Route::get('/story', [StoryController::class, 'index'])->name('story.index');
     Route::post('/story/advance', [StoryController::class, 'advanceLevel'])->name('story.advance');
-});
+    Route::post('/story/complete-level', [StoryController::class, 'completeLevel'])->name('story.complete');
+    Route::get('/niveles/{level}', function ($level) {
+        $progress = \App\Models\Progress::firstOrCreate(
+            ['user_id' => \Illuminate\Support\Facades\Auth::id()],
+            ['level' => 1]
+        );
+        if ((int)$level !== (int)$progress->level) {
+            return redirect()->route('story.index');
+        }
 
+        $viewName = "Niveles.nivel-{$level}";
+
+        if (!view()->exists($viewName)) {
+            $altView = "Niveles.Nivel-{$level}";
+            if (view()->exists($altView)) {
+                return view($altView);
+            }
+            abort(404, "Vista de nivel no encontrada: {$viewName}");
+        }
+
+        return view($viewName);
+    })->where('level', '[0-9]+')->name('niveles.show');
+});

@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('chat_groups', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->unsignedBigInteger('admin_id'); // <-- Nuevo campo
+            $table->unsignedBigInteger('admin_id'); 
             $table->timestamps();
             $table->foreign('admin_id')->references('id')->on('users')->onDelete('cascade');
         });

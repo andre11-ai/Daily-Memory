@@ -92,6 +92,10 @@
                     <div class="stat-title">Puntos totales</div>
                     <div class="stat-value" id="total-points">{{ $scoreGeneral ?? 0 }}</div>
                 </div>
+                                <div class="stat-card">
+                    <div class="stat-title">Nivel Historia</div>
+                    <div class="stat-value">{{ $storyLevel ?? 0 }}</div>
+                </div>
             </div>
 
             <div class="memory-section">
