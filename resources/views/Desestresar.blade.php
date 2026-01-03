@@ -40,13 +40,15 @@
                     </div>
 
                     <div class="game-card">
-                        <a href="#" class="game-link" target="_blank"> <div class="card-icon"><i class='bx bx-radio-circle'></i></div>
+                        <a href="#" class="game-link" target="_blank">
+                            <div class="card-icon"><i class='bx bx-radio-circle'></i></div>
                             <div class="card-title">Conecta 4</div>
                         </a>
                     </div>
 
                     <div class="game-card">
-                        <a href="#" class="game-link" target="_blank"> <div class="card-icon"><i class='bx bx-mouse'></i></div>
+                        <a href="#" class="game-link" target="_blank">
+                            <div class="card-icon"><i class='bx bx-mouse'></i></div>
                             <div class="card-title">Pinturillo</div>
                         </a>
                     </div>
@@ -71,5 +73,62 @@
             <div class="burbuja"></div>
         @endfor
     </div>
+
+    <button id="help-btn" class="help-btn hidden" aria-label="Ayuda sobre la sección de juegos anti-estrés">
+        <i class='bx bx-question-mark'></i>
+    </button>
+
+    <div id="help-modal" class="intro-overlay">
+        <div class="intro-scene">
+            <div class="mascot-container">
+                <img src="{{ asset('img/default-user.png') }}" alt="Mascota" class="mascot-img" />
+            </div>
+            <div class="speech-bubble">
+                <div class="intro-header">
+                    <div class="intro-eyebrow">ANTI-ESTRÉS</div>
+                    <h2 class="intro-title">¿Qué puedes hacer aquí?</h2>
+                </div>
+                <div class="intro-content">
+                    <p>Elige un juego rápido para distraerte y bajar la tensión.</p>
+                    <ul>
+                        <li><strong>Tetris:</strong> organiza piezas y enfoca tu mente.</li>
+                        <li><strong>Conecta 4:</strong> alinea fichas con estrategia.</li>
+                        <li><strong>Pinturillo:</strong> dibuja y adivina con amigos.</li>
+                        <li><strong>Galaxy Attack:</strong> acción arcade para soltar estrés.</li>
+                    </ul>
+                </div>
+                <div class="intro-footer">
+                    <button id="help-close" class="start-btn">Entendido</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const modal = document.getElementById('help-modal');
+        const helpBtn = document.getElementById('help-btn');
+        const closeBtn = document.getElementById('help-close');
+
+        setTimeout(() => modal.classList.add('active'), 500);
+
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+            helpBtn.classList.remove('hidden');
+        });
+
+        helpBtn.addEventListener('click', () => {
+            modal.classList.add('active');
+            helpBtn.classList.add('hidden');
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                modal.classList.remove('active');
+                helpBtn.classList.remove('hidden');
+            }
+        });
+    });
+    </script>
 </body>
 </html>

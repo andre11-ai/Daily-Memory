@@ -56,7 +56,7 @@
             </div>
              <div class="admin-card">
                 <div class="admin-card-title">Niveles Historia</div>
-                <div class="admin-card-value">0</div>
+                <div class="admin-card-value">20</div>
             </div>
         </div>
 
@@ -152,6 +152,13 @@
                     <canvas id="scatter-chart"></canvas>
                 </div>
             </div>
+        </section>
+        <section id="user-level-scatter-box" style="margin-top: 18px; background: #fff; border-radius: 10px; padding: 12px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);">
+            <h2 style="font-size:1.05rem; text-align:center; margin-bottom: 12px;">Dispersión de niveles por usuario</h2>
+            <canvas id="user-level-scatter" style="max-height: 320px;"></canvas>
+            <script type="application/json" id="scatter-data">
+                {!! json_encode($scatterData, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) !!}
+            </script>
         </section>
     </main>
 

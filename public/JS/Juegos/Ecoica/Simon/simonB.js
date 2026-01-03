@@ -1,210 +1,242 @@
-(function(){
-  const NUM_BUTTONS = 4;
-  const SPEED_BASE = 900;
-  const speedByRound = r => Math.max(240, SPEED_BASE - r*28);
-  const colors = ["#28cf5f","#f54f4f","#ffd43b","#2fb7ff"];
-  const freqs = [329.63, 261.63, 392.00, 220.00];
+document.addEventListener('DOMContentLoaded', function() {
+    const NUM_BUTTONS = 4;
+    const SPEED_BASE = 900;
+    const TARGET_ROUND = 50; 
 
-  const svg = document.getElementById('board');
-  const countEl = document.getElementById('count');
-  const startBtn = document.getElementById('start');
-  const strictBtn = document.getElementById('strict');
-  const soundToggle = document.getElementById('soundToggle');
-  const scoreLabel = document.getElementById('score-label');
-  const scoreModal = document.getElementById('score-modal');
-  const modalGameover = document.getElementById('modal-gameover');
-  const restartBtn = document.getElementById('restart-btn');
+    const colors = ["#28cf5f","#f54f4f","#ffd43b","#2fb7ff"];
+    const freqs = [329.63, 261.63, 392.00, 220.00];
 
-  let audioCtx = null;
-  let soundEnabled = true;
-  let maxRounds = 20;
+    const svg = document.getElementById('board');
+    const countEl = document.getElementById('count');
+    const startBtn = document.getElementById('start');
+    const strictBtn = document.getElementById('strict');
+    const soundToggle = document.getElementById('soundToggle');
+    const scoreLabel = document.getElementById('score-label');
 
-  let sequence = [];
-  let playerPos = 0;
-  let playing = false;
-  let strictMode = false;
-  let unlocked = true;
+    const modal = document.getElementById('modal-gameover');
+    const govBubble = document.getElementById('gov-bubble');
+    const govTitle = document.getElementById('gov-title');
+    const govMsg = document.getElementById('gov-msg');
+    const govEyebrow = document.getElementById('gov-eyebrow');
+    const scoreContainer = document.getElementById('score-container');
+    const scoreDisplay = document.getElementById('score-modal-display');
+    const actionBtn = document.getElementById('action-btn');
+    const backMenuContainer = document.getElementById('back-menu-container');
 
-  let score = 0;
-  let gameEnded = false;
+    let audioCtx = null;
+    let soundEnabled = true;
+    let sequence = [];
+    let playerPos = 0;
+    let playing = false; 
+    let strictMode = false;
+    let unlocked = false; 
+    let score = 0;
 
-  function ensureAudio(){
-    if(!audioCtx){
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-  }
-  function playTone(freq, duration=350, when=0){
-    if(!soundEnabled) return;
-    ensureAudio();
-    const ctx = audioCtx;
-    const o = ctx.createOscillator();
-    const g = ctx.createGain();
-    o.type = 'sine';
-    o.frequency.value = freq;
-    g.gain.value = 0.0001;
-    o.connect(g); g.connect(ctx.destination);
-    const now = ctx.currentTime + when/1000;
-    g.gain.setValueAtTime(0.0001, now);
-    g.gain.exponentialRampToValueAtTime(0.32, now + 0.02);
-    o.start(now);
-    g.gain.exponentialRampToValueAtTime(0.0001, now + duration/1000 - 0.02);
-    o.stop(now + duration/1000 + 0.02);
-  }
-  function polarToCartesian(cx, cy, r, angleDeg){
-    const rad = (angleDeg-90) * Math.PI/180.0;
-    return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
-  }
-  function describeArc(cx, cy, r, startAngle, endAngle){
-    const start = polarToCartesian(cx,cy,r,endAngle);
-    const end = polarToCartesian(cx,cy,r,startAngle);
-    const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
-    return ["M", cx, cy, "L", start.x, start.y, "A", r, r, 0, largeArcFlag, 0, end.x, end.y, "Z"].join(" ");
-  }
-  function buildBoard(){
-    svg.innerHTML = "";
-    const radius = 230;
-    for(let i=0;i<NUM_BUTTONS;i++){
-      const start = i * (360/NUM_BUTTONS);
-      const end = (i+1) * (360/NUM_BUTTONS);
-      const path = document.createElementNS("http://www.w3.org/2000/svg","path");
-      path.setAttribute("d", describeArc(0,0,radius,start,end));
-      path.setAttribute("fill", colors[i % colors.length]);
-      path.setAttribute("data-index", i);
-      path.classList.add('segment');
-      path.setAttribute("role","button");
-      path.setAttribute("aria-label","Botón " + (i+1));
-      const overlay = document.createElementNS("http://www.w3.org/2000/svg","path");
-      overlay.setAttribute("d", describeArc(0,0,radius-18,start,end));
-      overlay.setAttribute("fill","rgba(0,0,0,0.06)");
-      overlay.classList.add('segment-overlay');
-      svg.appendChild(path);
-      svg.appendChild(overlay);
-    }
-  }
-  function updateCount(){
-    countEl.textContent = sequence.length ? String(sequence.length).padStart(2,'0') : "--";
-    score = Math.max(score, sequence.length-1);
-    scoreLabel.textContent = `Score: ${score}`;
-  }
-  function flash(index, duration=500){
-    const segs = svg.querySelectorAll('.segment');
-    const seg = segs[index];
-    if(!seg) return;
-    seg.classList.add('active');
-    playTone(freqs[index % freqs.length], duration);
-    setTimeout(()=>seg.classList.remove('active'), duration+60);
-  }
-  async function playSequence(){
-    unlocked = false;
-    playing = true;
-    playerPos = 0;
-    updateCount();
-    const delay = speedByRound(sequence.length);
-    for(let i=0;i<sequence.length;i++){
-      const idx = sequence[i];
-      flash(idx, Math.min(420, delay-60));
-      await new Promise(r => setTimeout(r, delay));
-    }
-    unlocked = true;
-    playing = false;
-  }
-  function handlePlayerInput(idx){
-    if(!unlocked || gameEnded) return;
-    if(!audioCtx) try{ audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }catch(e){}
-    flash(idx,Math.max(200, speedByRound(sequence.length)-60));
-    if(sequence[playerPos] === idx){
-      playerPos++;
-      if(playerPos === sequence.length){
-        if(sequence.length >= maxRounds){
-          countEl.textContent = "WIN";
-          endGame();
-          return;
+    function ensureAudio(){
+        if(!audioCtx){
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         }
-        setTimeout(()=> { addStep(); playSequence(); }, 700);
-      }
-    } else {
-      unlocked = false;
-      countEl.textContent = "!!";
-      endGame();
     }
-  }
-  function addStep(){
-    const next = Math.floor(Math.random()*NUM_BUTTONS);
-    sequence.push(next);
-    updateCount();
-  }
-  function resetGame(){
-    sequence = [];
-    playerPos = 0;
-    unlocked = true;
-    playing = false;
-    score = 0;
-    gameEnded = false;
-    updateCount();
-    modalGameover.style.display='none';
-  }
-  function endGame(){
-    gameEnded = true;
-    unlocked = false;
-    playing = false;
-    scoreModal.textContent = score;
-    modalGameover.style.display='flex';
-    guardarScore(score);
-  }
-  svg.addEventListener('click', (e)=>{
-    const p = e.target;
-    if(!p || !p.classList.contains('segment')) return;
-    const idx = Number(p.getAttribute('data-index'));
-    handlePlayerInput(idx);
-  });
-  startBtn.addEventListener('click', ()=>{
-    if(!audioCtx && window.AudioContext) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-    resetGame();
-    addStep();
-    setTimeout(()=>playSequence(), 250);
-  });
-  strictBtn.addEventListener('click', ()=>{
-    strictMode = !strictMode;
-    strictBtn.classList.toggle('active', strictMode);
-  });
-  soundToggle.addEventListener('click', ()=>{
-    soundEnabled = !soundEnabled;
-    soundToggle.classList.toggle('active', soundEnabled);
-    soundToggle.textContent = soundEnabled ? 'Sonido' : 'Mute';
-  });
-  restartBtn.addEventListener('click', ()=>{
-    resetGame();
-  });
-  window.addEventListener('keydown', (e)=>{
-    const map = {'1':0,'2':1,'3':2,'4':3};
-    if(map[e.key] !== undefined) handlePlayerInput(map[e.key]);
-    if(e.key === ' '){ startBtn.click(); }
-  });
 
-  buildBoard();
-  updateCount();
-  let warmed=false;
-  document.addEventListener('pointerdown', ()=>{
-    if(warmed) return; warmed=true;
-    if(!audioCtx && window.AudioContext) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-    if(audioCtx && soundEnabled){
-      playTone(60, 80);
+    function playTone(freq, duration=350){
+        if(!soundEnabled) return;
+        ensureAudio();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration/1000);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration/1000);
     }
-  }, {once:true});
-  function guardarScore(score){
-    fetch('/simondice-game/score',{
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content
-      },
-      body:JSON.stringify({
-        score:score,
-        difficulty:"easy"
-      })
-    })
-    .then(res=>res.json())
-    .then(data=>console.log('Score guardado',data))
-    .catch(err=>console.error('Error guardar score:',err));
-  }
-})();
+
+    function buildBoard(){
+        svg.innerHTML = '';
+        const radius = 240;
+        const thickness = 100;
+        for(let i=0; i<NUM_BUTTONS; i++){
+            const startAngle = (i * 360 / NUM_BUTTONS) + 45; 
+            const endAngle = ((i+1) * 360 / NUM_BUTTONS) + 45;
+            
+            const x1 = Math.cos(startAngle * Math.PI/180) * radius;
+            const y1 = Math.sin(startAngle * Math.PI/180) * radius;
+            const x2 = Math.cos(endAngle * Math.PI/180) * radius;
+            const y2 = Math.sin(endAngle * Math.PI/180) * radius;
+            
+            const x3 = Math.cos(endAngle * Math.PI/180) * (radius - thickness);
+            const y3 = Math.sin(endAngle * Math.PI/180) * (radius - thickness);
+            const x4 = Math.cos(startAngle * Math.PI/180) * (radius - thickness);
+            const y4 = Math.sin(startAngle * Math.PI/180) * (radius - thickness);
+
+            const d = `M ${x1} ${y1} A ${radius} ${radius} 0 0 1 ${x2} ${y2} L ${x3} ${y3} A ${radius-thickness} ${radius-thickness} 0 0 0 ${x4} ${y4} Z`;
+            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            path.setAttribute("d", d);
+            path.setAttribute("class", "segment");
+            path.style.fill = colors[i];
+            path.style.stroke = "#181d25";
+            path.style.strokeWidth = "8";
+            
+            path.addEventListener('pointerdown', (e) => {
+                e.preventDefault();
+                handlePlayerInput(i);
+            });
+            svg.appendChild(path);
+        }
+    }
+
+    function activate(idx){
+        const segs = document.querySelectorAll('.segment');
+        segs[idx].classList.add('active');
+        playTone(freqs[idx]);
+        setTimeout(() => segs[idx].classList.remove('active'), 300);
+    }
+
+    function playSequence(){
+        if(playing) return;
+        playing = true;
+        unlocked = false;
+        countEl.textContent = sequence.length;
+        score = sequence.length - 1;
+        if(score < 0) score = 0;
+        scoreLabel.textContent = `Score: ${score}`;
+
+        let i = 0;
+        const speed = Math.max(200, SPEED_BASE - (sequence.length * 40));
+        
+        const interval = setInterval(() => {
+            activate(sequence[i]);
+            i++;
+            if(i >= sequence.length){
+                clearInterval(interval);
+                setTimeout(() => {
+                    playing = false;
+                    unlocked = true;
+                    playerPos = 0;
+                }, speed);
+            }
+        }, speed);
+    }
+
+    function addStep(){
+        sequence.push(Math.floor(Math.random() * NUM_BUTTONS));
+        score = sequence.length - 1;
+    }
+
+    function handlePlayerInput(idx){
+        if(!unlocked || playing) return;
+        
+        activate(idx);
+        
+        if(idx !== sequence[playerPos]){
+            countEl.textContent = "!!";
+            playTone(150, 600); 
+            guardarScore(score);
+            showGameOver(false); 
+            return;
+        }
+
+        playerPos++;
+        if(playerPos >= sequence.length){
+            score++; 
+            scoreLabel.textContent = `Score: ${score}`;
+            
+            if(score >= TARGET_ROUND){
+                guardarScore(score);
+                showGameOver(true);
+                return;
+            }
+
+            unlocked = false;
+            setTimeout(() => {
+                addStep();
+                playSequence();
+            }, 1000);
+        }
+    }
+
+    function resetGame(){
+        sequence = [];
+        playerPos = 0;
+        score = 0;
+        scoreLabel.textContent = `Score: 0`;
+        countEl.textContent = "--";
+        playing = false;
+        unlocked = false;
+    }
+
+    function showIntro() {
+        modal.classList.remove('hidden');
+        setTimeout(() => modal.classList.add('active'), 10);
+        govBubble.className = "speech-bubble";
+        scoreContainer.classList.add('hidden');
+        resetGame();
+
+        govEyebrow.textContent = "MEMORIA ECOICA";
+        govTitle.textContent = "Simon Fácil";
+        govMsg.innerHTML = `Repite la secuencia de luces y sonidos.<br>Meta: <strong>${TARGET_ROUND} rondas</strong>.`;
+        actionBtn.textContent = "¡Empezar!";
+
+        actionBtn.onclick = () => {
+            modal.classList.remove('active');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                addStep();
+                setTimeout(playSequence, 500);
+            }, 300);
+        };
+        injectBackLink();
+    }
+
+    function showGameOver(win) {
+        modal.classList.remove('hidden');
+        setTimeout(() => modal.classList.add('active'), 10);
+        scoreContainer.classList.remove('hidden');
+        scoreDisplay.textContent = score;
+
+        if (win) {
+            govBubble.className = "speech-bubble win-theme";
+            govEyebrow.textContent = "¡VICTORIA!";
+            govTitle.textContent = "¡Lo lograste!";
+            govMsg.innerHTML = "Tu memoria secuencial es excelente.";
+            actionBtn.textContent = "Jugar de nuevo";
+        } else {
+            govBubble.className = "speech-bubble lose-theme";
+            govEyebrow.textContent = "FALLASTE";
+            govTitle.textContent = "Secuencia incorrecta";
+            govMsg.innerHTML = "Te equivocaste de botón. ¡Inténtalo otra vez!";
+            actionBtn.textContent = "Reintentar";
+        }
+
+        actionBtn.onclick = () => showIntro();
+        injectBackLink();
+    }
+
+    function injectBackLink() {
+        if (!document.querySelector('.modal-back-link')) {
+            const backLink = document.createElement('a');
+            backLink.className = 'modal-back-link';
+            backLink.textContent = "Volver al menú principal";
+            backLink.href = "/TiposMemoria/Mecoica";
+            backMenuContainer.appendChild(backLink);
+        }
+    }
+
+    function guardarScore(scoreVal) {
+        const token = document.querySelector('meta[name="csrf-token"]')?.content;
+        fetch('/simondice-game/score', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token },
+            body: JSON.stringify({ score: scoreVal, difficulty: "easy" })
+        }).catch(console.error);
+    }
+
+    startBtn.addEventListener('click', () => { resetGame(); addStep(); playSequence(); });
+    strictBtn.addEventListener('click', () => { strictMode = !strictMode; strictBtn.classList.toggle('active'); });
+    soundToggle.addEventListener('click', () => { soundEnabled = !soundEnabled; soundToggle.classList.toggle('active'); soundToggle.textContent = soundEnabled ? 'Sonido' : 'Mute'; });
+
+    buildBoard();
+    showIntro();
+});

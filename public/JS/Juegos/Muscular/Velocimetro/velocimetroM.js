@@ -1,262 +1,211 @@
-window.$ = document.querySelectorAll.bind(document);
+document.addEventListener('DOMContentLoaded', () => {
+    window.$ = document.querySelectorAll.bind(document);
+    
+    const TARGET_WPM = 350;
 
-if (navigator.userAgent.match(/firefox/i)) {
-    let ffBtn = "font-weight: normal; font-size: 2em; margin-left: 0.3em;";
-    $("#restart-symbol")[0].setAttribute("style", ffBtn);
+    let wordList = ['Electroencefalografista','Esternocleidomastoideo','Anticonstitucionalidad','Electroencefalografía','HUMANIDADContrarrevolucionario','Interdisciplinariedad','Desoxirribonucleótido','Otorrinolaringológico','Otorrinolaringología','Electroencefalógrafo','Anticonstitucionalmente','Litofotográficamente','Circunstanciadamente','Electrocardiográficamente','Magnetoencefalografía','Aminotransferasa','Desproporcionadamente','Extraterritorialidad','Extraterritorialidad','Esternocleidooccipitomastoideo','Nacionalsindicalista','Craneofaringioma','Encephalitozoonidae','Antitauromaquia','Incomprehensibilidad','Antigubernamentalisticamente','Equisatisfactibilidad','Hipogammaglobulinemia','Bioluminiscencia','Pseudohermafroditismo','Auriculoventriculostomía','Magnetohidrodinámica',
+        "consigna", "flamear", "importante", "nervios", "pelo", "señales", "piso", "temprano", "vaca",
+        "zanahoria", "acierto", "bibliografía", "chupetin", "defensa", "ese", "fink", "doblar", "dije",
+        "marco", "huso", "despertar", "trocar", "amarillo", "billar", "ciudadano", "patinaje", "facilidad",
+        "flash", "formacion", "adelante", "gigante", "tripa", "kit", "capas", "significado", "clavo",
+        "opcion", "tierra", "lluvia", "sombra", "pronto", "sed", "desgarro", "tigre", "titulo",
+        "salvaje", "animado", "ciego", "boceto", "el", "caer", "hueso", "juguete", "paseo", "viento"
+    ];
 
-    let ffwait = "line-height: 1em; font-size: 4em;";
-    $(".waiting")[0].setAttribute("style", ffwait);
-}
+    let wordData = { seconds: 60, correct: 0, incorrect: 0, total: 0, typed: 0 };
+    let timer = null; 
+    let gameActive = false;
 
-let wordList = ['Electroencefalografista','Esternocleidomastoideo','Anticonstitucionalidad','Electroencefalografía','HUMANIDADContrarrevolucionario','Interdisciplinariedad','Desoxirribonucleótido','Otorrinolaringológico','Otorrinolaringología','Electroencefalógrafo','Anticonstitucionalmente','Litofotográficamente','Circunstanciadamente','Electrocardiográficamente','Magnetoencefalografía','Aminotransferasa','Desproporcionadamente','Extraterritorialidad','Extraterritorialidad','Esternocleidooccipitomastoideo','Nacionalsindicalista','Craneofaringioma','Encephalitozoonidae','Antitauromaquia','Incomprehensibilidad','Antigubernamentalisticamente','Equisatisfactibilidad','Hipogammaglobulinemia','Bioluminiscencia','Pseudohermafroditismo','Auriculoventriculostomía','Magnetohidrodinámica',
-    "consigna", "flamear", "importante", "nervios", "pelo", "señales", "piso", "temprano", "vaca",
-    "zanahoria", "acierto", "bibliografía", "chupete", "defender", "eso", "pensar", "doblar", "decir",
-    "encuadrar", "huso", "indeciso", "bajo", "era", "linea", "para", "antes", "en",
-    "encender", "morro", "porque", "paredes", "mismo", "como", "significado", "yo", "diferenciar",
-    "suyo", "mover", "ellos", "derechos", "son", "chaval", "presupuesto", "viejo", "regenerar",
-    "también", "son", "rural", "salado", "decir", "procedente", "frase", "sensacional",
-    "colocar", "tuvo", "tres", "por", "querer", "caliente", "aire", "simple", "bueno",
-    "algunos", "sitio", "como", "jugar", "lugar", "pequeño", "nosotros", "final", "poder",
-    "poner", "fuera", "casa", "otros", "leer", "donde", "mano", "todo", "puerto",
-    "tuyo", "largo", "cuando", "deletrear", "arriba", "añadir", "usar", "aunque", "palabra",
-    "tierra", "como", "aqui", "dijo", "debe", "un", "gran", "cada", "altura",
-    "ella", "como", "con", "seguir", "hacer", "actuar", "suyo", "objeto", "tiempo",
-    "preguntar", "si", "significado", "puede", "cambiar", "manera", "fueron", "sobre", "luz",
-    "muchas", "generoso", "entonces", "apagar", "pupila", "necesidad", "deber", "casa",
-    "escribir", "pintura", "gustar", "intentar", "asentir", "importe", "nada", "repetir",
-    "perdido", "animal", "largo", "punto", "hacer", "madre", "cosa", "mundo",
-    "ver", "cerca", "punto", "construir", "dos", "remoto", "viajar", "tierra", "yuxtapuesto",
-    "consigna", "flamear", "importante", "nervios", "pelo", "señales", "piso", "temprano", "vaca",
-    "zanahoria", "acierto", "bibliografía", "chupete", "defender", "eso", "pensar", "doblar", "decir",
-    "encuadrar", "huso", "indeciso", "bajo", "era", "linea", "para", "antes", "en",
-    "encender", "morro", "porque", "paredes", "mismo", "como", "significado", "yo", "diferenciar",
-    "suyo", "mover", "ellos", "derechos", "son", "chaval", "presupuesto", "viejo", "regenerar",
-    "también", "son", "rural", "salado", "decir", "procedente", "frase", "sensacional",
-    "colocar", "tuvo", "tres", "por", "querer", "caliente", "aire", "simple", "bueno",
-    "algunos", "sitio", "como", "jugar", "lugar", "pequeño", "nosotros", "final", "poder",
-    "poner", "fuera", "casa", "otros", "leer", "donde", "mano", "todo", "puerto",
-    "tuyo", "largo", "cuando", "deletrear", "arriba", "añadir", "usar", "aunque", "palabra",
-    "tierra", "como", "aqui", "dijo", "debe", "un", "gran", "cada", "altura",
-    "ella", "como", "con", "seguir", "hacer", "actuar", "suyo", "objeto", "tiempo",
-    "preguntar", "si", "significado", "puede", "cambiar", "manera", "fueron", "sobre", "luz",
-    "muchas", "generoso", "entonces", "apagar", "pupila", "necesidad", "deber", "casa",
-    "escribir", "pintura", "gustar", "intentar", "asentir", "importe", "nada", "repetir",
-    "perdido", "animal", "largo", "punto", "hacer", "madre", "cosa", "mundo",
-    "ver", "cerca", "punto", "construir", "dos", "remoto", "viajar", "tierra", "yuxtapuesto",
-    "consigna", "flamear", "importante", "nervios", "pelo", "señales", "piso", "temprano", "vaca",
-    "zanahoria", "acierto", "bibliografía", "chupete", "defender", "eso", "pensar", "doblar", "decir",
-    "encuadrar", "huso", "indeciso", "bajo", "era", "linea", "para", "antes", "en",
-    "encender", "morro", "porque", "paredes", "mismo", "como", "significado", "yo", "diferenciar",
-    "suyo", "mover", "ellos", "derechos", "son", "chaval", "presupuesto", "viejo", "regenerar",
-    "también", "son", "rural", "salado", "decir", "procedente", "frase", "sensacional",
-    "colocar", "tuvo", "tres", "por", "querer", "caliente", "aire", "simple", "bueno",
-    "algunos", "sitio", "como", "jugar", "lugar", "pequeño", "nosotros", "final", "poder",
-    "poner", "fuera", "casa", "otros", "leer", "donde", "mano", "todo", "puerto",
-    "tuyo", "largo", "cuando", "deletrear", "arriba", "añadir", "usar", "aunque", "palabra",
-    "tierra", "como", "aqui", "dijo", "debe", "un", "gran", "cada", "altura",
-    "ella", "como", "con", "seguir", "hacer", "actuar", "suyo", "objeto", "tiempo",
-    "preguntar", "si", "significado", "puede", "cambiar", "manera", "fueron", "sobre", "luz",
-    "muchas", "generoso", "entonces", "apagar", "pupila", "necesidad", "deber", "casa",
-    "escribir", "pintura", "gustar", "intentar", "asentir", "importe", "nada", "repetir",
-    "perdido", "animal", "largo", "punto", "hacer", "madre", "cosa", "mundo",
-    "ver", "cerca", "punto", "construir", "dos", "remoto", "viajar", "tierra", "yuxtapuesto"];
+    const modal = document.getElementById('modal-gameover');
+    const govBubble = document.getElementById('gov-bubble');
+    const govTitle = document.getElementById('gov-title');
+    const govMsg = document.getElementById('gov-msg');
+    const govEyebrow = document.getElementById('gov-eyebrow');
+    const scoreContainer = document.getElementById('score-container');
+    const scoreDisplay = document.getElementById('score-modal-display');
+    const actionBtn = document.getElementById('action-btn');
+    const typebox = document.getElementById('typebox');
+    const restartBtn = document.getElementById('restart');
 
-function shuffle(array) {
-    let m = array.length, t, i;
-    while (m) {
-        i = Math.floor(Math.random() * m--);
-        t = array[m];
-        array[m] = array[i];
-        array[i] = t;
-    }
-    return array;
-}
-
-
-function addWords() {
-    let wordSection = $("#word-section")[0];
-    wordSection.innerHTML = "";
-    $("#typebox")[0].value = "";
-
-    for (let i = 350; i > 0; i--) {
-        let words = shuffle(wordList);
-        let wordSpan = `<span>${words[i]}</span>`;
-        wordSection.innerHTML += wordSpan;
-    }
-    wordSection.firstChild.classList.add("current-word");
-
-
-}
-
-
-
-let colorCurrentWord =" #dddddd";
-let colorCorrectWord = "#93C572";
-let colorIncorrectWord = "#e50000";
-
-let wordData = {
-    seconds: 60,
-    correct: 0,
-    incorrect: 0,
-    total: 0,
-    typed: 0
-};
-
-
-
-function checkWord(word) {
-    let wlen = word.value.length;
-    let current = $(".current-word")[0];
-    let currentSubstring = current.innerHTML.substring(0, wlen);
-    if (word.value.trim() != currentSubstring) {
-        current.classList.add("incorrect-word-bg");
-        return false;
-    } else {
-        current.classList.remove("incorrect-word-bg");
-        return true;
-    }
-}
-
-function submitWord(word) {
-
-    let current = $(".current-word")[0];
-
-    if (checkWord(word)) {
-        current.classList.remove("current-word");
-        current.classList.add("correct-word-c");
-        wordData.correct += 1;
-    } else {
-        current.classList.remove("current-word", "incorrect-word-bg");
-        current.classList.add("incorrect-word-c");
-        wordData.incorrect += 1;
-    }
-    wordData.total = wordData.correct + wordData.incorrect;
-
-    current.nextSibling.classList.add("current-word");
-}
-
-function clearLine() {
-    let wordSection = $("#word-section")[0];
-    let current = $(".current-word")[0];
-    let previous = current.previousSibling;
-    let children = $(".correct-word-c, .incorrect-word-c").length;
-
-    if (current.offsetTop > previous.offsetTop) {
-        for (let i = 0; i < children; i++) {
-            wordSection.removeChild(wordSection.firstChild);
+    function shuffle(array) {
+        let m = array.length, t, i;
+        while (m) {
+            i = Math.floor(Math.random() * m--);
+            t = array[m];
+            array[m] = array[i];
+            array[i] = t;
         }
+        return array;
     }
-}
 
-function isTimer(seconds) {
+    function addWords() {
+        $("#word-section")[0].innerHTML = "";
+        $("#typebox")[0].value = "";
+        shuffle(wordList);
+        wordList.forEach(word => {
+            let span = document.createElement("span");
+            span.innerHTML = word;
+            $("#word-section")[0].appendChild(span);
+        });
+        $("#word-section")[0].firstChild.classList.add("current-word");
+    }
 
-    let time = seconds;
-    let one = $("#timer > span")[0].innerHTML;
-    if (one == "1:00") {
-        let typingTimer = setInterval(() => {
-            if (time <= 0) {
-                clearInterval(typingTimer);
-                finishTest();
+    function isTimer(seconds) {
+        let time = seconds;
+        if (timer !== null) return false;
+
+        timer = setInterval(() => {
+            if (time > 0) {
+                time--;
+                $("#timer")[0].innerHTML = time < 10 ? "0:0" + time : "0:" + time;
+                wordData.seconds = time;
             } else {
-                time -= 1;
-                let timePad = (time < 10) ? ("0" + time) : time; // zero padded
-                $("#timer > span")[0].innerHTML = `0:${timePad}`;
+                clearInterval(timer);
+                timer = null;
+                finishTest();
             }
         }, 1000);
-    } else if (one == "0:00") {return false;}
-    return true;
-}
-
-function sendAnalytics(wpm, accuracy, total, correct, incorrect, typed) {
-    result = wpm+"-"+accuracy+"-"+total+"-"+correct+"-"+incorrect+"-"+typed;
-
-    //ga('send', 'event', 'Typetest', 'result', result);
-
-    //clicky.log('typetest/#result', result);
-}
-
-var finished = false;
-function finishTest() {
-    if (finished) {
-        return;
-    } else {
-        finished = true;
+        return true;
     }
 
-    calculateWPM(wordData);
-}
+    function checkWord(word) {
+        let w = $("#word-section")[0].children[0];
+        let val = word.value;
+        let wVal = w.innerHTML;
 
-function calculateWPM(data) {
-    let {seconds, correct, incorrect, total, typed} = data;
-    let min = (seconds / 60);
-    let wpm = Math.ceil((typed / 5) - (incorrect) / min);
-    let accuracy = Math.ceil((correct / total) * 100);
+        if (word.value.length > w.innerHTML.length) {
+            w.classList.add("incorrect-word-c");
+        } else if (wVal.indexOf(val) === 0) {
+            w.classList.remove("incorrect-word-c");
+        } else {
+            w.classList.add("incorrect-word-c");
+        }
+    }
 
-    if (wpm < 0) {wpm = 0;}
-    let results = `<ul id="results">
-        <li>Puntos: <span class="wpm-value">${wpm}</span></li>
-        <li>Porcentaje: <span class="wpm-value">${accuracy}%</span></li>
-        <li id="results-stats">
-        Total de palabras: <span>${total}</span> |
-        Palabras Correctas: <span>${correct}</span> |
-        Palabras Incorrectas: <span>${incorrect}</span> |
-        Tipos de Caracteres: <span>${typed}</span>
-        </li>
-        </ul>`;
+    function submitWord(word) {
+        let w = $("#word-section")[0].children[0];
+        let val = word.value.trim();
+        let wVal = w.innerHTML;
 
-    $("#word-section")[0].innerHTML = results;
+        if (val === wVal) {
+            w.classList.add("correct-word-c");
+            wordData.correct += 1;
+        } else {
+            w.classList.add("incorrect-word-c");
+            wordData.incorrect += 1;
+        }
+        wordData.total += 1;
+        
+        $("#word-section")[0].removeChild(w);
+        $("#word-section")[0].appendChild(w);
+        $("#word-section")[0].children[0].classList.add("current-word");
+    }
 
-    let wpmClass = $("li:nth-child(2) .wpm-value")[0].classList;
-    if (accuracy > 80) {wpmClass.add("correct-word-c");}
-    else { wpmClass.add("incorrect-word-c");}
+    function clearLine() {
+        let wordSection = $("#word-section")[0];
+        if (wordSection.scrollTop + wordSection.offsetHeight >= wordSection.scrollHeight) {
+            wordSection.scrollTop = 0;
+        }
+    }
 
-    sendAnalytics(wpm, accuracy, total, correct, incorrect, typed);
-    console.log(wordData);
-    guardarScoreVelocimetro(wpm, 'medium');
-}
+    function typingTest(e) {
+        if (!gameActive) return;
+        e = e || window.event;
+        let kcode = e.keyCode;
+        let word = $("#typebox")[0];
 
-function typingTest(e) {
-
-    e = e || window.event;
-    let kcode = e.keyCode;
-    let word = $("#typebox")[0];
-
-    if (word.value.match(/^\s/g)) {
-        word.value = "";
-    } else {
-        if (isTimer(wordData.seconds)) {
+        if (word.value.match(/^\s/g)) {
+            word.value = "";
+        } else {
+            isTimer(wordData.seconds);
             checkWord(word);
-            if (kcode == 32) {
+            if (kcode == 32) { 
                 submitWord(word);
                 clearLine();
                 $("#typebox")[0].value = "";
             }
             wordData.typed += 1;
-        } else {
-            finishTest();
         }
     }
-}
 
-function restartTest() {
-    finished = false;
-    $("#typebox")[0].value = "";
-    location.reload();
-}
+    function finishTest() {
+        gameActive = false;
+        typebox.disabled = true;
 
-function guardarScoreVelocimetro(score, dificultad) {
-    fetch('/velocimetro-game/score', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-        },
-        body: JSON.stringify({
-            score: score,
-            difficulty: dificultad
-        })
-    })
-    .then(res => res.json())
-    .then(data => console.log(data.message))
-    .catch(err => console.error('Error al guardar score:', err));
-}
+        let wpm = Math.floor((wordData.typed / 5) - wordData.incorrect);
+        if (wpm < 0) wpm = 0;
+        
+        guardarScoreVelocimetro(wpm, 'medium');
+        showGameOver(wpm);
+    }
+
+    function showIntro() {
+        wordData = { seconds: 60, correct: 0, incorrect: 0, total: 0, typed: 0 };
+        if(timer) { clearInterval(timer); timer = null; }
+        $("#timer")[0].innerHTML = "1:00";
+        addWords();
+
+        modal.classList.remove('hidden');
+        setTimeout(() => modal.classList.add('active'), 10);
+        
+        govBubble.className = "speech-bubble";
+        scoreContainer.classList.add('hidden');
+
+        govEyebrow.textContent = "VELOCÍMETRO";
+        govTitle.textContent = "Nivel Medio";
+        govMsg.innerHTML = `Meta: <strong>${TARGET_WPM} Palabras por Minuto</strong>.`;
+        actionBtn.textContent = "¡Empezar!";
+
+        actionBtn.onclick = () => {
+            modal.classList.remove('active');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                gameActive = true;
+                typebox.disabled = false;
+                typebox.value = "";
+                typebox.focus();
+            }, 300);
+        };
+    }
+
+    function showGameOver(wpm) {
+        modal.classList.remove('hidden');
+        setTimeout(() => modal.classList.add('active'), 10);
+
+        scoreContainer.classList.remove('hidden');
+        scoreDisplay.textContent = wpm;
+
+        let win = wpm >= TARGET_WPM;
+
+        if (win) {
+            govBubble.className = "speech-bubble win-theme";
+            govEyebrow.textContent = "¡MUY BIEN!";
+            govTitle.textContent = "¡Nivel Superado!";
+            govMsg.innerHTML = "Tu velocidad es impresionante.";
+            actionBtn.textContent = "Jugar de nuevo";
+        } else {
+            govBubble.className = "speech-bubble lose-theme";
+            govEyebrow.textContent = "INTÉNTALO DE NUEVO";
+            govTitle.textContent = "Casi lo logras";
+            govMsg.innerHTML = "Necesitas escribir un poco más rápido.";
+            actionBtn.textContent = "Reintentar";
+        }
+
+        actionBtn.onclick = () => {
+            showIntro();
+        };
+    }
+
+    function guardarScoreVelocimetro(score, dificultad) {
+        const token = document.querySelector('meta[name="csrf-token"]')?.content;
+        fetch('/velocimetro-game/score', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token },
+            body: JSON.stringify({ score: score, difficulty: dificultad })
+        }).catch(err => console.error(err));
+    }
+
+    typebox.addEventListener('keyup', typingTest);
+    restartBtn.addEventListener('click', () => { showIntro(); });
+    showIntro();
+});

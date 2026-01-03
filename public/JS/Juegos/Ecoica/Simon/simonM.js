@@ -1,192 +1,221 @@
-(function(){
-  const NUM_BUTTONS = 5;
-  const SPEED_BASE = 820;
-  const speedByRound = r => Math.max(220, SPEED_BASE - r*30);
-  const colors = ["#28cf5f","#f54f4f","#ffd43b","#2fb7ff","#b06cff"];
-  const freqs = [329.63, 261.63, 392.00, 220.00, 440.00];
-  const svg = document.getElementById('board');
-  const countEl = document.getElementById('count');
-  const startBtn = document.getElementById('start');
-  const strictBtn = document.getElementById('strict');
-  const soundBtn = document.getElementById('sound');
-  const scoreLabel = document.getElementById('score-label');
-  const scoreModal = document.getElementById('score-modal');
-  const modalGameover = document.getElementById('modal-gameover');
-  const restartBtn = document.getElementById('restart-btn');
+document.addEventListener('DOMContentLoaded', function() {
+    const NUM_BUTTONS = 5;
+    const SPEED_BASE = 800;
+    const TARGET_ROUND = 100;
 
-  let audioCtx = null;
-  let soundEnabled = true;
-  const MAX = 20;
+    const colors = ["#28cf5f","#f54f4f","#ffd43b","#2fb7ff","#b06cff"];
+    const freqs = [329.63, 261.63, 392.00, 220.00, 440.00];
 
-  let sequence = [];
-  let playerPos = 0;
-  let unlocked = true;
-  let strictMode = false;
-  let score = 0;
-  let gameEnded = false;
+    const svg = document.getElementById('board');
+    const countEl = document.getElementById('count');
+    const startBtn = document.getElementById('start');
+    const strictBtn = document.getElementById('strict');
+    const soundToggle = document.getElementById('sound');
+    const scoreLabel = document.getElementById('score-label');
 
-  function ensureAudio(){ if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+    const modal = document.getElementById('modal-gameover');
+    const govBubble = document.getElementById('gov-bubble');
+    const govTitle = document.getElementById('gov-title');
+    const govMsg = document.getElementById('gov-msg');
+    const govEyebrow = document.getElementById('gov-eyebrow');
+    const scoreContainer = document.getElementById('score-container');
+    const scoreDisplay = document.getElementById('score-modal-display');
+    const actionBtn = document.getElementById('action-btn');
+    const backMenuContainer = document.getElementById('back-menu-container');
 
-  function playTone(freq, duration=350, when=0){
-    if(!soundEnabled) return;
-    ensureAudio();
-    const ctx = audioCtx;
-    const o = ctx.createOscillator();
-    const g = ctx.createGain();
-    o.type = 'triangle';
-    o.frequency.value = freq;
-    g.gain.value = 0.0001;
-    o.connect(g); g.connect(ctx.destination);
-    const now = ctx.currentTime + when/1000;
-    g.gain.setValueAtTime(0.0001, now);
-    g.gain.exponentialRampToValueAtTime(0.28, now + 0.02);
-    o.start(now);
-    g.gain.exponentialRampToValueAtTime(0.0001, now + duration/1000 - 0.01);
-    o.stop(now + duration/1000 + 0.02);
-  }
+    let audioCtx = null;
+    let soundEnabled = true;
+    let sequence = [];
+    let playerPos = 0;
+    let playing = false; 
+    let strictMode = false;
+    let unlocked = false; 
+    let score = 0;
 
-  function polarToCartesian(cx, cy, r, angleDeg){
-    const rad = (angleDeg-90) * Math.PI/180.0;
-    return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
-  }
-
-  function describeArc(cx, cy, r, startAngle, endAngle){
-    const start = polarToCartesian(cx,cy,r,endAngle);
-    const end = polarToCartesian(cx,cy,r,startAngle);
-    const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
-    return ["M", cx, cy, "L", start.x, start.y, "A", r, r, 0, largeArcFlag, 0, end.x, end.y, "Z"].join(" ");
-  }
-
-  function build(){
-    svg.innerHTML = "";
-    const r = 240;
-    for(let i=0;i<NUM_BUTTONS;i++){
-      const start = i*(360/NUM_BUTTONS);
-      const end = (i+1)*(360/NUM_BUTTONS);
-      const p = document.createElementNS("http://www.w3.org/2000/svg","path");
-      p.setAttribute("d", describeArc(0,0,r,start,end));
-      p.setAttribute("fill", colors[i%colors.length]);
-      p.setAttribute("data-index", i);
-      p.classList.add('segment');
-      svg.appendChild(p);
+    function ensureAudio(){
+        if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
-  }
 
-  function updateCount(){
-    countEl.textContent = sequence.length ? String(sequence.length).padStart(2,'0') : "--";
-    score = Math.max(score, sequence.length-1);
-    scoreLabel.textContent = `Score: ${score}`;
-  }
-
-  function flash(idx, duration=360){
-    const segs = svg.querySelectorAll('.segment');
-    const s = segs[idx];
-    if(!s) return;
-    s.classList.add('active');
-    playTone(freqs[idx % freqs.length], duration);
-    setTimeout(()=> s.classList.remove('active'), duration+50);
-  }
-
-  async function playSequence(){
-    unlocked = false;
-    playerPos = 0;
-    for(let i=0;i<sequence.length;i++){
-      const idx = sequence[i];
-      flash(idx, Math.min(420, speedByRound(sequence.length)-60));
-      await new Promise(r => setTimeout(r, speedByRound(sequence.length)));
+    function playTone(freq, duration=300){
+        if(!soundEnabled) return;
+        ensureAudio();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration/1000);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration/1000);
     }
-    unlocked = true;
-  }
 
-  function addStep(){ sequence.push(Math.floor(Math.random()*NUM_BUTTONS)); updateCount(); }
+    function buildBoard(){
+        svg.innerHTML = '';
+        const radius = 240;
+        const thickness = 90;
+        for(let i=0; i<NUM_BUTTONS; i++){
+            const startAngle = (i * 360 / NUM_BUTTONS) - 90; 
+            const endAngle = ((i+1) * 360 / NUM_BUTTONS) - 90;
+            
+            const x1 = Math.cos(startAngle * Math.PI/180) * radius;
+            const y1 = Math.sin(startAngle * Math.PI/180) * radius;
+            const x2 = Math.cos(endAngle * Math.PI/180) * radius;
+            const y2 = Math.sin(endAngle * Math.PI/180) * radius;
+            const x3 = Math.cos(endAngle * Math.PI/180) * (radius - thickness);
+            const y3 = Math.sin(endAngle * Math.PI/180) * (radius - thickness);
+            const x4 = Math.cos(startAngle * Math.PI/180) * (radius - thickness);
+            const y4 = Math.sin(startAngle * Math.PI/180) * (radius - thickness);
 
-  function reset(){
-    sequence=[]; playerPos=0; unlocked=true; score=0; gameEnded=false; updateCount();
-    modalGameover.style.display='none';
-  }
-
-  function handleInput(idx){
-    if(!unlocked || gameEnded) return;
-    if(!audioCtx && window.AudioContext) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    flash(idx, Math.max(160, speedByRound(sequence.length)-60));
-    if(sequence[playerPos] === idx){
-      playerPos++;
-      if(playerPos === sequence.length){
-        if(sequence.length >= MAX){
-          countEl.textContent="WIN";
-          endGame();
-          return;
+            const d = `M ${x1} ${y1} A ${radius} ${radius} 0 0 1 ${x2} ${y2} L ${x3} ${y3} A ${radius-thickness} ${radius-thickness} 0 0 0 ${x4} ${y4} Z`;
+            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            path.setAttribute("d", d);
+            path.setAttribute("class", "segment");
+            path.style.fill = colors[i];
+            path.style.stroke = "#181d25";
+            path.style.strokeWidth = "8";
+            path.addEventListener('pointerdown', (e) => { e.preventDefault(); handlePlayerInput(i); });
+            svg.appendChild(path);
         }
-        setTimeout(()=>{ addStep(); playSequence(); }, 600);
-      }
-    } else {
-      unlocked=false;
-      countEl.textContent="!!";
-      endGame();
     }
-  }
 
-  function endGame(){
-    gameEnded = true;
-    unlocked = false;
-    scoreModal.textContent = score;
-    modalGameover.style.display='flex';
-    guardarScore(score);
-  }
+    function activate(idx){
+        const segs = document.querySelectorAll('.segment');
+        segs[idx].classList.add('active');
+        playTone(freqs[idx]);
+        setTimeout(() => segs[idx].classList.remove('active'), 250);
+    }
 
-  svg.addEventListener('click', function(e){
-    const p = e.target;
-    if(!p || !p.classList.contains('segment')) return;
-    handleInput(Number(p.getAttribute('data-index')));
-  });
+    function playSequence(){
+        if(playing) return;
+        playing = true;
+        unlocked = false;
+        countEl.textContent = sequence.length;
+        scoreLabel.textContent = `Score: ${score}`;
 
-  startBtn.addEventListener('click', ()=>{
-    if(!audioCtx && window.AudioContext) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    reset();
-    addStep();
-    setTimeout(()=>playSequence(), 200);
-  });
+        let i = 0;
+        const speed = Math.max(180, SPEED_BASE - (sequence.length * 35));
+        
+        const interval = setInterval(() => {
+            activate(sequence[i]);
+            i++;
+            if(i >= sequence.length){
+                clearInterval(interval);
+                setTimeout(() => {
+                    playing = false;
+                    unlocked = true;
+                    playerPos = 0;
+                }, speed);
+            }
+        }, speed);
+    }
 
-  strictBtn.addEventListener('click', ()=>{
-    strictMode = !strictMode;
-    strictBtn.classList.toggle('active', strictMode);
-  });
-  soundBtn.addEventListener('click', ()=>{
-    soundEnabled = !soundEnabled;
-    soundBtn.classList.toggle('active', soundEnabled);
-    soundBtn.textContent = soundEnabled ? 'Sonido' : 'Mute';
-  });
+    function addStep(){
+        sequence.push(Math.floor(Math.random() * NUM_BUTTONS));
+    }
 
-  restartBtn.addEventListener('click', ()=>{
-    reset();
-  });
+    function handlePlayerInput(idx){
+        if(!unlocked || playing) return;
+        activate(idx);
+        
+        if(idx !== sequence[playerPos]){
+            countEl.textContent = "!!";
+            playTone(150, 600);
+            guardarScore(score);
+            showGameOver(false); 
+            return;
+        }
 
-  window.addEventListener('keydown', (e)=>{
-    const map = {'1':0,'2':1,'3':2,'4':3,'5':4};
-    if(map[e.key] !== undefined) handleInput(map[e.key]);
-    if(e.key===' ') startBtn.click();
-  });
+        playerPos++;
+        if(playerPos >= sequence.length){
+            score++;
+            scoreLabel.textContent = `Score: ${score}`;
+            if(score >= TARGET_ROUND){
+                guardarScore(score);
+                showGameOver(true);
+                return;
+            }
+            unlocked = false;
+            setTimeout(() => { addStep(); playSequence(); }, 1000);
+        }
+    }
 
-  build(); updateCount();
+    function resetGame(){
+        sequence = []; playerPos = 0; score = 0;
+        scoreLabel.textContent = `Score: 0`; countEl.textContent = "--";
+        playing = false; unlocked = false;
+    }
 
-  document.addEventListener('pointerdown', ()=>{
-    if(!audioCtx && window.AudioContext) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  }, {once:true});
+    function showIntro() {
+        modal.classList.remove('hidden');
+        setTimeout(() => modal.classList.add('active'), 10);
+        govBubble.className = "speech-bubble";
+        scoreContainer.classList.add('hidden');
+        resetGame();
 
-  function guardarScore(score){
-    fetch('/simondice-game/score',{
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content
-      },
-      body:JSON.stringify({
-        score:score,
-        difficulty:"medium"
-      })
-    })
-    .then(res=>res.json())
-    .then(data=>console.log('Score guardado',data))
-    .catch(err=>console.error('Error guardar score:',err));
-  }
-})();
+        govEyebrow.textContent = "MEMORIA ECOICA";
+        govTitle.textContent = "Simon Medio";
+        govMsg.innerHTML = `5 colores. Secuencias más largas.<br>Meta: <strong>${TARGET_ROUND} rondas</strong>.`;
+        actionBtn.textContent = "¡Empezar!";
+
+        actionBtn.onclick = () => {
+            modal.classList.remove('active');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                addStep();
+                setTimeout(playSequence, 500);
+            }, 300);
+        };
+        injectBackLink();
+    }
+
+    function showGameOver(win) {
+        modal.classList.remove('hidden');
+        setTimeout(() => modal.classList.add('active'), 10);
+        scoreContainer.classList.remove('hidden');
+        scoreDisplay.textContent = score;
+
+        if (win) {
+            govBubble.className = "speech-bubble win-theme";
+            govEyebrow.textContent = "¡MUY BIEN!";
+            govTitle.textContent = "¡Nivel Superado!";
+            govMsg.innerHTML = "Gran concentración.";
+            actionBtn.textContent = "Jugar de nuevo";
+        } else {
+            govBubble.className = "speech-bubble lose-theme";
+            govEyebrow.textContent = "FALLASTE";
+            govTitle.textContent = "Juego Terminado";
+            govMsg.innerHTML = "La secuencia se rompió.";
+            actionBtn.textContent = "Reintentar";
+        }
+        actionBtn.onclick = () => showIntro();
+        injectBackLink();
+    }
+
+    function injectBackLink() {
+        if (!document.querySelector('.modal-back-link')) {
+            const backLink = document.createElement('a');
+            backLink.className = 'modal-back-link';
+            backLink.textContent = "Volver al menú principal";
+            backLink.href = "/TiposMemoria/Mecoica";
+            backMenuContainer.appendChild(backLink);
+        }
+    }
+
+    function guardarScore(scoreVal) {
+        const token = document.querySelector('meta[name="csrf-token"]')?.content;
+        fetch('/simondice-game/score', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token },
+            body: JSON.stringify({ score: scoreVal, difficulty: "medium" })
+        }).catch(console.error);
+    }
+
+    startBtn.addEventListener('click', () => { resetGame(); addStep(); playSequence(); });
+    strictBtn.addEventListener('click', () => { strictMode = !strictMode; strictBtn.classList.toggle('active'); });
+    soundToggle.addEventListener('click', () => { soundEnabled = !soundEnabled; soundToggle.classList.toggle('active'); soundToggle.textContent = soundEnabled ? 'Sonido' : 'Mute'; });
+
+    buildBoard();
+    showIntro();
+});

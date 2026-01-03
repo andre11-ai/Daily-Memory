@@ -56,7 +56,7 @@ class AdminController extends Controller
 
             foreach ($difficultyCounts as $diffLabel => $count) {
                 $key = Str::ascii((string)$diffLabel);
-                $key = strtolower(preg_replace('/\s+/', '', $key)); 
+                $key = strtolower(preg_replace('/\s+/', '', $key));
 
                 if (strpos($key, 'fac') !== false || $key === 'b' || strpos($key, 'easy') !== false) {
                     $playsPerDifficulty['facil'] += (int) $count;
@@ -70,10 +70,24 @@ class AdminController extends Controller
             }
         }
 
-        return view('admin', compact(
-            'users','usersCount','gamesCount',
-            'playsTotal','playsPerDifficulty','q'
-        ));
+    $scatterData = DB::table('progress')
+        ->select('user_id', DB::raw('ROUND(AVG(level), 1) as average_level'))
+        ->groupBy('user_id')
+        ->get()
+        ->map(function ($entry) {
+            $user = User::find($entry->user_id);
+            return [
+                'label' => $user ? $user->name : 'Usuario desconocido',
+                'x' => $entry->average_level ?? 0,
+                'y' => $user ? $user->id : null,
+            ];
+        })->toArray();
+
+    return view('admin', compact(
+        'users', 'usersCount', 'gamesCount',
+        'playsTotal', 'playsPerDifficulty', 'q', 'scatterData'
+    ));
+
     }
 
     public function usersList(Request $request)

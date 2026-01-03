@@ -54,14 +54,31 @@
         </section>
     </main>
 
-    <div id="modal-gameover" class="modal-gameover" style="display:none;">
-        <div class="modal-content">
-            <h2>¡Fin del juego!</h2>
-            <p>Puntaje final: <span id="score-modal">0</span></p>
-            <button id="restart-btn">Reiniciar</button>
-            <a href="/TiposMemoria/Miconica" class="nav-link volver-btn" style="justify-content:center; margin-top:14px;">
-                 <i class='bx bx-left-arrow-alt'></i> Volver
-            </a>
+    <div id="modal-gameover" class="intro-overlay hidden">
+        <div class="intro-scene">
+            <div class="mascot-container">
+                <img src="/img/default-user.png" alt="Mascota" class="mascot-img" />
+            </div>
+            <div id="gov-bubble" class="speech-bubble">
+                <div class="intro-header">
+                    <div id="gov-eyebrow" class="intro-eyebrow">NIVEL FÁCIL</div>
+                    <h2 id="gov-title" class="intro-title">Secuencia de Imágenes</h2>
+                </div>
+                <div class="intro-content">
+                    <p id="gov-msg">
+                        Bienvenido. <br>
+                        Meta: Completa los <strong>10 niveles</strong> o consigue un alto puntaje. <br>
+                        Memoriza el orden exacto de las imágenes.
+                    </p>
+                    <p id="score-container" class="hidden" style="font-size: 1.1rem; color:#333;">
+                        Puntaje final: <strong id="score-modal-display" style="font-size:1.3rem;">0</strong>
+                    </p>
+                </div>
+                <div class="intro-footer">
+                    <button id="action-btn" class="start-btn">¡Empezar!</button>
+                    <div id="back-menu-container"></div>
+                </div>
+            </div>
         </div>
     </div>
 

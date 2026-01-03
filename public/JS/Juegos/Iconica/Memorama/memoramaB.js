@@ -1,14 +1,17 @@
-let showTarjet = 0;
-let tarjet1 = null;
-let tarjet2 = null;
+let tarjetasDestapadas = 0;
+let tarjeta1 = null;
+let tarjeta2 = null;
 let primerResultado = null;
 let segundoResultado = null;
+let primeraCartaId = null;
 let score = 0;
 let movimientos = 0;
 let aciertos = 0;
-let time = false;
 let timer = 120;
+let tiempoInicial = 120;
 let tiempoRegresivoId = null;
+let juegoIniciado = false;
+let bloqueoTablero = false;
 
 const RUTA_IMAGENES = '/img/imageMemorama/';
 
@@ -17,92 +20,95 @@ let showTi = document.getElementById('t-restante');
 let showMov = document.getElementById('Movimientos');
 let showAc = document.getElementById('Aciertos');
 
-let modalGameover = document.getElementById('modal-gameover');
-let scoreModal = document.getElementById('score-modal');
-let movModal = document.getElementById('mov-modal');
-let restartBtn = document.getElementById('restart-btn');
+const modalGO = document.getElementById('modal-gameover');
+const govBubble = document.getElementById('gov-bubble');
+const govEyebrow = document.getElementById('gov-eyebrow');
+const govTitle = document.getElementById('gov-title');
+const govMsg = document.getElementById('gov-msg');
+const sContainer = document.getElementById('score-container');
+const sDisplay = document.getElementById('score-modal-display');
+const actionBtn = document.getElementById('action-btn');
+const backCont = document.getElementById('back-menu-container');
 
 let numbers = [1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8];
-numbers = numbers.sort(() => Math.random() - 0.5);
 
-document.addEventListener('DOMContentLoaded', () => {
-    const gameContainer = document.getElementById('game-container');
-    if (gameContainer) {
-        const attTimer = parseInt(gameContainer.dataset.time);
-        timer = (!isNaN(attTimer) && attTimer > 0) ? attTimer : 120;
-    } else {
-        timer = 120;
-    }
+function initGame() {
+    bloqueoTablero = false;
+    tarjetasDestapadas = 0;
+    score = 0;
+    movimientos = 0;
+    aciertos = 0;
+    timer = tiempoInicial;
+    numbers = numbers.sort(() => Math.random() - 0.5);
 
     showScore.innerHTML = `Score: 0`;
     showTi.innerHTML = `Tiempo: ${timer} s`;
     showMov.innerHTML = `Movimientos: 0`;
     showAc.innerHTML = `Aciertos: 0`;
-});
 
-function countTime() {
-    showTi.innerHTML = `Tiempo: ${timer} s`;
-    tiempoRegresivoId = setInterval(() => {
-        if (timer > 0) {
-            timer--;
-            showTi.innerHTML = `Tiempo: ${timer} s`;
-        }
-        if (timer <= 0) {
-            showTi.innerHTML = `Tiempo: 0 s`;
-            clearInterval(tiempoRegresivoId);
-            blockTarjet();
-            showModal('timeout');
-        }
-    }, 1000)
-}
-
-function blockTarjet() {
-    for (let i = 0; i < numbers.length; i++) {
-        let blockTarjet = document.getElementById(i);
-        blockTarjet.innerHTML = `<img src="${RUTA_IMAGENES}${numbers[i]}.png" alt="">`;
-        blockTarjet.disabled = true;
+    for (let i = 0; i <= 15; i++) {
+        let tarjeta = document.getElementById(i);
+        tarjeta.innerHTML = '';
+        tarjeta.disabled = false;
     }
+
+    showIntro();
 }
 
-function showModal(tipo) {
-    modalGameover.style.display = 'flex';
-    scoreModal.textContent = score;
-    movModal.textContent = movimientos;
-    guardarScore(score);
+function contarTiempo() {
+    tiempoRegresivoId = setInterval(() => {
+        timer--;
+        showTi.innerHTML = `Tiempo: ${timer} s`;
+        if (timer <= 0) {
+            clearInterval(tiempoRegresivoId);
+            bloquearTarjetas();
+            mostrarModal(false);
+        }
+    }, 1000);
+}
 
-    if (tipo === 'timeout') {
-        modalGameover.querySelector('.modal-content h2').innerText = "¡Tiempo Agotado!";
-        modalGameover.querySelector('.modal-content p').innerText = "No lograste completar el juego.";
-    } else {
-        modalGameover.querySelector('.modal-content h2').innerText = "¡Fin del juego!";
+function bloquearTarjetas() {
+    for (let i = 0; i <= 15; i++) {
+        let tarjetaBloqueada = document.getElementById(i);
+        if(!tarjetaBloqueada.innerHTML.includes('img')) {
+            tarjetaBloqueada.innerHTML = `<img src="${RUTA_IMAGENES}${numbers[i]}.png" alt="">`;
+        }
+        tarjetaBloqueada.disabled = true;
     }
 }
 
 function show(id) {
-    if (!time) {
-        countTime();
-        time = true;
-    }
-    showTarjet++;
+    if (!juegoIniciado) return;
+    if (bloqueoTablero) return;
 
-    if (showTarjet == 1) {
-        tarjet1 = document.getElementById(id);
+    let tarjetaSeleccionada = document.getElementById(id);
+
+    if (tarjetaSeleccionada.disabled) return;
+
+    if (tarjetasDestapadas == 0) {
+        tarjeta1 = tarjetaSeleccionada;
+        primeraCartaId = id;
         primerResultado = numbers[id];
-        tarjet1.innerHTML = `<img src="${RUTA_IMAGENES}${primerResultado}.png" alt="">`;
-        tarjet1.disabled = true;
-    }
-    else if (showTarjet == 2) {
-        tarjet2 = document.getElementById(id);
+
+        tarjeta1.innerHTML = `<img src="${RUTA_IMAGENES}${primerResultado}.png" alt="">`;
+        tarjeta1.disabled = true;
+
+        tarjetasDestapadas++;
+
+    } else if (tarjetasDestapadas == 1) {
+        if (id == primeraCartaId) return;
+
+        tarjeta2 = tarjetaSeleccionada;
         segundoResultado = numbers[id];
-        tarjet2.innerHTML = `<img src="${RUTA_IMAGENES}${segundoResultado}.png" alt="">`;
-        tarjet2.disabled = true;
+
+        tarjeta2.innerHTML = `<img src="${RUTA_IMAGENES}${segundoResultado}.png" alt="">`;
+        tarjeta2.disabled = true;
 
         movimientos++;
         showMov.innerHTML = `Movimientos: ${movimientos}`;
 
         if (primerResultado == segundoResultado) {
-            showTarjet = 0;
-
+            tarjetasDestapadas = 0;
             aciertos++;
             showAc.innerHTML = `Aciertos: ${aciertos}`;
             score++;
@@ -110,37 +116,95 @@ function show(id) {
 
             if (aciertos == 8) {
                 clearInterval(tiempoRegresivoId);
-                showModal();
+                mostrarModal(true);
             }
         } else {
+            bloqueoTablero = true;
             setTimeout(() => {
-                tarjet1.innerHTML = '';
-                tarjet2.innerHTML = '';
-                tarjet1.disabled = false;
-                tarjet2.disabled = false;
-                showTarjet = 0;
+                tarjeta1.innerHTML = '';
+                tarjeta2.innerHTML = '';
+                tarjeta1.disabled = false;
+                tarjeta2.disabled = false;
+                tarjetasDestapadas = 0;
+                bloqueoTablero = false;
             }, 800);
         }
     }
 }
 
-restartBtn && restartBtn.addEventListener('click', function() {
-    location.reload();
-});
 
-function guardarScore(score) {
+function showIntro() {
+    modalGO.classList.remove('hidden');
+    setTimeout(() => modalGO.classList.add('active'), 10);
+
+    govBubble.classList.remove('win-theme', 'lose-theme');
+    sContainer.classList.add('hidden');
+
+    govEyebrow.textContent = "NIVEL FÁCIL";
+    govTitle.textContent = "Memorama";
+    govMsg.innerHTML = "Encuentra todos los pares antes de que se acabe el tiempo.<br>Tienes <strong>120 segundos</strong>.";
+
+    actionBtn.textContent = "¡Empezar!";
+    actionBtn.onclick = () => {
+        modalGO.classList.remove('active');
+        setTimeout(() => {
+            modalGO.classList.add('hidden');
+            juegoIniciado = true;
+            contarTiempo();
+        }, 300);
+    };
+    backCont.innerHTML = '';
+}
+
+function mostrarModal(gano) {
+    modalGO.classList.remove('hidden');
+    setTimeout(() => modalGO.classList.add('active'), 10);
+
+    govBubble.classList.remove('win-theme', 'lose-theme');
+    sContainer.classList.remove('hidden');
+    sDisplay.textContent = score;
+
+    backCont.innerHTML = '';
+    const link = document.createElement('a');
+    link.className = 'modal-back-link';
+    link.innerHTML = "<i class='bx bx-left-arrow-alt'></i> Volver al Menú";
+    link.href = "/TiposMemoria/Miconica";
+    backCont.appendChild(link);
+
+    if (gano) {
+        govBubble.classList.add('win-theme');
+        govEyebrow.textContent = "¡EXCELENTE!";
+        govTitle.textContent = "¡Nivel Completado!";
+        govMsg.innerHTML = `Has encontrado todos los pares en ${tiempoInicial - timer} segundos. <br>¡Gran memoria!`;
+        actionBtn.textContent = "Jugar de nuevo";
+    } else {
+        govBubble.classList.add('lose-theme');
+        govEyebrow.textContent = "¡TIEMPO AGOTADO!";
+        govTitle.textContent = "¡Buen intento!";
+        govMsg.innerHTML = "Se acabó el tiempo. <br>Intenta ser más rápido la próxima vez.";
+        actionBtn.textContent = "Reintentar";
+    }
+
+    actionBtn.onclick = () => {
+        initGame();
+    };
+
+    guardarScore(score);
+}
+
+function guardarScore(scoreVal) {
+    const token = document.querySelector('meta[name="csrf-token"]')?.content;
     fetch('/memorama-game/score', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            'X-CSRF-TOKEN': token
         },
         body: JSON.stringify({
-            score: score,
+            score: scoreVal,
             difficulty: "easy"
         })
-    })
-    .then(res => res.json())
-    .then(data => console.log('Score guardado', data))
-    .catch(err => console.error('Error guardar score:', err));
+    }).catch(err => console.error('Error guardando score:', err));
 }
+
+document.addEventListener('DOMContentLoaded', initGame);

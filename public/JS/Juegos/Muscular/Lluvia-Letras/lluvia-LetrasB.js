@@ -8,6 +8,19 @@ class Juego {
         this.animador = null;
         this.maincontainer = null;
         this.terminado = false;
+
+        this.modalGO = document.getElementById('modal-gameover');
+        this.govBubble = document.getElementById('gov-bubble');
+        this.govEyebrow = document.getElementById('gov-eyebrow');
+        this.govTitle = document.getElementById('gov-title');
+        this.govMsg = document.getElementById('gov-msg');
+        this.sContainer = document.getElementById('score-container');
+        this.sDisplay = document.getElementById('score-modal-display');
+        this.actionBtn = document.getElementById('action-btn');
+        this.backCont = document.getElementById('back-menu-container');
+
+        this.TARGET_SCORE = 40;
+
         window.onload = this.iniciar.bind(this);
     }
 
@@ -15,110 +28,141 @@ class Juego {
         this.terminado = false;
         this.maincontainer = document.getElementById("maincontainer");
         this.vista.palabra = this.maincontainer;
+        this.showIntro();
+    }
+
+    comenzarPartida() {
+        this.terminado = false;
+        this.modelo.puntuacion = 0;
+        this.modelo.vidas = 3;
+        this.maincontainer.innerHTML = '';
+        this.actualizarStatus();
+        this.actualizarVidasDots();
+
         this.generador = window.setInterval(this.generarPalabra.bind(this), 1500);
         this.animador = window.setInterval(() => this.vista.moverPalabra(this, this.modelo), 100);
         window.onkeypress = this.pulsar.bind(this);
-        this.actualizarStatus();
-        this.ocultarModal();
-        // Reiniciar dots de vidas
-        this.actualizarVidasDots();
-        // Botón restart
-        document.getElementById("restart-btn").onclick = () => {
-            this.reiniciar();
-        };
     }
 
     generarPalabra() {
+        if(this.terminado) return;
         let palabraEnviada = this.modelo.crearPalabra();
         this.vista.dibujar(palabraEnviada);
     }
 
     pulsar(e) {
-        let letra = e.key;
+        if(this.terminado) return;
+        let letra = e.key.toLowerCase();
         let palabras = this.maincontainer.querySelectorAll(".palabra");
+
         for (let palabra of palabras) {
-            let span = palabra.children.item(0);
-            let nodoTexto = palabra.childNodes[1];
-            let texto = nodoTexto.nodeValue;
-            let caracterTexto = texto.charAt(0)
-            if (letra == caracterTexto) {
-                span.textContent += letra;
-                nodoTexto.nodeValue = texto.substring(1);
-            } else {
-                nodoTexto.nodeValue = span.innerHTML + texto;
-                span.textContent = "";
-            }
-            if (nodoTexto.nodeValue.length == 0) {
+            let span = palabra.querySelector("span");
+            let letraObjetivo = span.innerText.charAt(0).toLowerCase();
+
+            if (letra === letraObjetivo) {
                 palabra.remove();
-                this.modelo.sumarPuntuacion();
+                this.modelo.puntuacion++;
                 this.actualizarStatus();
-                if (this.modelo.vidas === 0 && !this.terminado) {
-                    this.terminarJuego();
+
+                let scoreLabel = document.getElementById("score-label");
+                scoreLabel.classList.remove("score-animate");
+                void scoreLabel.offsetWidth;
+                scoreLabel.classList.add("score-animate");
+
+                if(this.modelo.puntuacion >= this.TARGET_SCORE) {
+                    this.terminarJuego(true);
                 }
+                return;
             }
         }
     }
 
     actualizarStatus() {
-        document.getElementById("score-label").innerHTML = `<b>Score:</b> ${this.modelo.puntuacion}`;
-        document.getElementById("vidas-label").innerHTML =
-          `<b>Vidas:</b> <span id="vidas-dots"></span>`;
+        document.getElementById("score-label").innerHTML = "<b>Score: </b>" + this.modelo.puntuacion;
         this.actualizarVidasDots();
     }
 
     actualizarVidasDots() {
-        const dotsContainer = document.getElementById('vidas-dots');
-        dotsContainer.innerHTML = '';
-        const vidas = this.modelo.vidas;
-        for(let i=1;i<=3;i++) {
-            const dot=document.createElement('span');
-            dot.className='vida-dot'+(i<=vidas?' active':'');
-            dotsContainer.appendChild(dot);
+        let dotsHTML = '';
+        for(let i = 1; i <= 3; i++) {
+            dotsHTML += `<span class="vida-dot${i <= this.modelo.vidas ? ' active' : ''}"></span>`;
         }
+        document.getElementById("vidas-dots").innerHTML = dotsHTML;
     }
 
-    terminarJuego() {
-        if (this.terminado) return;
+    terminarJuego(gano = false) {
         this.terminado = true;
         clearInterval(this.generador);
         clearInterval(this.animador);
         window.onkeypress = null;
-        // Modal puntaje
-        this.mostrarModal(this.modelo.puntuacion);
+        this.mostrarModal(gano);
+    }
+
+    showIntro() {
+        this.modalGO.classList.remove('hidden');
+        setTimeout(() => this.modalGO.classList.add('active'), 10);
+
+        this.govBubble.classList.remove('win-theme', 'lose-theme');
+        this.sContainer.classList.add('hidden');
+
+        this.govEyebrow.textContent = "NIVEL FÁCIL";
+        this.govTitle.textContent = "Lluvia de Letras";
+        this.govMsg.innerHTML = `Destruye <strong>${this.TARGET_SCORE} palabras</strong>.<br>Presiona la letra inicial.`;
+
+        this.actionBtn.textContent = "¡Empezar!";
+        this.actionBtn.onclick = () => {
+            this.modalGO.classList.remove('active');
+            setTimeout(() => {
+                this.modalGO.classList.add('hidden');
+                this.comenzarPartida();
+            }, 300);
+        };
+        this.backCont.innerHTML = '';
+    }
+
+    mostrarModal(gano) {
+        this.modalGO.classList.remove('hidden');
+        setTimeout(() => this.modalGO.classList.add('active'), 10);
+
+        this.govBubble.classList.remove('win-theme', 'lose-theme');
+        this.sContainer.classList.remove('hidden');
+        this.sDisplay.textContent = this.modelo.puntuacion;
+
+        this.backCont.innerHTML = '';
+        const link = document.createElement('a');
+        link.className = 'modal-back-link';
+        link.innerHTML = "<i class='bx bx-left-arrow-alt'></i> Volver al Menú";
+        link.href = "/TiposMemoria/Mmuscular";
+        this.backCont.appendChild(link);
+
+        if (gano) {
+            this.govBubble.classList.add('win-theme');
+            this.govEyebrow.textContent = "¡FELICIDADES!";
+            this.govTitle.textContent = "¡Manos Rápidas!";
+            this.govMsg.innerHTML = "Has alcanzado la meta. <br>¡Tus reflejos son excelentes!";
+            this.actionBtn.textContent = "Jugar de nuevo";
+        } else {
+            this.govBubble.classList.add('lose-theme');
+            this.govEyebrow.textContent = "¡GAME OVER!";
+            this.govTitle.textContent = "¡Buen intento!";
+            this.govMsg.innerHTML = "Las palabras cayeron demasiado rápido. <br>¡Inténtalo otra vez!";
+            this.actionBtn.textContent = "Reintentar";
+        }
+
+        this.actionBtn.onclick = () => {
+            this.showIntro();
+        };
+
         this.guardarScore(this.modelo.puntuacion);
     }
 
-    mostrarModal(score) {
-        document.getElementById('score-modal').textContent = score;
-        document.getElementById('modal-gameover').style.display='flex';
-    }
-    ocultarModal() {
-        document.getElementById('modal-gameover').style.display='none';
-    }
-    reiniciar() {
-        // Eliminas palabras activas
-        this.maincontainer.innerHTML = '';
-        this.modelo.puntuacion = 0;
-        this.modelo.vidas = 3;
-        this.actualizarStatus();
-        this.iniciar();
-    }
-
-    guardarScore(score) {
+    guardarScore(scoreVal) {
+        const token = document.querySelector('meta[name="csrf-token"]')?.content;
         fetch('/lluvia-letras-game/score', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            },
-            body: JSON.stringify({
-                score: score,
-                difficulty: 'easy', // Cambia según el nivel
-            })
-        })
-        .then(res => res.json())
-        .then(data => console.log(data.message))
-        .catch(err => console.error('Error al guardar score:', err));
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token },
+            body: JSON.stringify({ score: scoreVal, difficulty: "easy" })
+        }).catch(err => console.error(err));
     }
 }
 
@@ -132,9 +176,12 @@ class Vista {
         this.palabra.appendChild(palabra);
         palabra.classList.add("palabra");
         palabra.style.top = "0px";
-        palabra.style.left = Math.floor(Math.random() * 600) + "px";
+        palabra.style.left = Math.floor(Math.random() * 80) + 5 + "%";
         palabra.appendChild(span);
-        palabra.appendChild(document.createTextNode(palabraEnviada));
+        span.innerText = palabraEnviada.charAt(0);
+        if (palabraEnviada.length > 1) {
+            palabra.appendChild(document.createTextNode(palabraEnviada.slice(1)));
+        }
     }
     moverPalabra(juego, modelo) {
         let palabras = this.palabra.querySelectorAll(".palabra");
@@ -147,7 +194,7 @@ class Vista {
                 modelo.quitarVida();
                 juego.actualizarStatus();
                 if (modelo.vidas === 0 && !juego.terminado) {
-                    juego.terminarJuego();
+                    juego.terminarJuego(false);
                 }
             }
         }
@@ -156,19 +203,15 @@ class Vista {
 
 class Modelo {
     constructor() {
-        this.palabras = ["l", "a", "p", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m"];
+        this.palabras = ["luz", "mar", "sol", "pan", "ave", "pez", "red", "sal", "gas", "tren", "uno", "dos"];
         this.puntuacion = 0;
         this.vidas = 3;
     }
     crearPalabra() {
         return this.palabras[Math.floor(Math.random() * this.palabras.length)];
     }
-    sumarPuntuacion() {
-        this.puntuacion++;
-    }
     quitarVida() {
         this.vidas--;
-        if (this.vidas < 0) this.vidas = 0;
     }
 }
 

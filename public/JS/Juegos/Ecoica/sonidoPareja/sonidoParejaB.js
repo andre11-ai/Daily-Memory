@@ -1,11 +1,22 @@
 document.addEventListener('DOMContentLoaded', function() {
     const SEGUNDOS = 60;
-    const palabras = ["Gato", "Perro", "Pato"];
-    let pares = palabras.concat(palabras);
+    const palabras = ["Gato", "Perro", "Pato", "Humano", "Mesa", "Silla"];
+    let pares = [];
     let score = 0;
     let seleccionados = [];
-    let timer, tiempoRestante;
+    let timer = null;
+    let tiempoRestante = SEGUNDOS;
     let juegoTerminado = false;
+
+    const modal = document.getElementById('modal-gameover');
+    const govBubble = document.getElementById('gov-bubble');
+    const govTitle = document.getElementById('gov-title');
+    const govMsg = document.getElementById('gov-msg');
+    const govEyebrow = document.getElementById('gov-eyebrow');
+    const scoreContainer = document.getElementById('score-container');
+    const scoreDisplay = document.getElementById('score-modal-display');
+    const actionBtn = document.getElementById('action-btn');
+    const backMenuContainer = document.getElementById('back-menu-container');
 
     function mezclar(array) {
         for (let i = array.length - 1; i > 0; i--) {
@@ -13,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
             [array[i], array[j]] = [array[j], array[i]];
         }
     }
+
     function hablar(txt) {
         if ('speechSynthesis' in window) {
             let msg = new window.SpeechSynthesisUtterance(txt);
@@ -20,102 +32,165 @@ document.addEventListener('DOMContentLoaded', function() {
             window.speechSynthesis.speak(msg);
         }
     }
+
     function iniciarTimer() {
         if (timer) clearInterval(timer);
         tiempoRestante = SEGUNDOS;
         document.getElementById('tiempo-label').textContent = `Tiempo: ${tiempoRestante}s`;
+        
         timer = setInterval(() => {
             tiempoRestante--;
             if (tiempoRestante < 0) tiempoRestante = 0;
             document.getElementById('tiempo-label').textContent = `Tiempo: ${tiempoRestante}s`;
             if (tiempoRestante <= 0) {
-                terminarJuego();
+                terminarJuego(false); 
             }
         }, 1000);
     }
-    function terminarJuego() {
-        if (juegoTerminado) return;
-        juegoTerminado = true;
-        clearInterval(timer);
-        document.getElementById('modal-gameover').style.display = 'flex';
-        document.getElementById('score-modal').textContent = Math.max(score, 0);
-        guardarScore(Math.max(score, 0));
-    }
-    function crearJuego() {
-        if (timer) clearInterval(timer);
 
+    function crearJuego() {
+        const contenedor = document.getElementById('parejas-juego');
+        contenedor.innerHTML = '';
+        document.getElementById('feedback').textContent = '';
+        document.getElementById('reset-game').style.display = 'block';
+        
+        juegoTerminado = false;
+        score = 0;
+        document.getElementById('score-label').textContent = `Score: ${score}`;
+        
         pares = palabras.concat(palabras);
         mezclar(pares);
-        score = 0;
-        seleccionados = [];
-        juegoTerminado = false;
-        document.getElementById('parejas-juego').innerHTML = '';
-        document.getElementById('feedback').innerText = '';
-        document.getElementById('score-label').textContent = `Score: 0`;
-        document.getElementById('modal-gameover').style.display = 'none';
 
-        pares.forEach((palabra, idx) => {
+        pares.forEach((palabra, index) => {
             const btn = document.createElement('button');
-            btn.className = 'pareja-btn';
+            btn.classList.add('pareja-btn');
+            btn.textContent = '?'; 
             btn.dataset.palabra = palabra;
-            btn.dataset.idx = idx;
-            btn.innerText = "🔊";
-            btn.disabled = false;
             btn.onclick = function() {
-                if (juegoTerminado) return;
-                if (btn.classList.contains('found') || btn.classList.contains('selected')) return;
-                btn.classList.add('selected');
-                hablar(palabra);
+                if (seleccionados.length < 2 && !btn.classList.contains('found') && !btn.classList.contains('selected')) {
+                    hablar(palabra);
+                    btn.classList.add('selected');
+ 
+                    seleccionados.push({ btn, palabra });
 
-                seleccionados.push({idx, palabra, btn});
-                if (seleccionados.length === 2) {
-                    document.querySelectorAll('.pareja-btn:not(.found)').forEach(b => b.disabled = true);
-                    if (seleccionados[0].palabra === seleccionados[1].palabra) {
-                        seleccionados[0].btn.classList.add('found');
-                        seleccionados[1].btn.classList.add('found');
-                        seleccionados[0].btn.classList.remove('selected');
-                        seleccionados[1].btn.classList.remove('selected');
-                        score++;
-                        document.getElementById('feedback').innerText = "¡Pareja encontrada!";
-                        document.getElementById('score-label').textContent = `Score: ${score}`;
-                    } else {
-                        document.getElementById('feedback').innerText = "No es pareja. Intenta de nuevo.";
-                        setTimeout(function() {
-                            seleccionados[0].btn.classList.remove('selected');
-                            seleccionados[1].btn.classList.remove('selected');
-                        }, 900);
-                    }
-                    setTimeout(function() {
-                        document.querySelectorAll('.pareja-btn:not(.found)').forEach(b => b.disabled = false);
-                        seleccionados = [];
-                        if (score === palabras.length) {
-                            terminarJuego();
+                    if (seleccionados.length === 2) {
+                        document.querySelectorAll('.pareja-btn:not(.found)').forEach(b => b.disabled = true);
+                        
+                        if (seleccionados[0].palabra === seleccionados[1].palabra) {
+                            score++;
+                            document.getElementById('score-label').textContent = `Score: ${score}`;
+                            document.getElementById('feedback').textContent = "¡Pareja encontrada!";
+                            
+                            seleccionados.forEach(sel => {
+                                sel.btn.classList.remove('selected');
+                                sel.btn.classList.add('found');
+                                sel.btn.textContent = "✔"; 
+                            });
+                        } else {
+                            document.getElementById('feedback').textContent = "Intenta de nuevo.";
+                            setTimeout(() => {
+                                seleccionados.forEach(sel => {
+                                    sel.btn.classList.remove('selected');
+                                });
+                            }, 900);
                         }
-                    }, 950);
+
+                        setTimeout(() => {
+                            document.querySelectorAll('.pareja-btn:not(.found)').forEach(b => b.disabled = false);
+                            seleccionados = [];
+                            if (score === palabras.length) {
+                                terminarJuego(true);
+                            }
+                        }, 950);
+                    }
                 }
             };
-            document.getElementById('parejas-juego').appendChild(btn);
+            contenedor.appendChild(btn);
         });
+        
         iniciarTimer();
     }
-    document.getElementById('reset-game').onclick = crearJuego;
-    document.getElementById('restart-btn').onclick = crearJuego;
-    crearJuego();
+
+    function terminarJuego(win) {
+        clearInterval(timer);
+        juegoTerminado = true;
+        guardarScore(score);
+        showGameOver(win);
+    }
+
+    function showIntro() {
+        modal.classList.remove('hidden');
+        setTimeout(() => modal.classList.add('active'), 10);
+
+        govBubble.className = "speech-bubble";
+        scoreContainer.classList.add('hidden');
+        document.getElementById('reset-game').style.display = 'none';
+
+        govEyebrow.textContent = "MEMORIA ECOICA";
+        govTitle.textContent = "Nivel Fácil";
+        govMsg.innerHTML = `Encuentra las parejas de sonidos.<br>Tienes <strong>${SEGUNDOS} segundos</strong>.`;
+        actionBtn.textContent = "¡Empezar!";
+
+        actionBtn.onclick = () => {
+            modal.classList.remove('active');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                crearJuego();
+            }, 300);
+        };
+        injectBackLink();
+    }
+
+    function showGameOver(win) {
+        modal.classList.remove('hidden');
+        setTimeout(() => modal.classList.add('active'), 10);
+
+        scoreContainer.classList.remove('hidden');
+        scoreDisplay.textContent = score;
+
+        if (win) {
+            govBubble.className = "speech-bubble win-theme";
+            govEyebrow.textContent = "¡EXCELENTE!";
+            govTitle.textContent = "¡Nivel Completado!";
+            govMsg.innerHTML = "Has encontrado todas las parejas a tiempo.";
+            actionBtn.textContent = "Jugar de nuevo";
+        } else {
+            govBubble.className = "speech-bubble lose-theme";
+            govEyebrow.textContent = "TIEMPO AGOTADO";
+            govTitle.textContent = "Inténtalo de nuevo";
+            govMsg.innerHTML = "Se acabó el tiempo. Escucha con atención.";
+            actionBtn.textContent = "Reintentar";
+        }
+
+        actionBtn.onclick = () => {
+            showIntro();
+        };
+        injectBackLink();
+    }
+
+    function injectBackLink() {
+        if (!document.querySelector('.modal-back-link')) {
+            const backLink = document.createElement('a');
+            backLink.className = 'modal-back-link';
+            backLink.textContent = "Volver al menú principal";
+            backLink.href = "/TiposMemoria/Mecoica";
+            backMenuContainer.appendChild(backLink);
+        }
+    }
+
+    document.getElementById('reset-game').onclick = () => showIntro();
 
     function guardarScore(score) {
+        const token = document.querySelector('meta[name="csrf-token"]')?.content;
         fetch('/sonido-pareja-game/score', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                'X-CSRF-TOKEN': token
             },
-            body: JSON.stringify({
-                score: score,
-                difficulty: 'easy'
-            })
-        })
-        .then(res => res.json())
-        .then(data => console.log(data.message))
-        .catch(err => console.error('Error al guardar score:', err));
+            body: JSON.stringify({ score: score, difficulty: 'easy' })
+        }).catch(err => console.error('Error al guardar score:', err));
     }
+
+    showIntro();
 });

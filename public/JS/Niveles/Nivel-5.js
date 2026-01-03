@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const TARGET_SCORE = 8;    
+    const TARGET_SCORE = 8;
     const CURRENT_LEVEL = 5;
     const NEXT_LEVEL_URL = '/niveles/6';
     const MAP_URL = '/story';
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const scoreLabel = document.getElementById('score-label');
     const rondaLabel = document.getElementById('ronda-label');
     const feedback = document.getElementById('feedback');
-    const startBtnGame = document.getElementById('start-btn'); 
+    const startBtnGame = document.getElementById('start-btn');
     const soundButtonsContainer = document.getElementById('sound-buttons');
     const userSelectionContainer = document.getElementById('user-selection');
 
@@ -43,15 +43,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function siguienteRonda() {
         if (rondaActual > rondasMax) {
-            finalizarJuego(score >= TARGET_SCORE); 
+            finalizarJuego(score >= TARGET_SCORE);
             return;
         }
-        
+
         jugando = true;
         secuencia = [];
         eleccionUsuario = [];
         feedback.innerText = 'Escuchando...';
-        soundButtonsContainer.classList.add('hidden'); 
+        soundButtonsContainer.classList.add('hidden');
         userSelectionContainer.innerText = '';
         actualizarBarra();
 
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function mostrarBotones() {
         soundButtonsContainer.classList.remove('hidden');
         soundButtonsContainer.innerHTML = "";
-        
+
         sonidos.forEach((s, idx) => {
             let btn = document.createElement('button');
             btn.innerText = s.nombre;
@@ -85,10 +85,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (!jugando) return;
                 hablar(s.nombre);
                 eleccionUsuario.push(idx);
-                
+
                 btn.classList.add('selected');
                 setTimeout(()=>btn.classList.remove('selected'), 200);
-                
+
                 actualizarSeleccion();
 
                 if (eleccionUsuario.length === secuencia.length) {
@@ -107,10 +107,10 @@ document.addEventListener('DOMContentLoaded', function() {
     function verificarRespuesta() {
         jugando = false;
         let correcto = JSON.stringify(secuencia) === JSON.stringify(eleccionUsuario);
-        
+
         if (correcto) {
             feedback.innerText = "¡Correcto! Pulsa Siguiente.";
-            score += 2; 
+            score += 2;
 
             if (score >= TARGET_SCORE) {
                 finalizarJuego(true);
@@ -141,10 +141,10 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => modalGO.classList.add('active'), 10);
 
         govBubble.classList.remove('win-theme', 'lose-theme');
-        sContainer.classList.add('hidden'); 
+        sContainer.classList.add('hidden');
 
         govEyebrow.textContent = `HISTORIA · NIVEL ${CURRENT_LEVEL}`;
-        govTitle.textContent = "Repetir Palabra (Ecoica)";
+        govTitle.textContent = "Repetir Palabra";
         govMsg.innerHTML = `
             Vamos a entrenar tu memoria auditiva. <br>
             Meta: consigue <strong>${TARGET_SCORE} puntos</strong>. <br>
@@ -156,8 +156,8 @@ document.addEventListener('DOMContentLoaded', function() {
             modalGO.classList.remove('active');
             setTimeout(() => {
                 modalGO.classList.add('hidden');
-                rondaActual = 1; 
-                score = 0; 
+                rondaActual = 1;
+                score = 0;
                 jugando = false;
                 actualizarBarra();
                 feedback.innerText = 'Pulsa "Siguiente" para comenzar';
@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 soundButtonsContainer.innerHTML = '';
             }, 300);
         };
-        
+
         backCont.innerHTML = '';
     }
 
@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             actionBtn.textContent = "Reintentar";
             actionBtn.onclick = () => {
-                showIntro(); 
+                showIntro();
             };
         }
 

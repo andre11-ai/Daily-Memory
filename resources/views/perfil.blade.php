@@ -92,7 +92,7 @@
                     <div class="stat-title">Puntos totales</div>
                     <div class="stat-value" id="total-points">{{ $scoreGeneral ?? 0 }}</div>
                 </div>
-                                <div class="stat-card">
+                <div class="stat-card">
                     <div class="stat-title">Nivel Historia</div>
                     <div class="stat-value">{{ $storyLevel ?? 0 }}</div>
                 </div>
@@ -188,6 +188,35 @@
         </section>
     </main>
 
+    <button id="help-btn" class="help-btn hidden" aria-label="Ayuda sobre la página de perfil">
+        <i class='bx bx-question-mark'></i>
+    </button>
+
+    <div id="help-modal" class="intro-overlay">
+        <div class="intro-scene">
+            <div class="mascot-container">
+                <img src="{{ asset('img/default-user.png') }}" alt="Mascota" class="mascot-img" />
+            </div>
+            <div class="speech-bubble">
+                <div class="intro-header">
+                    <div class="intro-eyebrow">MI PERFIL</div>
+                    <h2 class="intro-title">¿Qué ves aquí?</h2>
+                </div>
+                <div class="intro-content">
+                    <p>Aquí puedes ver tu progreso y editar tu cuenta.</p>
+                    <ul>
+                        <li><strong>Estadísticas:</strong> Juegos jugados, nivel y puntajes.</li>
+                        <li><strong>Gráficas:</strong> Tu rendimiento por tipo de memoria.</li>
+                        <li><strong>Editar Perfil:</strong> Cambia tu nombre, correo o contraseña.</li>
+                    </ul>
+                </div>
+                <div class="intro-footer">
+                    <button id="help-close" class="start-btn">Entendido</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="modal-backdrop" class="modal-backdrop" style="display:none">
         <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
             <div class="modal-header">
@@ -272,6 +301,32 @@
             scoreGeneral: @json($scoreGeneral ?? 0),
             levelInfo: @json($levelInfo ?? null)
         };
+    </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const modal = document.getElementById('help-modal');
+        const helpBtn = document.getElementById('help-btn');
+        const closeBtn = document.getElementById('help-close');
+
+        setTimeout(() => modal.classList.add('active'), 500);
+
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+            helpBtn.classList.remove('hidden');
+        });
+
+        helpBtn.addEventListener('click', () => {
+            modal.classList.add('active');
+            helpBtn.classList.add('hidden');
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                modal.classList.remove('active');
+                helpBtn.classList.remove('hidden');
+            }
+        });
+    });
     </script>
     <script src="{{ asset('/JS/perfil.js') }}"></script>
 </body>

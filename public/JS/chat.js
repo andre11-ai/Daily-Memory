@@ -436,6 +436,9 @@
         let selectedUserId = null;
         let selectedUserName = "";
 
+        createEmojiPicker('emoji-picker-personal-popup', 'emoji-btn-personal', '#personal-chat-input');
+
+
         function loadPersonalChatsList(selectedId = null) {
             apiFetch('/chat/personal/last-chats')
                 .then(chats => {

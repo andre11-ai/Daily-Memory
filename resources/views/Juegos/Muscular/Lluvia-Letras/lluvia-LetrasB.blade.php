@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Lluvia de Letras - Fácil | MemoryMaster</title>
+    <title>Lluvia de Letras - Fácil</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link rel="stylesheet" href="{{ asset('CSS/Juegos/Muscular/Lluvia-Letras/lluvia-LetrasB.css') }}">
@@ -25,9 +25,7 @@
     </header>
 
     <div class="game-top-bar">
-        <div class="game-title">
-            Lluvia de Letras
-        </div>
+        <div class="game-title">Lluvia de Letras</div>
         <div class="score-vidas-bar">
             <span id="score-label"><b>Score:</b> 0</span>
             <span id="vidas-label"><b>Vidas:</b>
@@ -41,18 +39,34 @@
     </div>
 
     <main>
-        <section id="maincontainer">
-            </section>
+        <section id="maincontainer"></section>
     </main>
 
-    <div id="modal-gameover" class="modal-gameover" style="display:none;">
-        <div class="modal-content">
-            <h2>¡Fin del juego!</h2>
-            <p>Tu puntaje: <span id="score-modal">0</span></p>
-            <button id="restart-btn">Reiniciar</button>
-            <a href="{{ url('/TiposMemoria/Mmuscular') }}" class="nav-link volver-btn" style="justify-content:center; margin-top:14px;">
-                 <i class='bx bx-left-arrow-alt'></i> Volver
-            </a>
+    <div id="modal-gameover" class="intro-overlay hidden">
+        <div class="intro-scene">
+            <div class="mascot-container">
+                <img src="/img/default-user.png" alt="Mascota" class="mascot-img" />
+            </div>
+            <div id="gov-bubble" class="speech-bubble">
+                <div class="intro-header">
+                    <div id="gov-eyebrow" class="intro-eyebrow">NIVEL FÁCIL</div>
+                    <h2 id="gov-title" class="intro-title">Lluvia de Letras</h2>
+                </div>
+                <div class="intro-content">
+                    <p id="gov-msg">
+                        Destruye las palabras antes de que toquen el suelo. <br>
+                        Meta: <strong>15 puntos</strong>. <br>
+                        Presiona la <strong>letra inicial</strong> en tu teclado.
+                    </p>
+                    <p id="score-container" class="hidden" style="font-size: 1.1rem; color:#333;">
+                        Puntaje final: <strong id="score-modal-display" style="font-size:1.3rem;">0</strong>
+                    </p>
+                </div>
+                <div class="intro-footer">
+                    <button id="action-btn" class="start-btn">¡Empezar!</button>
+                    <div id="back-menu-container"></div>
+                </div>
+            </div>
         </div>
     </div>
 

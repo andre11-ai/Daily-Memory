@@ -22,12 +22,6 @@
     <div class="nav__list">
         <a href="{{ url('/perfil') }}" class="nav-link"><i class="fas fa-user"></i> Perfil</a>
         <a href="{{ url('/menu') }}" class="nav-link"><i class="fas fa-home"></i> Menú</a>
-        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: inline;">
-            @csrf
-            <button type="submit" class="nav-link logout-btn">
-                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-            </button>
-        </form>
     </div>
 </nav>
 <main>
@@ -44,7 +38,6 @@
             </button>
         </div>
         <div class="chat-card">
-            <!-- Chat Mundial -->
             <section class="chat-panel" id="panel-mundial">
                 <div class="chat-title"><i class="fas fa-globe"></i> Chat Mundial</div>
                 <div class="chat-messages" id="messages-mundial"></div>
@@ -55,7 +48,6 @@
                     <div class="emoji-picker-popup" id="emoji-picker-mundial-popup"></div>
                 </div>
             </section>
-            <!-- Chat Grupos -->
             <section class="chat-panel" id="panel-grupos">
                 <div class="chat-title"><i class="fas fa-users"></i> Chat de Grupos</div>
                 <div class="group-bar">
@@ -109,9 +101,8 @@
                     <div class="group-emoji-picker-popup" id="emoji-picker-grupos-popup"></div>
                 </div>
             </section>
-            <!-- Chat Personal -->
             <section class="chat-panel" id="panel-personal">
-                <div class="chat-title"><i class="fas fa-user-friends"></i> Chat Personal</div>
+                <div class="chat-title"><i class="fas a-user-friends"></i> Chat Personal</div>
                 <div class="personal-chats-list-row" id="personal-chats-list-row"></div>
                 <div class="last-chats-list" id="last-chats-list"></div>
                 <div class="user-search-row">
@@ -137,6 +128,63 @@
     @endfor
 </div>
 </header>
+
+<button id="help-btn" class="help-btn hidden" aria-label="Ayuda sobre el chat">
+    <i class="fa-solid fa-question"></i>
+</button>
+
+<div id="help-modal" class="intro-overlay">
+    <div class="intro-scene">
+        <div class="mascot-container">
+            <img src="{{ asset('img/default-user.png') }}" alt="Mascota" class="mascot-img" />
+        </div>
+        <div class="speech-bubble">
+            <div class="intro-header">
+                <div class="intro-eyebrow">CHAT GLOBAL</div>
+                <h2 class="intro-title">¿Cómo funciona?</h2>
+            </div>
+            <div class="intro-content">
+                <p>Comunícate con otros usuarios en tiempo real.</p>
+                <ul>
+                    <li><strong>Mundial:</strong> Habla con todos los conectados.</li>
+                    <li><strong>Grupos:</strong> Crea salas privadas para amigos.</li>
+                    <li><strong>Personal:</strong> Envía mensajes directos a un usuario.</li>
+                </ul>
+            </div>
+            <div class="intro-footer">
+                <button id="help-close" class="start-btn">Entendido</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('help-modal');
+    const helpBtn = document.getElementById('help-btn');
+    const closeBtn = document.getElementById('help-close');
+
+    setTimeout(() => modal.classList.add('active'), 500);
+
+    closeBtn.addEventListener('click', () => {
+        modal.classList.remove('active');
+        helpBtn.classList.remove('hidden');
+    });
+
+    helpBtn.addEventListener('click', () => {
+        modal.classList.add('active');
+        helpBtn.classList.add('hidden');
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            modal.classList.remove('active');
+            helpBtn.classList.remove('hidden');
+        }
+    });
+});
+</script>
+
 <script src="{{ asset('JS/chat.js') }}"></script>
 </body>
 </html>

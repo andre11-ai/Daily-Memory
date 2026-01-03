@@ -1,8 +1,19 @@
 document.addEventListener('DOMContentLoaded', function() {
+    const TARGET_SCORE = 30;
     const colores = ["#F44336","#2196F3","#4CAF50","#FFEB3B","#E91E63","#FF9800","#9C27B0","#00bcd4"];
     let rondaActual = 1, score = 0, vidas = 3, rondaColores = 3;
     let colorsToMemorize = [], userSelected = [];
-    let jugando = true;
+    let jugando = false;
+
+    const modalGO = document.getElementById('modal-gameover');
+    const govBubble = document.getElementById('gov-bubble');
+    const govEyebrow = document.getElementById('gov-eyebrow');
+    const govTitle = document.getElementById('gov-title');
+    const govMsg = document.getElementById('gov-msg');
+    const sContainer = document.getElementById('score-container');
+    const sDisplay = document.getElementById('score-modal-display');
+    const actionBtn = document.getElementById('action-btn');
+    const backCont = document.getElementById('back-menu-container');
 
     function actualizarBarra() {
         document.getElementById('score-label').innerHTML = `<b>Score:</b> ${score}`;
@@ -13,14 +24,9 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('vidas-dots').innerHTML = dots;
     }
 
-    function mostrarModal() {
-        document.getElementById('modal-gameover').style.display='flex';
-        document.getElementById('score-modal').textContent = score;
-        guardarScore(score);
-    }
-
     function iniciarRonda() {
-        if(vidas<=0) { mostrarModal(); jugando = false; return; }
+        if(vidas<=0) { mostrarModal(false); return; }
+
         jugando = true;
         userSelected = [];
         colorsToMemorize = [];
@@ -28,10 +34,12 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('select-phase').style.display = 'none';
         document.getElementById('memorize-grid').innerHTML = '';
         document.getElementById('select-grid').innerHTML = '';
-        while(colorsToMemorize.length<rondaColores){
+
+        while(colorsToMemorize.length < rondaColores){
             let col = colores[Math.floor(Math.random()*colores.length)];
             if(!colorsToMemorize.includes(col)) colorsToMemorize.push(col);
         }
+
         colorsToMemorize.forEach(col=>{
             let div=document.createElement('div');
             div.className='color-card-option';
@@ -46,7 +54,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('select-phase').style.display='flex';
         userSelected = [];
         document.getElementById('select-grid').innerHTML = '';
-        colores.forEach((col,i)=>{
+
+        colores.forEach((col)=>{
             let div=document.createElement('div');
             div.className='color-card-option';
             div.style.background=col;
@@ -63,45 +72,112 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById('verify-btn').onclick = function() {
         if(!jugando || userSelected.length !== colorsToMemorize.length) return;
+
         let aciertos = 0;
         for(let i=0;i<colorsToMemorize.length;i++){
             if(userSelected[i] === colorsToMemorize[i]) aciertos++;
         }
+
         score += aciertos;
         let errores = colorsToMemorize.length - aciertos;
         vidas -= errores;
         actualizarBarra();
-        if(vidas<=0){
-            mostrarModal();
+
+        if (score >= TARGET_SCORE) {
+            mostrarModal(true);
             return;
         }
+
+        if(vidas<=0){
+            mostrarModal(false);
+            return;
+        }
+
         rondaActual++;
-        rondaColores = Math.min(colores.length-1, rondaColores+1); // Pueden ser más difíciles
+        rondaColores = Math.min(colores.length-1, rondaColores+1);
         setTimeout(iniciarRonda, 950);
     }
 
-    document.getElementById('restart-btn').onclick = function() {
-        rondaActual=1; score=0; vidas=3; rondaColores=3; jugando=true;
-        document.getElementById('modal-gameover').style.display='none';
-        iniciarRonda();
+
+    function showIntro() {
+        modalGO.classList.remove('hidden');
+        setTimeout(() => modalGO.classList.add('active'), 10);
+
+        govBubble.classList.remove('win-theme', 'lose-theme');
+        sContainer.classList.add('hidden');
+        govEyebrow.textContent = "NIVEL FÁCIL";
+        govTitle.textContent = "Memoriza el Color";
+        govMsg.innerHTML = `
+            Bienvenido. <br>
+            Meta: consigue <strong>${TARGET_SCORE} puntos</strong>. <br>
+            Memoriza los colores y selecciónalos en orden. <br>
+            Tienes tres vidas. <br>
+        `;
+        actionBtn.textContent = "¡Empezar!";
+        actionBtn.onclick = () => {
+            modalGO.classList.remove('active');
+            setTimeout(() => {
+                modalGO.classList.add('hidden');
+                iniciarRonda();
+            }, 300);
+        };
+        backCont.innerHTML = '';
     }
 
-    iniciarRonda();
+    function mostrarModal(gano) {
+        jugando = false;
+        modalGO.classList.remove('hidden');
+        setTimeout(() => modalGO.classList.add('active'), 10);
 
-    function guardarScore(score){
+        govBubble.classList.remove('win-theme', 'lose-theme');
+        sContainer.classList.remove('hidden');
+        sDisplay.textContent = score;
+
+        backCont.innerHTML = '';
+        const link = document.createElement('a');
+        link.className = 'modal-back-link';
+        link.innerHTML = "<i class='bx bx-left-arrow-alt'></i> Volver al Menú";
+        link.href = "/TiposMemoria/Miconica";
+        backCont.appendChild(link);
+
+        if (gano) {
+            govBubble.classList.add('win-theme');
+            govEyebrow.textContent = "¡VICTORIA!";
+            govTitle.textContent = "¡Memoria Excelente!";
+            govMsg.innerHTML = "Has alcanzado la meta de puntos. <br>¡Gran trabajo!";
+            actionBtn.textContent = "Jugar de nuevo";
+        } else {
+            govBubble.classList.add('lose-theme');
+            govEyebrow.textContent = "¡SE ACABARON LAS VIDAS!";
+            govTitle.textContent = "¡Buen intento!";
+            govMsg.innerHTML = "La memoria se entrena con práctica. <br>¡Inténtalo otra vez!";
+            actionBtn.textContent = "Reintentar";
+        }
+
+        actionBtn.onclick = () => {
+            modalGO.classList.remove('active');
+            setTimeout(() => {
+                modalGO.classList.add('hidden');
+                reiniciarJuego();
+            }, 300);
+        };
+
+        guardarScore(score);
+    }
+
+    function reiniciarJuego() {
+        rondaActual=1; score=0; vidas=3; rondaColores=3;
+        showIntro();
+    }
+
+    function guardarScore(scoreVal){
+        const token = document.querySelector('meta[name="csrf-token"]')?.content;
         fetch('/color-game/score',{
             method:'POST',
-            headers:{
-                'Content-Type':'application/json',
-                'X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content
-            },
-            body:JSON.stringify({
-                score:score,
-                difficulty:"easy"
-            })
-        })
-        .then(res=>res.json())
-        .then(data=>console.log('Score guardado',data))
-        .catch(err=>console.error('Error guardar score:',err));
+            headers:{ 'Content-Type':'application/json', 'X-CSRF-TOKEN': token },
+            body:JSON.stringify({ score:scoreVal, difficulty:"easy" })
+        }).catch(err=>console.error('Error:',err));
     }
+
+    showIntro();
 });

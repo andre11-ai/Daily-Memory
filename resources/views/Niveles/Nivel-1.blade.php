@@ -23,7 +23,7 @@
     </header>
 
     <div class="color-title-bar">
-        <div class="game-title">Memoriza los color</div>
+        <div class="game-title">Memoriza los colores</div>
         <div class="color-score-bar">
             <span id="score-label"><b>Score:</b> 0</span>
             <span id="vidas-label"><b>Vidas:</b>
@@ -53,7 +53,7 @@
 
     <div id="modal-gameover" class="intro-overlay hidden">
         <div class="intro-scene">
-            
+
             <div class="mascot-container">
                 <img src="/img/default-user.png" alt="Mascota Resultado" class="mascot-img" />
             </div>
@@ -63,7 +63,7 @@
                     <div id="gov-eyebrow" class="intro-eyebrow">RESULTADO</div>
                     <h2 id="gov-title" class="intro-title">Título del Resultado</h2>
                 </div>
-                
+
                 <div class="intro-content">
                     <p id="gov-msg">Mensaje de la mascota aquí...</p>
                     <p style="font-size: 1.1rem; color:#333;">

@@ -42,4 +42,9 @@ class User extends Authenticatable{
     public function chatGroups(){
         return $this->belongsToMany(ChatGroup::class, 'chat_group_user');
     }
+
+    public function gameScores()
+    {
+        return $this->hasMany(\App\Models\GameScore::class, 'user_id', 'id');
+    }
 }

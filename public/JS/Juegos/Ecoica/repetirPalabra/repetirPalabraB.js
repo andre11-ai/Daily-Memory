@@ -1,12 +1,28 @@
 document.addEventListener('DOMContentLoaded', function() {
+    const TARGET_ROUND = 10; 
     let sonidos = [
         {nombre: 'Gato'},
         {nombre: 'Perro'},
         {nombre: 'Pato'}
     ];
-    let rondaActual = 1, score = 0, rondasMax = 10;
+    let rondaActual = 1, score = 0;
     let secuencia = [], eleccionUsuario = [];
     let jugando = false;
+
+    const modal = document.getElementById('modal-gameover');
+    const govBubble = document.getElementById('gov-bubble');
+    const govTitle = document.getElementById('gov-title');
+    const govMsg = document.getElementById('gov-msg');
+    const govEyebrow = document.getElementById('gov-eyebrow');
+    const scoreContainer = document.getElementById('score-container');
+    const scoreDisplay = document.getElementById('score-modal-display');
+    const actionBtn = document.getElementById('action-btn');
+    const backMenuContainer = document.getElementById('back-menu-container');
+    
+    const startBtnGame = document.getElementById('start-btn');
+    const soundButtons = document.getElementById('sound-buttons');
+    const userSelection = document.getElementById('user-selection');
+    const feedback = document.getElementById('feedback');
 
     function hablar(texto) {
         if ('speechSynthesis' in window) {
@@ -21,105 +37,150 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('ronda-label').textContent = `Ronda: ${rondaActual}`;
     }
 
-    function gameOver() {
-        jugando = false;
-        document.getElementById('modal-gameover').style.display="flex";
-        document.getElementById('score-modal').textContent = score;
-        guardarScore(score);
-    }
-
     function siguienteRonda() {
-        if (rondaActual > rondasMax) {
-            gameOver(); return;
-        }
         jugando = true;
         secuencia = [];
         eleccionUsuario = [];
-        document.getElementById('feedback').innerText = '';
-        document.getElementById('sound-buttons').classList.remove('hidden');
-        document.getElementById('user-selection').innerText = '';
+        feedback.innerText = 'Escucha...';
+        soundButtons.classList.add('hidden');
+        userSelection.innerText = '';
+        startBtnGame.style.display = 'none'; 
+        
         actualizarBarra();
 
-        for (let i=0; i<rondaActual+1; i++) {
+        for (let i = 0; i < rondaActual + 1; i++) {
             let idx = Math.floor(Math.random() * sonidos.length);
             secuencia.push(idx);
         }
 
         let i = 0;
-        function playNext() {
-            if (i < secuencia.length) {
-                hablar(sonidos[secuencia[i]].nombre);
-                i++;
-                setTimeout(playNext, 1100);
-            } else {
+        let interval = setInterval(() => {
+            hablar(sonidos[secuencia[i]].nombre);
+            i++;
+            if (i >= secuencia.length) {
+                clearInterval(interval);
+                feedback.innerText = "¡Tu turno!";
                 mostrarBotones();
             }
-        }
-        playNext();
+        }, 1500);
+    }
 
-        function mostrarBotones() {
-            let con = document.getElementById('sound-buttons');
-            con.innerHTML = "";
-            sonidos.forEach((s, idx) => {
-                let btn = document.createElement('button');
-                btn.innerText = s.nombre;
-                btn.onclick = function() {
-                    if (!jugando) return;
-                    hablar(s.nombre);
-                    eleccionUsuario.push(idx);
-                    btn.classList.add('selected');
-                    actualizarSeleccion();
+    function mostrarBotones() {
+        soundButtons.innerHTML = '';
+        soundButtons.classList.remove('hidden');
+        sonidos.forEach((obj, idx) => {
+            let btn = document.createElement('button');
+            btn.innerText = obj.nombre;
+            btn.onclick = () => procesarEleccion(idx);
+            soundButtons.appendChild(btn);
+        });
+    }
 
-                    if (eleccionUsuario.length === secuencia.length) {
-                        verificarRespuesta();
-                    }
-                };
-                con.appendChild(btn);
-            });
+    function procesarEleccion(idx) {
+        if (!jugando) return;
+        eleccionUsuario.push(idx);
+        actualizarSeleccionVisual();
+
+        if (eleccionUsuario.length === secuencia.length) {
+            verificarRespuesta();
         }
     }
-    function actualizarSeleccion() {
+
+    function actualizarSeleccionVisual() {
         let txt = eleccionUsuario.map(idx => sonidos[idx].nombre).join(' → ');
-        document.getElementById('user-selection').innerText = txt;
+        userSelection.innerText = txt;
     }
+
     function verificarRespuesta() {
         jugando = false;
         let correcto = JSON.stringify(secuencia) === JSON.stringify(eleccionUsuario);
-        document.getElementById('feedback').innerText = correcto ? "¡Correcto! Pulsa Siguiente." : "Incorrecto. Fin de juego.";
+        
         if (correcto) {
             score++;
             rondaActual++;
+            feedback.innerText = "¡Correcto! Preparando siguiente ronda...";
+            feedback.style.color = "green";
+            
+            if (score >= TARGET_ROUND) {
+                setTimeout(() => showGameOver(true), 1000);
+            } else {
+                setTimeout(siguienteRonda, 1500);
+            }
         } else {
-            setTimeout(gameOver, 1000); return;
+            feedback.innerText = "Incorrecto.";
+            feedback.style.color = "red";
+            setTimeout(() => showGameOver(false), 1000);
         }
         actualizarBarra();
     }
 
-    document.getElementById('start-btn').onclick = function() {
-        if (!jugando) siguienteRonda();
-    };
-    document.getElementById('restart-btn').onclick = function() {
-        rondaActual = 1; score = 0; jugando = false;
-        document.getElementById('modal-gameover').style.display="none";
+    function showIntro() {
+        rondaActual = 1; score = 0;
         actualizarBarra();
-        siguienteRonda();
-    };
+        
+        modal.classList.remove('hidden');
+        setTimeout(() => modal.classList.add('active'), 10);
+        govBubble.className = "speech-bubble";
+        scoreContainer.classList.add('hidden');
 
-    actualizarBarra();
+        govEyebrow.textContent = "MEMORIA ECOICA";
+        govTitle.textContent = "Nivel Fácil";
+        govMsg.innerHTML = `Escucha y repite la secuencia de palabras.<br>Meta: <strong>${TARGET_ROUND} rondas</strong>.`;
+        actionBtn.textContent = "¡Empezar!";
+
+        actionBtn.onclick = () => {
+            modal.classList.remove('active');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                siguienteRonda();
+            }, 300);
+        };
+        injectBackLink();
+    }
+
+    function showGameOver(win) {
+        modal.classList.remove('hidden');
+        setTimeout(() => modal.classList.add('active'), 10);
+        scoreContainer.classList.remove('hidden');
+        scoreDisplay.textContent = score;
+
+        if (win) {
+            govBubble.className = "speech-bubble win-theme";
+            govEyebrow.textContent = "¡MUY BIEN!";
+            govTitle.textContent = "¡Nivel Completado!";
+            govMsg.innerHTML = "Gran memoria auditiva.";
+            actionBtn.textContent = "Jugar de nuevo";
+            guardarScore(score);
+        } else {
+            govBubble.className = "speech-bubble lose-theme";
+            govEyebrow.textContent = "FALLASTE";
+            govTitle.textContent = "Secuencia incorrecta";
+            govMsg.innerHTML = "Intenta concentrarte más en el sonido.";
+            actionBtn.textContent = "Reintentar";
+            guardarScore(score);
+        }
+        actionBtn.onclick = () => showIntro();
+        injectBackLink();
+    }
+
+    function injectBackLink() {
+        if (!document.querySelector('.modal-back-link')) {
+            const backLink = document.createElement('a');
+            backLink.className = 'modal-back-link';
+            backLink.textContent = "Volver al menú principal";
+            backLink.href = "/TiposMemoria/Mecoica";
+            backMenuContainer.appendChild(backLink);
+        }
+    }
+
+    function guardarScore(score) {
+        const token = document.querySelector('meta[name="csrf-token"]')?.content;
+        fetch('/repetir-palabra-game/score', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token },
+            body: JSON.stringify({ score: score, difficulty: "easy" })
+        }).catch(err => console.error(err));
+    }
+
+    showIntro();
 });
-function guardarScore(score){
-    fetch('/repetir-palabra-game/score',{
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content
-      },
-      body:JSON.stringify({
-        score:score,
-        difficulty:"easy"
-      })
-    })
-    .then(res=>res.json())
-    .then(data=>console.log('Score guardado',data))
-    .catch(err=>console.error('Error guardar score:',err));
-}
