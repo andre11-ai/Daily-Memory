@@ -1,7 +1,6 @@
 const validateEmail = require('../helpers/validateEmail');
 const createMemory = require('../helpers/createMemory');
 const validateDate = require('../helpers/validateDate');
-
 describe('Daily-Memory Unit Tests', () => {
 
   // Test 1: Validar correo electrónico válido
@@ -218,3 +217,4 @@ describe('Daily-Memory Unit Tests', () => {
     expect(validateDate('1999-12-31')).toBe(true); // Fecha válida en el pasado
   });
 });
+
