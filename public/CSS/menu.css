@@ -36,7 +36,6 @@ a {
     transition: color .2s;
 }
 
-/* --- NAVBAR --- */
 .navbar {
     position: sticky;
     top: 0;
@@ -86,7 +85,6 @@ a {
     color: var(--white);
 }
 
-/* --- CONTENEDOR PRINCIPAL --- */
 main.main-menu {
     display: flex;
     flex-wrap: wrap;
@@ -99,7 +97,6 @@ main.main-menu {
     gap: 2rem;
 }
 
-/* Título de Bienvenida */
 .main-menu .welcome-banner {
     width: 100%;
     text-align: center;
@@ -109,8 +106,6 @@ main.main-menu {
     font-weight: 600;
 }
 
-/* Sección de Botones (Grid) */
-/* AJUSTE: Bajamos el flex-basis a 400px para que quepan mejor en tablet horizontal */
 .games-section-grid {
     flex: 1 1 400px;
     display: grid;
@@ -160,8 +155,6 @@ main.main-menu {
     line-height: 1.2;
 }
 
-/* Sección de Imagen */
-/* AJUSTE: Bajamos el flex-basis a 350px para dar espacio en tablet */
 .image-section {
     flex: 1 1 350px;
     display: flex;
@@ -177,15 +170,9 @@ main.main-menu {
 }
 
 
-/* --- EL PODER DEL RESPONSIVE --- */
-
-/* CORRECCIÓN: Cambiado de 1400px a 992px.
-   Esto hace que tablets grandes (como la S11 Ultra) se comporten como laptops.
-*/
 @media (max-width: 992px) {
     .main-menu {
         flex-direction: column;
-        /* Forzamos columna vertical */
         align-items: center;
         gap: 2rem;
         margin-top: 1rem;
@@ -193,12 +180,10 @@ main.main-menu {
 
     .main-menu .welcome-banner {
         order: 1;
-        /* 1. Título arriba */
     }
 
     .games-section-grid {
         order: 2;
-        /* 2. Botones en medio */
         width: 100%;
         max-width: 600px;
         gap: 1.5rem;
@@ -207,13 +192,11 @@ main.main-menu {
 
     .game-card {
         max-width: 100%;
-        /* Las cartas llenan el espacio disponible */
         justify-content: center;
     }
 
     .image-section {
         order: 3;
-        /* 3. Imagen abajo */
         width: 100%;
         display: flex;
         justify-content: center;
@@ -221,11 +204,9 @@ main.main-menu {
 
     .main-image {
         max-width: 300px;
-        /* Imagen un poco más pequeña en vertical */
     }
 }
 
-/* Celulares pequeños */
 @media (max-width: 600px) {
     .navbar {
         flex-direction: column;
@@ -241,7 +222,6 @@ main.main-menu {
 
     .games-section-grid {
         grid-template-columns: 1fr;
-        /* Una sola columna */
     }
 
     .welcome-banner {
@@ -250,7 +230,6 @@ main.main-menu {
 }
 
 
-/* --- FOOTER --- */
 .footer {
     background: #f4f7fa;
     padding: 3rem 0;
@@ -308,7 +287,6 @@ main.main-menu {
     }
 }
 
-/* --- BURBUJAS (FONDO) --- */
 .burbujas {
     position: fixed;
     width: 100%;
