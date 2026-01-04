@@ -11,13 +11,7 @@
     --black: #303333;
     --black-strong: #0f2933;
     --shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-
     --font-main: 'Poppins', sans-serif;
-    --font-size-h1: 2.5rem;
-    --font-size-h2: 1.25rem;
-    --font-size-base: 1rem;
-    --font-size-small: .85rem;
-
     --radius-large: 1.5rem;
     --radius-small: .5rem;
 }
@@ -33,6 +27,7 @@ body {
     font-family: var(--font-main);
     color: var(--black);
     min-height: 100vh;
+    overflow-x: hidden;
 }
 
 a {
@@ -41,6 +36,7 @@ a {
     transition: color .2s;
 }
 
+/* --- NAVBAR --- */
 .navbar {
     position: sticky;
     top: 0;
@@ -55,7 +51,7 @@ a {
 }
 
 .logo {
-    font-size: var(--font-size-h1);
+    font-size: 1.8rem;
     font-weight: 700;
     color: var(--primary-color);
     letter-spacing: 1px;
@@ -67,7 +63,8 @@ a {
     gap: 1.5rem;
 }
 
-.nav-link {
+.nav-link,
+.logout-btn {
     font-size: 1rem;
     font-weight: 500;
     color: var(--black);
@@ -77,6 +74,10 @@ a {
     display: flex;
     align-items: center;
     gap: .5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
 }
 
 .nav-link:hover,
@@ -85,69 +86,46 @@ a {
     color: var(--white);
 }
 
-.logout-btn {
-    font-size: 1rem;
-    font-family: inherit;
-    color: var(--black);
-    background: none;
-    border: none;
-    cursor: pointer;
-    transition: background .2s, color .2s;
-    padding: .5rem 1rem;
-    border-radius: var(--radius-small);
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-}
-
-
-.main-menu .welcome-banner {
-    width: 100%;
-    text-align:center;
-    margin: -8rem 0 -15rem 0;
-    font-size: 2rem;
-    color: var(--black-strong);
-    font-weight: 600;
-    letter-spacing: .2px;
-}
-
-main {
+/* --- CONTENEDOR PRINCIPAL --- */
+main.main-menu {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 2rem;
+    justify-content: center;
+    align-items: center;
     width: 100%;
-    max-width: 1200px;
-    margin: 0 auto 2rem auto;
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+    gap: 2rem;
 }
 
+/* Título de Bienvenida */
+.main-menu .welcome-banner {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    font-size: 2.5rem;
+    color: var(--black-strong);
+    font-weight: 600;
+}
+
+/* Sección de Botones (Grid) */
+/* AJUSTE: Bajamos el flex-basis a 400px para que quepan mejor en tablet horizontal */
 .games-section-grid {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-end;
-    height: 100%;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-}
-
-.games-section {
-    flex: 1 1 340px;
-    display: flex;
-    flex-direction: column;
+    flex: 1 1 400px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
-    align-items: flex-start;
-    justify-content: center;
-    margin-top: 7rem;
+    justify-items: center;
 }
 
 .game-card {
     background: var(--white);
     box-shadow: var(--shadow);
     border-radius: var(--radius-large);
-    padding: 1rem 1.5rem;
-    width: 50%;
-    max-width: 350px;
+    padding: 1.2rem;
+    width: 100%;
+    max-width: 380px;
     display: flex;
     align-items: center;
     transition: transform .18s;
@@ -161,365 +139,242 @@ main {
 .game-link {
     display: flex;
     align-items: center;
-    gap: 1.2rem;
+    gap: 1rem;
     width: 100%;
     color: var(--black);
 }
 
 .card-icon {
-    font-size: 2.2rem;
+    font-size: 2rem;
     color: var(--primary-color);
     background: var(--background-light);
     border-radius: var(--radius-small);
-    padding: .7rem;
+    padding: .8rem;
     box-shadow: 0 2px 8px rgba(0, 200, 163, 0.08);
+    flex-shrink: 0;
 }
 
 .card-title {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 600;
+    line-height: 1.2;
 }
 
-.main-menu {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    gap: 2rem;
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto 2rem auto;
-}
-
-.games-section-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-    gap: 2rem;
-    flex: 1 1 340px;
-    align-items: center;
-    justify-items: center;
-}
-
-.game-card {
-    width: 100%;
-    max-width: 350px;
-}
-
+/* Sección de Imagen */
+/* AJUSTE: Bajamos el flex-basis a 350px para dar espacio en tablet */
 .image-section {
     flex: 1 1 350px;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
 }
 
 .main-image {
     width: 100%;
-    max-width: 400px;
+    max-width: 450px;
     height: auto;
-    border-radius: var(--radius-large);
-    box-shadow: var(--shadow);
-    margin-top: 2rem;
+    filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.1));
 }
 
-@media (max-width: 900px) {
+
+/* --- EL PODER DEL RESPONSIVE --- */
+
+/* CORRECCIÓN: Cambiado de 1400px a 992px.
+   Esto hace que tablets grandes (como la S11 Ultra) se comporten como laptops.
+*/
+@media (max-width: 992px) {
     .main-menu {
         flex-direction: column;
+        /* Forzamos columna vertical */
         align-items: center;
+        gap: 2rem;
+        margin-top: 1rem;
+    }
+
+    .main-menu .welcome-banner {
+        order: 1;
+        /* 1. Título arriba */
+    }
+
+    .games-section-grid {
+        order: 2;
+        /* 2. Botones en medio */
+        width: 100%;
+        max-width: 600px;
         gap: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .game-card {
+        max-width: 100%;
+        /* Las cartas llenan el espacio disponible */
+        justify-content: center;
+    }
+
+    .image-section {
+        order: 3;
+        /* 3. Imagen abajo */
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .main-image {
+        max-width: 300px;
+        /* Imagen un poco más pequeña en vertical */
+    }
+}
+
+/* Celulares pequeños */
+@media (max-width: 600px) {
+    .navbar {
+        flex-direction: column;
+        gap: 0.5rem;
+        height: auto;
+        padding: 1rem;
+    }
+
+    .nav__list {
+        flex-wrap: wrap;
+        justify-content: center;
     }
 
     .games-section-grid {
         grid-template-columns: 1fr;
-        grid-template-rows: auto;
-        gap: 1rem;
-        width: 100%;
+        /* Una sola columna */
     }
 
-    .image-section {
-        width: 100%;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .main-image {
-        max-width: 85vw;
-        margin: 2rem auto 0 auto;
-        display: block;
-    }
-
-    .game-card {
-        max-width: 95vw;
-    }
-
-    .main-menu .welcome-banner {
-        margin: .8rem 0 1rem 0;
-        font-size: 1rem;
+    .welcome-banner {
+        font-size: 1.8rem;
     }
 }
 
-.image-section {
-    flex: 1 1 350px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
-.main-image {
-    width: 100%;
-    max-width: 425px;
-    border-radius: var(--radius-large);
-    box-shadow: var(--shadow);
-    margin-top: 7rem;
-}
-
+/* --- FOOTER --- */
 .footer {
     background: #f4f7fa;
-    padding: 1rem 0 0rem 0;
-    margin-top: 4rem;
-    box-shadow: 0 -50px -50px rgba(0, 0, 0, 0.06);
+    padding: 3rem 0;
+    margin-top: 5rem;
 }
 
 .footer-container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
+    padding: 0 2rem;
 }
 
 .footer-row {
     display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: flex-start;
+    gap: 2rem;
+    flex-wrap: wrap;
 }
 
 .footer-col {
-    flex: 1 1 220px;
+    flex: 1 1 250px;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    margin-bottom: 2rem;
+    gap: 1rem;
 }
 
-.logo-col {
-    align-items: center;
+.col-center {
+    text-align: justify;
 }
 
+.col-right {
+    align-items: flex-end;
+}
+
+.logoo,
 .cerebroo {
-    width: 150px;
-    margin-bottom: 1rem;
+    max-width: 150px;
+    height: auto;
 }
 
-.purpose-col {
-    flex: 2;
-    padding-left: 2rem;
+@media (max-width: 900px) {
+    .footer-row {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .col-center {
+        text-align: center;
+    }
+
+    .col-right {
+        align-items: center;
+    }
 }
 
-.purpose-col h4 {
-    font-size: 1.1rem;
-    color: var(--primary-color);
-    margin-bottom: 1rem;
-    font-weight: 600;
-}
-
-.purpose-col p {
-    font-size: 1rem;
-    color: #555;
-    line-height: 1.7;
-}
-
+/* --- BURBUJAS (FONDO) --- */
 .burbujas {
-    position: absolute;
+    position: fixed;
     width: 100%;
-    height: 100vh;
+    height: 100%;
     top: 0;
     left: 0;
+    z-index: -1;
     pointer-events: none;
-    z-index: 0;
 }
 
 .burbuja {
-    border-radius: 50%;
-    background: var(--accent-color);
-    opacity: .18;
     position: absolute;
-    bottom: -150px;
-    animation: burbujas 3s linear infinite;
+    bottom: -100px;
+    background: var(--accent-color);
+    border-radius: 50%;
+    opacity: 0.18;
+    animation: flotar 15s linear infinite;
 }
 
 .burbuja:nth-child(1) {
     width: 80px;
     height: 80px;
     left: 5%;
-    animation-delay: 1s;
+    animation-duration: 8s;
 }
 
 .burbuja:nth-child(2) {
     width: 100px;
     height: 100px;
     left: 35%;
-    animation-delay: 2.5s;
+    animation-duration: 12s;
 }
 
 .burbuja:nth-child(3) {
     width: 20px;
     height: 20px;
     left: 15%;
-    animation-delay: .8s;
+    animation-duration: 10s;
 }
 
 .burbuja:nth-child(4) {
     width: 50px;
     height: 50px;
     left: 90%;
-    animation-delay: 2.2s;
+    animation-duration: 15s;
 }
 
 .burbuja:nth-child(5) {
     width: 70px;
     height: 70px;
     left: 65%;
-    animation-delay: 2.8s;
+    animation-duration: 9s;
 }
 
-.burbuja:nth-child(6) {
-    width: 20px;
-    height: 20px;
-    left: 50%;
-    animation-delay: 1.5s;
-}
-
-.burbuja:nth-child(7) {
-    width: 20px;
-    height: 20px;
-    left: 50%;
-    animation-delay: 1.9s;
-}
-
-.burbuja:nth-child(8) {
-    width: 100px;
-    height: 100px;
-    left: 52%;
-    animation-delay: 2.8s;
-}
-
-.burbuja:nth-child(9) {
-    width: 65px;
-    height: 65px;
-    left: 51%;
-    animation-delay: 2.5s;
-}
-
-.burbuja:nth-child(10) {
-    width: 40px;
-    height: 40px;
-    left: 35%;
-    animation-delay: 1.8s;
-}
-
-@keyframes burbujas {
+@keyframes flotar {
     0% {
-        bottom: 0;
+        bottom: -100px;
         opacity: 0;
     }
 
     50% {
-        opacity: .3;
-        transform: translateX(30px);
+        opacity: 0.3;
     }
 
     100% {
         bottom: 100vh;
         opacity: 0;
-    }
-}
-
-@media (max-width: 900px) {
-    main {
-        flex-direction: column;
-        align-items: center;
-        gap: 1.5rem;
-    }
-
-    .games-section,
-    .image-section {
-        width: 100%;
-        max-width: 100vw;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .main-image {
-        max-width: 85vw;
-        margin: 2rem auto 0 auto;
-        display: block;
-    }
-
-    .game-card {
-        max-width: 95vw;
-    }
-
-    .footer-row {
-        flex-direction: column;
-        gap: 2rem;
-        align-items: center;
-    }
-
-    .footer-col {
-        align-items: center;
-        text-align: center;
-        width: 100%;
-    }
-
-    .purpose-col {
-        padding-left: 0;
-    }
-}
-
-@media (max-width: 600px) {
-    .navbar {
-        flex-direction: column;
-        gap: .5rem;
-        padding: .5rem 1rem;
-        height: auto;
-    }
-
-    .logo {
-        font-size: 2rem;
-    }
-
-    .nav__list {
-        flex-direction: column;
-        gap: .7rem;
-        align-items: center;
-    }
-
-    .main-image {
-        max-width: 98vw;
-    }
-
-    .games-section {
-        gap: 1rem;
-    }
-
-    .game-card {
-        padding: 1rem 1.2rem;
-        font-size: 1rem;
-    }
-
-    .footer {
-        padding: 1.5rem 0 .7rem 0;
-    }
-
-    .footer-row {
-        gap: 1.2rem;
-    }
-
-    .cerebroo {
-        max-width: 70px;
-    }
-
-    .purpose-col {
-        padding-left: 0;
     }
 }

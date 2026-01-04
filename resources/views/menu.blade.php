@@ -62,15 +62,24 @@
 
         <footer class="footer">
             <div class="footer-container">
-                <div class="footer-row">
-                    <div class="footer-col logo-col">
-                        <img src="{{ asset('img/pngwing.com.png') }}" alt="cerebro" class="cerebroo">
-                    </div>
-                    <div class="footer-col purpose-col" style="flex: 2;">
-                        <h4>Propósito</h4>
-                        <p>
-                        Daily Memory es una plataforma web de estimulación cognitiva centrada en la memoria. Combina juegos diseñados para trabajar distintos tipos de memoria (muscular, ecoica, icónica). Su objetivo es brindar una experiencia accesible, medible y administrable para fortalecer la memoria a través de actividades lúdicas y seguimiento de resultados.                    </div>
-                </div>
+<div class="footer-row">
+    <div class="footer-col col-left">
+        <img src="{{ asset('img/logo.png') }}" alt="logo" class="logoo">
+    </div>
+
+    <div class="footer-col col-center">
+        <h4>Propósito</h4>
+        <p>
+            Daily Memory es una plataforma web de estimulación cognitiva centrada en la memoria.
+            Combina juegos diseñados para trabajar distintos tipos de memoria. Su objetivo es brindar
+            una experiencia accesible y medible.
+        </p>
+    </div>
+
+    <div class="footer-col col-right">
+        <img src="{{ asset('img/pngwing.com.png') }}" alt="cerebro" class="cerebroo">
+    </div>
+</div>
             </div>
         </footer>
         <div class="burbujas">
