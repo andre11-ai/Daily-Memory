@@ -22,7 +22,7 @@ class Juego {
         this.actionBtn = document.getElementById('action-btn');
         this.backCont = document.getElementById('back-menu-container');
 
-        this.TARGET_SCORE = 50;
+        this.TARGET_SCORE = 120;
 
         window.onload = this.iniciar.bind(this);
     }
@@ -242,7 +242,10 @@ class Vista {
 class Modelo {
     constructor() {
         this.palabras = [
-            "gato", "perro", "mesa", "silla", "libro", "lapiz", "arbol", "hoja", "nube", "playa", "tigre", "raton"
+            "gato", "perro", "mesa", "silla", "libro", "lapiz", "arbol", "hoja", "nube", "playa", "tigre", "raton",
+            "cielo", "agua", "fuego", "mundo", "carta", "avion", "barco", "luna", "fresa", "leon",
+            "lobo", "roca", "piano", "cajon", "juego", "gafas", "jardin", "puerta", "camisa", "zapato",
+            "banco", "fruta", "reloj", "queso", "plato", "robot", "zorro", "bosque", "nieve", "isla"
         ];
         this.puntuacion = 0;
         this.vidas = 3;

@@ -33,21 +33,21 @@
 
                 <div class="games-grid">
                     <div class="game-card">
-                        <a href="/Desestresar/Tetris" class="game-link" target="_blank">
+                        <a href="/Mantenimiento" class="game-link" target="_blank">
                             <div class="card-icon"><i class='bx bx-cube'></i></div>
                             <div class="card-title">Tetris</div>
                         </a>
                     </div>
 
                     <div class="game-card">
-                        <a href="#" class="game-link" target="_blank">
+                        <a href="/Mantenimiento" class="game-link" target="_blank">
                             <div class="card-icon"><i class='bx bx-radio-circle'></i></div>
                             <div class="card-title">Conecta 4</div>
                         </a>
                     </div>
 
                     <div class="game-card">
-                        <a href="#" class="game-link" target="_blank">
+                        <a href="/Mantenimiento" class="game-link" target="_blank">
                             <div class="card-icon"><i class='bx bx-mouse'></i></div>
                             <div class="card-title">Pinturillo</div>
                         </a>

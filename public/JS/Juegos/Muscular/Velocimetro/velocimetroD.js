@@ -1,19 +1,21 @@
 document.addEventListener('DOMContentLoaded', () => {
     window.$ = document.querySelectorAll.bind(document);
-    
-    const TARGET_WPM = 500; 
 
-    let wordList = ['Electroencephalographer', 'Sternocleidomastoid', 'Anti-constitutionality', 'Electroencephalography', 'HUMANITY Counter-revolutionary', 'Interdisciplinarity', 'Desoxyribonucleotide', 'Otorhinolaryngologist', 'Otorhinolaryngology', 'Electroencephalographer', 'Anti-constitutionally', 'Lithophotographically', 'Circumstantially ','Electrocardiographically','Magnetoencephalography','Aminotransferase','Disproportionately','Extraterritoriality','Extraterritoriality','Sternocleidooccipitomastoid','Nacionalsindicalista','Craniopharyngioma','Encephalitozoonidae','Antibullfighting','Incomprehensibility', 'Antigovernmentalistically', 'Equisatisfactibility', 'Hypogammaglobulinemia', 'Bioluminescence', 'Pseudohermaphroditism', 'Auriculoventriculostomy', 'Magnetohydrodynamics',
-    "slogan", "flame", "important", "nerves", "hair", "signals", "floor", "early", "cow",
-    "carrot", "hit", "bibliography", "lollipop", "defend", "that", "think", "bend", "say",
-    "frame", "spindle", "wake", "trade", "yellow", "billiards", "citizen", "skating", "ease",
-    "flash", "formation", "forward", "giant", "gut", "kit", "layers", "meaning", "nail",
-    "option", "earth", "rain", "shadow", "soon", "thirst", "tear", "tiger", "title",
-    "wild", "animated", "blind", "sketch", "the", "fall", "bone", "toy", "ride", "wind"
+    const TARGET_WPM = 1000;
+
+    let wordList = ["eslogan", "llama", "importante", "nervios", "cabello", "señales", "piso", "temprano", "vaca",
+    "zanahoria", "golpe", "bibliografía", "paleta", "defender", "pensar", "doblar", "decir",
+    "marco", "huso", "despertar", "comercio", "amarillo", "billar", "ciudadano", "patinaje", "facilidad",
+    "destello", "formación", "adelante", "gigante", "tripa", "equipo", "capas", "significado", "uña",
+    "opción", "tierra", "lluvia", "sombra", "pronto", "lágrima", "tigre", "título",
+    "salvaje", "animado", "ciego", "boceto", "caer", "hueso", "juguete", "paseo", "viento",
+    "extraordinario", "transformación", "arquitectura", "conocimiento", "responsabilidad",
+    "independencia", "comunicación", "investigación", "desarrollo", "imaginación", "creatividad",
+    "sostenibilidad", "colaboración", "innovación", "tecnología", "educación", "cultura", "diversidad",
+    "inclusión", "empatía", "resiliencia", "liderazgo", "motivación", "superación", "compromiso"
     ];
-
     let wordData = { seconds: 60, correct: 0, incorrect: 0, total: 0, typed: 0 };
-    let timer = null; 
+    let timer = null;
     let gameActive = false;
 
     const modal = document.getElementById('modal-gameover');
@@ -95,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
             wordData.incorrect += 1;
         }
         wordData.total += 1;
-        
+
         $("#word-section")[0].removeChild(w);
         $("#word-section")[0].appendChild(w);
         $("#word-section")[0].children[0].classList.add("current-word");
@@ -119,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             isTimer(wordData.seconds);
             checkWord(word);
-            if (kcode == 32) { 
+            if (kcode == 32) {
                 submitWord(word);
                 clearLine();
                 $("#typebox")[0].value = "";
@@ -134,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let wpm = Math.floor((wordData.typed / 5) - wordData.incorrect);
         if (wpm < 0) wpm = 0;
-        
+
         guardarScoreVelocimetro(wpm, 'hard');
         showGameOver(wpm);
     }
@@ -147,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         modal.classList.remove('hidden');
         setTimeout(() => modal.classList.add('active'), 10);
-        
+
         govBubble.className = "speech-bubble";
         scoreContainer.classList.add('hidden');
 

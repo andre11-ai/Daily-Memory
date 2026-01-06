@@ -21,67 +21,66 @@
             </div>
         </nav>
 
-            <main class="main-menu">
-                @php $user = auth()->user(); @endphp
+        <main class="main-menu">
+            @php $user = auth()->user(); @endphp
 
-                <div class="welcome-banner" role="status" aria-live="polite">
-                    Bienvenido, <strong>{{ $user ? ($user->username ?? $user->name) : 'Usuario' }}</strong>
+            <div class="welcome-banner" role="status" aria-live="polite">
+                Bienvenido, <strong>{{ $user ? ($user->username ?? $user->name) : 'Usuario' }}</strong>
+            </div>
+
+            <section class="games-section games-section-grid">
+                <div class="game-card">
+                    <a href="{{ url('/Desestresar') }}" class="game-link">
+                        <div class="card-icon"><i class="fas fa-gamepad"></i></div>
+                        <div class="card-title">Juegos para Desestresar</div>
+                    </a>
                 </div>
+                <div class="game-card">
+                    <a href="{{ url('/tipomemoria') }}" class="game-link">
+                        <div class="card-icon"><i class="fas fa-brain"></i></div>
+                        <div class="card-title">Juegos de Memoria</div>
+                    </a>
+                </div>
+                <div class="game-card">
+                    <a href="/chat" class="game-link" target="_blank">
+                        <div class="card-icon"><i class="fas fa-comments"></i></div>
+                        <div class="card-title">Chat</div>
+                    </a>
+                </div>
+                <div class="game-card">
+                    <a href="{{ url('/story') }}" class="game-link">
+                        <div class="card-icon"><i class="fas fa-book-open"></i></div>
+                        <div class="card-title">Historia</div>
+                    </a>
+                </div>
+            </section>
 
-                <section class="games-section games-section-grid">
-                    <div class="game-card">
-                        <a href="{{ url('/Desestresar') }}" class="game-link">
-                            <div class="card-icon"><i class="fas fa-gamepad"></i></div>
-                            <div class="card-title">Juegos para Desestresar</div>
-                        </a>
-                    </div>
-                    <div class="game-card">
-                        <a href="{{ url('/tipomemoria') }}" class="game-link">
-                            <div class="card-icon"><i class="fas fa-brain"></i></div>
-                            <div class="card-title">Juegos de Memoria</div>
-                        </a>
-                    </div>
-                    <div class="game-card">
-                        <a href="/chat" class="game-link" target="_blank">
-                            <div class="card-icon"><i class="fas fa-comments"></i></div>
-                            <div class="card-title">Chat</div>
-                        </a>
-                    </div>
-                    <div class="game-card">
-                        <a href="{{ url('/story') }}" class="game-link">
-                            <div class="card-icon"><i class="fas fa-book-open"></i></div>
-                            <div class="card-title">Historia</div>
-                        </a>
-                    </div>
-                </section>
-                <section class="image-section">
-                    <img src="{{ asset('img/kisspng-4-pics-1-word-word-brain-thought-action-game-snoring-transparent-png-5a76bf36785379.6988479815177316384929.png') }}"
-                        alt="relax" class="main-image">
-                </section>
-            </main>
+            <section class="image-section">
+                <img src="{{ asset('img/logo.png') }}" alt="relax" class="main-image">
+            </section>
+        </main>
 
         <footer class="footer">
             <div class="footer-container">
-<div class="footer-row">
-    <div class="footer-col col-left">
-        <img src="{{ asset('img/logo.png') }}" alt="logo" class="logoo">
-    </div>
+                <div class="footer-row">
 
-    <div class="footer-col col-center">
-        <h4>Propósito</h4>
-        <p>
-            Daily Memory es una plataforma web de estimulación cognitiva centrada en la memoria.
-            Combina juegos diseñados para trabajar distintos tipos de memoria. Su objetivo es brindar
-            una experiencia accesible y medible.
-        </p>
-    </div>
+                    <div class="footer-img-container">
+                        <img src="{{ asset('img/pngwing.com.png') }}" alt="cerebro" class="cerebroo">
+                    </div>
 
-    <div class="footer-col col-right">
-        <img src="{{ asset('img/pngwing.com.png') }}" alt="cerebro" class="cerebroo">
-    </div>
-</div>
+                    <div class="footer-text-container">
+                        <h4>Propósito</h4>
+                        <p>
+                            Daily Memory es una plataforma web de estimulación cognitiva centrada en la memoria.
+                            Combina juegos diseñados para trabajar distintos tipos de memoria. Su objetivo es brindar
+                            una experiencia accesible y medible.
+                        </p>
+                    </div>
+
+                </div>
             </div>
         </footer>
+
         <div class="burbujas">
             @for($i = 0; $i < 10; $i++)
                 <div class="burbuja"></div>

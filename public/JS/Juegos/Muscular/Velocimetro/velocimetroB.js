@@ -1,19 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {
     window.$ = document.querySelectorAll.bind(document);
-    
-    const TARGET_WPM = 200;
 
-    let wordList = ['Electroencefalografista','Esternocleidomastoideo','Anticonstitucionalidad','Electroencefalografía','HUMANIDADContrarrevolucionario','Interdisciplinariedad','Desoxirribonucleótido','Otorrinolaringológico','Otorrinolaringología','Electroencefalógrafo','Anticonstitucionalmente','Litofotográficamente','Circunstanciadamente','Electrocardiográficamente','Magnetoencefalografía','Aminotransferasa','Desproporcionadamente','Extraterritorialidad','Extraterritorialidad','Esternocleidooccipitomastoideo','Nacionalsindicalista','Craneofaringioma','Encephalitozoonidae','Antitauromaquia','Incomprehensibilidad','Antigubernamentalisticamente','Equisatisfactibilidad','Hipogammaglobulinemia','Bioluminiscencia','Pseudohermafroditismo','Auriculoventriculostomía','Magnetohidrodinámica',
-        "consigna", "flamear", "importante", "nervios", "pelo", "señales", "piso", "temprano", "vaca",
-        "zanahoria", "acierto", "bibliografía", "chupetin", "defensa", "ese", "fink", "doblar", "dije",
-        "marco", "huso", "despertar", "trocar", "amarillo", "billar", "ciudadano", "patinaje", "facilidad",
-        "flash", "formacion", "adelante", "gigante", "tripa", "kit", "capas", "significado", "clavo",
-        "opcion", "tierra", "lluvia", "sombra", "pronto", "sed", "desgarro", "tigre", "titulo",
-        "salvaje", "animado", "ciego", "boceto", "el", "caer", "hueso", "juguete", "paseo", "viento"
+    const TARGET_WPM = 500;
+
+    let wordList = [ "sol", "pan", "luz", "mar", "sal", "ojo", "pie", "oso", "uva",
+    "casa", "gato", "mesa", "agua", "tela", "pelo", "boca", "mano",
+    "flor", "hoja", "caja", "bola", "dado", "nube", "luna", "aire",
+    "rojo", "azul", "gris", "oro", "tren", "auto", "bici", "foto",
+    "pato", "pez", "rana", "miel", "vaso", "taza", "pera", "lima",
+    "uno", "dos", "tres", "ver", "ir", "dar", "ser", "rey", "voz",
+    "rio", "lago", "foco", "cine", "mapa", "bebe", "mama", "papa",
+    "libro", "perro", "papel", "goma", "silla",
+    "cama", "fuego", "hielo", "playa", "radio",
+    "reloj", "leche", "nieve", "amigos", "camino"
     ];
 
     let wordData = { seconds: 60, correct: 0, incorrect: 0, total: 0, typed: 0 };
-    let timer = null; 
+    let timer = null;
     let gameActive = false;
 
     const modal = document.getElementById('modal-gameover');
@@ -42,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function addWords() {
         $("#word-section")[0].innerHTML = "";
         $("#typebox")[0].value = "";
-        
+
         shuffle(wordList);
         wordList.forEach(word => {
             let span = document.createElement("span");
@@ -71,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function checkWord(word) {
-        let w = $("#word-section")[0].children[0]; 
+        let w = $("#word-section")[0].children[0];
         let val = word.value;
         let wVal = w.innerHTML;
 
@@ -97,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
             wordData.incorrect += 1;
         }
         wordData.total += 1;
-        
+
         $("#word-section")[0].removeChild(w);
         $("#word-section")[0].appendChild(w);
         $("#word-section")[0].children[0].classList.add("current-word");
@@ -111,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function typingTest(e) {
-        if (!gameActive) return; 
+        if (!gameActive) return;
 
         e = e || window.event;
         let kcode = e.keyCode;
@@ -121,9 +124,9 @@ document.addEventListener('DOMContentLoaded', () => {
             word.value = "";
         } else {
             isTimer(wordData.seconds);
-            
+
             checkWord(word);
-            if (kcode == 32) { 
+            if (kcode == 32) {
                 submitWord(word);
                 clearLine();
                 $("#typebox")[0].value = "";
@@ -139,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let wpm = Math.floor((wordData.typed / 5) - wordData.incorrect);
         if (wpm < 0) wpm = 0;
-        
+
         guardarScoreVelocimetro(wpm, 'easy');
 
         showGameOver(wpm);
@@ -153,8 +156,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         modal.classList.remove('hidden');
         setTimeout(() => modal.classList.add('active'), 10);
-        
-        bubble = govBubble; 
+
+        bubble = govBubble;
         bubble.className = "speech-bubble";
         scoreContainer.classList.add('hidden');
 
@@ -216,9 +219,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     typebox.addEventListener('keyup', typingTest);
-    
+
     restartBtn.addEventListener('click', () => {
-        showIntro(); 
+        showIntro();
     });
 
     showIntro();

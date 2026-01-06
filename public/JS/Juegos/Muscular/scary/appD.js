@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isPaused) return;
         animationID = requestAnimationFrame(animate);
         c.clearRect(0,0,canvas.width,canvas.height);
-        
+
         player.draw();
         particles.forEach((particle, index)=>{
             if(particle.alpha <= 0){particles.splice(index, 1);} else{particle.update();}
@@ -137,14 +137,14 @@ document.addEventListener('DOMContentLoaded', () => {
         enemies.forEach((enemy, index) => {
             enemy.update();
             const dist = Math.hypot(player.x - enemy.x, player.y - enemy.y);
-            
+
             if(dist - enemy.radius - player.radius < 0.7 ){
                 cancelAnimationFrame(animationID);
                 clearInterval(enemyInterval);
                 guardarScoreEnBD(score, 'hard');
                 showGameOver(false);
             }
-            
+
             projectiles.forEach((projectile, projectileIndex) => {
                 const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y);
                 if(dist - enemy.radius - projectile.radius < 1 ){
@@ -183,15 +183,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function showIntro() {
         modal.classList.remove('hidden');
         setTimeout(() => modal.classList.add('active'), 10);
-        
+
         bubble.className = "speech-bubble";
         scoreContainer.classList.add('hidden');
-        
+
         govEyebrow.textContent = "MEMORIA MUSCULAR";
         govTitle.textContent = "Nivel Difícil";
         govMsg.innerHTML = "Solo para expertos. Las palabras caen muy rápido.<br><strong>¿Podrás sobrevivir?</strong>";
         actionBtn.textContent = "¡Empezar!";
-        
+
         actionBtn.onclick = () => {
             modal.classList.remove('active');
             setTimeout(() => modal.classList.add('hidden'), 300);
@@ -205,10 +205,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function showGameOver(win) {
         modal.classList.remove('hidden');
         setTimeout(() => modal.classList.add('active'), 10);
-        
+
         scoreContainer.classList.remove('hidden');
         scoreDisplay.textContent = score;
-        
+
         if (win) {
             bubble.className = "speech-bubble win-theme";
             govEyebrow.textContent = "¡MAESTRO!";
@@ -222,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
             govMsg.innerHTML = "La velocidad fue demasiada esta vez.";
             actionBtn.textContent = "Reintentar";
         }
-        
+
         actionBtn.onclick = () => {
             showIntro();
         };

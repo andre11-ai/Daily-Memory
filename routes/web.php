@@ -96,8 +96,8 @@ Route::get('/Desestresar/Galaxy-attack', function () {
     return view('/Desestresar/Galaxy-attack');
 })->middleware('auth');
 
-Route::get('/Desestresar/Tetris', function () {
-    return view('/Desestresar/Tetris');
+Route::get('/Mantenimiento', function () {
+    return view('/Mantenimiento');
 })->middleware('auth');
 
 

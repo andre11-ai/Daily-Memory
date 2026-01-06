@@ -19,7 +19,7 @@ class Juego {
         this.actionBtn = document.getElementById('action-btn');
         this.backCont = document.getElementById('back-menu-container');
 
-        this.TARGET_SCORE = 40;
+        this.TARGET_SCORE = 80;
 
         window.onload = this.iniciar.bind(this);
     }
@@ -203,7 +203,10 @@ class Vista {
 
 class Modelo {
     constructor() {
-        this.palabras = ["luz", "mar", "sol", "pan", "ave", "pez", "red", "sal", "gas", "tren", "uno", "dos"];
+        this.palabras = ["luz", "mar", "sol", "pan", "ave", "pez", "red", "sal",
+            "gas", "tren", "uno", "dos", "oso", "uva", "fin", "pie", "gol", "rey",
+            "voz", "mes", "ajo", "ojo", "sed", "ley", "sur", "tía", "ola"
+        ];
         this.puntuacion = 0;
         this.vidas = 3;
     }

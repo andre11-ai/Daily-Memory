@@ -1,11 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     window.$ = document.querySelectorAll.bind(document);
-    
-    const TARGET_WPM = 350;
 
-    let wordList = ['Electroencefalografista','Esternocleidomastoideo','Anticonstitucionalidad','Electroencefalografía','HUMANIDADContrarrevolucionario','Interdisciplinariedad','Desoxirribonucleótido','Otorrinolaringológico','Otorrinolaringología','Electroencefalógrafo','Anticonstitucionalmente','Litofotográficamente','Circunstanciadamente','Electrocardiográficamente','Magnetoencefalografía','Aminotransferasa','Desproporcionadamente','Extraterritorialidad','Extraterritorialidad','Esternocleidooccipitomastoideo','Nacionalsindicalista','Craneofaringioma','Encephalitozoonidae','Antitauromaquia','Incomprehensibilidad','Antigubernamentalisticamente','Equisatisfactibilidad','Hipogammaglobulinemia','Bioluminiscencia','Pseudohermafroditismo','Auriculoventriculostomía','Magnetohidrodinámica',
-        "consigna", "flamear", "importante", "nervios", "pelo", "señales", "piso", "temprano", "vaca",
-        "zanahoria", "acierto", "bibliografía", "chupetin", "defensa", "ese", "fink", "doblar", "dije",
+    const TARGET_WPM = 750;
+
+    let wordList = ["consigna", "flamear", "importante", "nervios", "pelo", "señales", "piso", "temprano", "vaca",
+        "zanahoria", "acierto", "bibliografía", "chupetin", "defensa", "fink", "doblar", "dije",
         "marco", "huso", "despertar", "trocar", "amarillo", "billar", "ciudadano", "patinaje", "facilidad",
         "flash", "formacion", "adelante", "gigante", "tripa", "kit", "capas", "significado", "clavo",
         "opcion", "tierra", "lluvia", "sombra", "pronto", "sed", "desgarro", "tigre", "titulo",
@@ -13,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     let wordData = { seconds: 60, correct: 0, incorrect: 0, total: 0, typed: 0 };
-    let timer = null; 
+    let timer = null;
     let gameActive = false;
 
     const modal = document.getElementById('modal-gameover');
@@ -95,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
             wordData.incorrect += 1;
         }
         wordData.total += 1;
-        
+
         $("#word-section")[0].removeChild(w);
         $("#word-section")[0].appendChild(w);
         $("#word-section")[0].children[0].classList.add("current-word");
@@ -119,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             isTimer(wordData.seconds);
             checkWord(word);
-            if (kcode == 32) { 
+            if (kcode == 32) {
                 submitWord(word);
                 clearLine();
                 $("#typebox")[0].value = "";
@@ -134,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let wpm = Math.floor((wordData.typed / 5) - wordData.incorrect);
         if (wpm < 0) wpm = 0;
-        
+
         guardarScoreVelocimetro(wpm, 'medium');
         showGameOver(wpm);
     }
@@ -147,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         modal.classList.remove('hidden');
         setTimeout(() => modal.classList.add('active'), 10);
-        
+
         govBubble.className = "speech-bubble";
         scoreContainer.classList.add('hidden');
 

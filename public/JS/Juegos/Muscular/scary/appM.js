@@ -5,15 +5,11 @@ document.addEventListener('DOMContentLoaded', () => {
         "herramienta","independencia","jerarquia","kilometro","laberinto","maravilla","naturaleza","orquesta",
         "paraguas","queroseno","respirar","serpiente","teclado","universo","velocidad","xilofono","zanahoria",
         "arquitectura","bicicleta","conciencia","desarrollo","efervescente", "filosofia","geografia","hipopotamo",
-        "importante","justificacion","conocimiento","libertad","matematicas","navegacion","oportunidad","periodico",
-        "quimica","responsabilidad","sentimiento","tecnologia","urbanizacion","voluntad","extraterrestre","abecedario",
-        "benevolencia","constelacion","descubrimiento","espectaculo","fotografia","gobernador","humanidad",
-        "inteligencia","jurisprudencia","kermese","literatura","mecanismo","nostalgia","obstaculo","paralelepipedo",
-        "quebrantahuesos","reconocimiento","satisfaccion","temperatura","universidad","vulnerabilidad","zoologico",
-        "administracion","biodegradable","comunicacion","dificultad","extraordinario","ferrocarril","gramatical","hipotenusa",
-        "investigacion","laringologo","metamorfosis","nutricionista","organizacion","probabilidad","quirofano","refrigerador",
-        "semiconductor","trabajador","vocabulario","circunferencia","internacional","electrodomestico","otorrinolaringologo",
-        "electroencefalografista"
+        "magia","nube","oreja","piano","roca","sopa","tigre","uva","vaso","yogur","zapato","amarillo","barco","cuchara",
+        "delfin","estrella","familia","guitarra","helado","invierno","jardin","lampara","montaña","naranja","oceano",
+        "pelota","quesadilla","regalo","sonrisa","tortuga","universo","ventana","xilofono","payaso","amigo","escuela",
+        "flor","globo","isla","juego","kiwi","lago","mono","nube","pescado","queso","raton","sol","tren","uva",
+        "volcan","whisky","yate","zorro"
     ];
 
     const META_PUNTOS = 15000;
@@ -123,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isPaused) return;
         animationID = requestAnimationFrame(animate);
         c.clearRect(0,0,canvas.width,canvas.height);
-        
+
         player.draw();
         particles.forEach((particle, index)=>{
             if(particle.alpha <= 0){particles.splice(index, 1);} else{particle.update();}
@@ -137,14 +133,14 @@ document.addEventListener('DOMContentLoaded', () => {
         enemies.forEach((enemy, index) => {
             enemy.update();
             const dist = Math.hypot(player.x - enemy.x, player.y - enemy.y);
-            
+
             if(dist - enemy.radius - player.radius < 0.7 ){
                 cancelAnimationFrame(animationID);
                 clearInterval(enemyInterval);
                 guardarScoreEnBD(score, 'medium');
                 showGameOver(false);
             }
-            
+
             projectiles.forEach((projectile, projectileIndex) => {
                 const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y);
                 if(dist - enemy.radius - projectile.radius < 1 ){
@@ -183,15 +179,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function showIntro() {
         modal.classList.remove('hidden');
         setTimeout(() => modal.classList.add('active'), 10);
-        
+
         bubble.className = "speech-bubble";
         scoreContainer.classList.add('hidden');
-        
+
         govEyebrow.textContent = "MEMORIA MUSCULAR";
         govTitle.textContent = "Nivel Medio";
         govMsg.innerHTML = "Protege tu base escribiendo rápidamente.<br><strong>¡Cuidado con la velocidad!</strong>";
         actionBtn.textContent = "¡Empezar!";
-        
+
         actionBtn.onclick = () => {
             modal.classList.remove('active');
             setTimeout(() => modal.classList.add('hidden'), 300);
@@ -205,10 +201,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function showGameOver(win) {
         modal.classList.remove('hidden');
         setTimeout(() => modal.classList.add('active'), 10);
-        
+
         scoreContainer.classList.remove('hidden');
         scoreDisplay.textContent = score;
-        
+
         if (win) {
             bubble.className = "speech-bubble win-theme";
             govEyebrow.textContent = "¡VICTORIA!";
@@ -222,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
             govMsg.innerHTML = "La bruja ha invadido tu espacio.";
             actionBtn.textContent = "Reintentar";
         }
-        
+
         actionBtn.onclick = () => {
             showIntro();
         };

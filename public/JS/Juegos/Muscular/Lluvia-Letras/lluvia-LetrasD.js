@@ -22,7 +22,7 @@ class Juego {
         this.actionBtn = document.getElementById('action-btn');
         this.backCont = document.getElementById('back-menu-container');
 
-        this.TARGET_SCORE = 70;
+        this.TARGET_SCORE = 150;
 
         window.onload = this.iniciar.bind(this);
     }
@@ -209,7 +209,7 @@ class Vista {
         let palabras = this.palabra.querySelectorAll(".palabra");
         for (let palabra of palabras) {
             let top = parseInt(palabra.style.top);
-            top += 4;
+            top += 3;
             palabra.style.top = top + "px";
 
             if (top > 450) {
@@ -230,11 +230,14 @@ class Vista {
 
 class Modelo {
     constructor() {
-        this.palabras = [
-            "computadora", "teclado", "impresora", "pantalla", "raton",
-            "programacion", "desarrollo", "javascript", "internet",
-            "algoritmo", "base", "datos", "sistema", "red", "codigo"
-        ];
+        this.palabras = [ "computadora", "teclado", "impresora", "pantalla", "celular", "television",
+        "refrigerador", "microondas", "aspiradora", "ventilador", "calendario",
+        "escritorio", "biblioteca", "diccionario", "periodico", "zapatilla",
+        "restaurante", "aeropuerto", "universidad", "estacionamiento", "ambulancia",
+        "helicoptero", "carretera", "bicicleta", "edificio", "ascensor",
+        "chocolate", "ensalada", "elefante", "dinosaurio", "vacaciones",
+        "cumpleaños", "guitarra", "campeonato", "electricidad", "entrevista"
+    ];
         this.puntuacion = 0;
         this.vidas = 3;
     }
